@@ -13,8 +13,8 @@ Message structure:
 """
 can_messages = []
 class MyListener(can.Listener):
-    def on_message(self, message):
-      message = {
+    def on_message_receieved(self, message):
+      message_data = {
             "id": hex(message.arbitration_id),
             "data": list(message.data),
             "timestamp": message.timestamp
