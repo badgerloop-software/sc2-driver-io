@@ -9,20 +9,17 @@ def transmit_can_message(channel="can0", bustype="socketcan"):
     # Initialize the CAN bus interface
     bus = can.interface.Bus(channel=channel, bustype=bustype)
 
-    # Prompt for the arbitration ID (CAN ID)
-    arb_id_input = input("Enter arbitration id (e.g. 0x123): ").strip()
+    # Prompt for the arbitration ID (CAN ID), this gets the arbitration id from the user and validates it
+    arb_id_input = input("Enter 3-digit hex message id (e.g. 0x123): ").strip()
     try:
         # Accept input as hex if it starts with 0x, otherwise assume hex too
-        if arb_id_input.lower().startswith("0x"):
-            arbitration_id = int(arb_id_input, 16)
-        else:
-            arbitration_id = int(arb_id_input, 16)
+        arbitration_id = int(arb_id_input, 16)
     except ValueError:
         print("Invalid arbitration id input.")
         bus.shutdown()
         return
 
-    # Prompt for data bytes input (as hex values)
+    # Prompt for data bytes input (as hex values) accepts users inputs as data.
     data_input = input("Enter data bytes as hex values separated by spaces (e.g. '11 22 33 44'): ").strip()
     try:
         data_bytes = []
@@ -39,21 +36,17 @@ def transmit_can_message(channel="can0", bustype="socketcan"):
         bus.shutdown()
         return
 
-    # Prompt for whether the CAN ID is extended or standard
-    extended_input = input("Is this an extended CAN ID? (y/n): ").strip().lower()
-    is_extended_id = extended_input.startswith("y")
-
     # Create the CAN message
     msg = can.Message(
         arbitration_id=arbitration_id,
         data=data_bytes,
-        is_extended_id=is_extended_id
+        is_extended_id=False;
     )
 
-    # Attempt to send the message
+    # Send message using bus.send()
     try:
         bus.send(msg)
-        print("Message sent successfully!")
+        print(f"Message sent successfully!\n Message Details: ID={msg.arbitration_id}, Data={msg.data_bytes}")
     except can.CanError as e:
         print(f"Message failed to send: {e}")
 
