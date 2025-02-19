@@ -1,7 +1,22 @@
 #!/usr/bin/env python3
 import can
+import argparse
+import logging
 
-def transmit_can_message(channel="can0", bustype="socketcan"):
+# Allow user to input CAN channel
+parser = argparse.ArgumentParser(description="Specify the CAN channel.")
+# Define a positional argument for channel
+parser.add_argument("channel", type=str, help="CAN channel (e.g., can0, vcan0)")
+args = parser.parse_args()
+# add logging
+logging.basicConfig(
+    level=logging.ERROR,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S"
+)
+
+
+def transmit_can_message(channel, bustype="socketcan"):
     """
     Initializes the CAN bus, prompts the user for message parameters,
     and transmits the CAN message.
@@ -15,7 +30,7 @@ def transmit_can_message(channel="can0", bustype="socketcan"):
         # Accept input as hex if it starts with 0x, otherwise assume hex too
         arbitration_id = int(arb_id_input, 16)
     except ValueError:
-        print("Invalid arbitration id input.")
+        logging.error("Invalid data byte input.")
         bus.shutdown()
         return
 
@@ -32,7 +47,7 @@ def transmit_can_message(channel="can0", bustype="socketcan"):
                 return
             data_bytes.append(data_byte)
     except ValueError:
-        print("Invalid data byte input.")
+        logging.error("Invalid data byte input.")
         bus.shutdown()
         return
 
@@ -40,7 +55,7 @@ def transmit_can_message(channel="can0", bustype="socketcan"):
     msg = can.Message(
         arbitration_id=arbitration_id,
         data=data_bytes,
-        is_extended_id=False;
+        is_extended_id=False
     )
 
     # Send message using bus.send()
@@ -54,4 +69,4 @@ def transmit_can_message(channel="can0", bustype="socketcan"):
     bus.shutdown()
 
 if __name__ == "__main__":
-    transmit_can_message()
+    transmit_can_message(args.channel)

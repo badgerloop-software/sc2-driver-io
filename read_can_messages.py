@@ -1,9 +1,7 @@
 import can
 import struct
 import time
-
-# Create a CAN bus connection
-bus = can.interface.Bus(channel="can0", bustype="socketcan")
+import logging
 
 """
 Message structure: 
@@ -12,68 +10,147 @@ Message structure:
 .timestamp: the timestamp of the CAN message
 """
 
-output_can_messages_types = [
-    {"schematic_name": "ACC_IN", "data_type": "float", "id": "0x20A"},
-    {"schematic_name": "MCU_ACC", "data_type": "float", "id": "0x200"},
-    {"schematic_name": "MCU_RGN_BRK", "data_type": "float", "id": "0x201"},
-    {"schematic_name": "MCU_DIR", "data_type": "boolean", "id": "0x207", "bit_offset": 0},
-    {"schematic_name": "LV_12V_TELEM", "data_type": "float", "id": "0x202"},
-    {"schematic_name": "LV_5V_TELEM", "data_type": "float", "id": "0x203"},
-    {"schematic_name": "I_OUT_5V_TELEM", "data_type": "float", "id": "0x204"},
-    {"schematic_name": "I_IN_TELEM", "data_type": "float", "id": "0x205"},
-    {"schematic_name": "MC_SPEED_SIG", "data_type": "boolean", "id": "0x207", "bit_offset": 0}
-    {"schematic_name": "MCU_ECO", "data_type": "boolean", "id": "0x207", "bit_offset": 1},
-    {"schematic_name": "MCU_MC_ON", "data_type": "boolean", "id": "0x209", "bit_offset": 2},
-    {"schematic_name": "PRK_BRK_TELEM", "data_type": "boolean", "id": "0x207","bit_offset": 3},
-    {"schematic_name": "BRK_PRES_TELEM", "data_type": "float", "id": "0x206"}
-]
+logging.basicConfig(
+    level=logging.ERROR,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S"
+)
 
-def extract_bit(byte_value, bit_position):
-    """Extracts a boolean value from a specific bit position in a byte."""
-    return bool((byte_value >> bit_position) & 1)
+signal_definitions = {
+    "0x20A": {
+        "default": {
+            "name": "ACC_IN",
+            "data_type": "float"
+        }
+    },
+    "0x200": {
+        "default": {
+            "name": "MCU_ACC",
+            "data_type": "float"
+        }
+    },
+    "0x201": {
+        "default": {
+            "name": "MCU_RGN_BRK",
+            "data_type": "float"
+        }
+    },
+    "0x207": {
+        0: {
+            "name": "MCU_DIR",
+            "data_type": "boolean"
+        },
+        1: {
+            "name": "MCU_ECO",
+            "data_type": "boolean"
+        },
+        3: {
+            "name": "PRK_BRK_TELEM",
+            "data_type": "boolean"
+        }
+    },
+    "0x202": {
+        "default": {
+            "name": "LV_12V_TELEM",
+            "data_type": "float"
+        }
+    },
+    "0x203": {
+        "default": {
+            "name": "LV_5V_TELEM",
+            "data_type": "float"
+        }
+    },
+    "0x204": {
+        "default": {
+            "name": "I_OUT_5V_TELEM",
+            "data_type": "float"
+        }
+    },
+    "0x205": {
+        "default": {
+            "name": "I_IN_TELEM",
+            "data_type": "float"
+        }
+    },
+    "0x209": {
+        2: {
+            "name": "MCU_MC_ON",
+            "data_type": "boolean"
+        }
+    },
+    "0x206": {
+        "default": {
+            "name": "BRK_PRES_TELEM",
+            "data_type": "float"
+        }
+    }
+}
+
 
 class MyListener(can.Listener):
-    def on_message_receieved(self, message):
+    def on_message_received(self, message):
         message_data = {
             "id": hex(message.arbitration_id),
             "data": list(message.data),
             "timestamp": message.timestamp
         }
-        #loop through output_can_messages_types dictionary and add data types + schematic name to the message_data
-        for can_messages_type in output_can_messages_types:
-          if message_data["id"] == can_messages_type["id"]:
-            message_data["data_type"] = can_messages_type["data_type"]
-            message_data["schematic_name"] = can_messages_type["schematic_name"]
-            if can_messages_type["bit_offset"] != None:
-                message_data["bit_offset"] = can_messages_type['bit_offset']
-        assert message_data["data_type"] != None #assert error if id not found.
-        #handle different data types
-        if message_data["data_type"] == "float":
-            byte_array = bytes(message_data["data"]) 
-            float_value = struct.unpack("<f", byte_array)[0]
-            print(f"New Message: ID={message_data['id']},Name={message_data['schematic_name']} Value={float_value}, Time Stamp={message_data['timestamp']}")
-        elif message_data["data_type"] == "boolean":
-            messages_list = []
-            if len(message_data["data"]) > 0:
-                #get first byte
-                byte = message_data["data"][0]
-            #not done yet use extract bit data
+        
+        #loop through signal definitions to find can_id
+        can_id = hex(message.arbitration_id).upper()
+        if can_id not in signal_definitions:
+            logging.error(f"CAN ID {can_id} not found in signal definitions.")
+            return
+        signals = signal_definitions[can_id]
 
-#set up listener
-listener = MyListener()
+        #handle floats
+        if 'default' in signals:
+            signal = signals['default']
+            if signal["data_type"] == "float":
+            # Convert message.data to a bytes object if it's not already one.
+                byte_array = bytes(message.data)
+                if len(byte_array) < 4:
+                    logging.error(f"Insufficient data for float signal in CAN ID {can_id}.")
+                else:
+                    # Unpack the first 4 bytes as a little-endian float.
+                    float_value = struct.unpack("<f", byte_array[:4])[0]
+                    print(f"New Message: ID={message_data['id']},Name={signal['name']} Value={float_value}, Time Stamp={message_data['timestamp']}")
+        
+        #handle booleans
+        else:
+            for key in signals:
+                signal = signals[key]
+                if signal["data_type"] == "boolean":
+                    byte_array = bytes(message.data)
+                    if not byte_array:
+                        logging.error(f"No data available for boolean signal in CAN ID {can_id}.")
+                        continue
+                    bit_offset = key
+                    bool_value = bool((byte_array[0] >> bit_offset) & 1)
+                    print(f"New Message: ID={message_data['id']},Name={signals[key]['name']} Value={bool_value}, Time Stamp={message_data['timestamp']}")
+            
 
-#A Notifier runs in the background and listens for messages. When a new message arrives, it calls on_message in MyListener.
-notifier = can.Notifier(bus, [listener])
+if __name__ == "__main__":
+    # Create a CAN bus connection
+    bus = can.interface.Bus(channel="can0", bustype="socketcan")
+    
+    #set up listener
+    listener = MyListener()
 
-#create an infinite loop to keep listening to messages.
-try:
-    print("Listening for CAN messages... Press Ctrl+C to stop.")
-    while True:
-        time.sleep(1)
-        # Infinite loop to keep listening
-except KeyboardInterrupt:
-    print("Stopping CAN receiver.")
-    notifier.stop()
-    bus.shutdown()
-except AssertionError:
-    print('CAN ID not found')
+    #A Notifier runs in the background and listens for messages. When a new message arrives, it calls on_message in MyListener.
+    notifier = can.Notifier(bus, [listener])
+    
+    try:
+        #create an infinite loop to keep listening to messages.
+        print("Listening for CAN messages... Press Ctrl+C to stop.")
+        while True:
+            time.sleep(1)
+            # Infinite loop to keep listening
+    except KeyboardInterrupt:
+        print("Stopping CAN receiver.")
+        notifier.stop()
+        bus.shutdown()
+    except AssertionError:
+        print('CAN ID not found')
+
+
