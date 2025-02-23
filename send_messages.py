@@ -61,7 +61,7 @@ def transmit_can_message(channel, bustype="socketcan"):
     # Send message using bus.send()
     try:
         bus.send(msg)
-        print(f"Message sent successfully!\n Message Details: ID={msg.arbitration_id}, Data={msg.data_bytes}")
+        print(f"Message sent successfully!\n Message Details: ID={msg.arbitration_id}, Data={msg.data}")
     except can.CanError as e:
         print(f"Message failed to send: {e}")
 

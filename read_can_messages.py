@@ -111,6 +111,7 @@ class MyListener(can.Listener):
                 byte_array = bytes(message.data)
                 if len(byte_array) < 4:
                     logging.error(f"Insufficient data for float signal in CAN ID {can_id}.")
+                    return
                 else:
                     # Unpack the first 4 bytes as a little-endian float.
                     float_value = struct.unpack("<f", byte_array[:4])[0]
@@ -150,7 +151,5 @@ if __name__ == "__main__":
         print("Stopping CAN receiver.")
         notifier.stop()
         bus.shutdown()
-    except AssertionError:
-        print('CAN ID not found')
 
 
