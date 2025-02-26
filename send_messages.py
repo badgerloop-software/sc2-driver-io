@@ -70,5 +70,6 @@ def transmit_can_message(channel, bustype="socketcan"):
     # Cleanly shutdown the bus connection
     bus.shutdown()
 
+
 if __name__ == "__main__":
     transmit_can_message(args.channel)
