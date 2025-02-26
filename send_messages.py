@@ -12,7 +12,7 @@ args = parser.parse_args()
 logging.basicConfig(
     level=logging.ERROR,
     format="%(asctime)s - %(levelname)s - %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S"
+    datefmt="%Y-%m-%d %H:%M:%S",
 )
 
 
@@ -35,7 +35,9 @@ def transmit_can_message(channel, bustype="socketcan"):
         return
 
     # Prompt for data bytes input (as hex values) accepts users inputs as data.
-    data_input = input("Enter data bytes as hex values separated by spaces (e.g. '11 22 33 44'): ").strip()
+    data_input = input(
+        "Enter data bytes as hex values separated by spaces (e.g. '11 22 33 44'): "
+    ).strip()
     try:
         data_bytes = []
         for byte_str in data_input.split():
@@ -53,20 +55,21 @@ def transmit_can_message(channel, bustype="socketcan"):
 
     # Create the CAN message
     msg = can.Message(
-        arbitration_id=arbitration_id,
-        data=data_bytes,
-        is_extended_id=False
+        arbitration_id=arbitration_id, data=data_bytes, is_extended_id=False
     )
 
     # Send message using bus.send()
     try:
         bus.send(msg)
-        print(f"Message sent successfully!\n Message Details: ID={msg.arbitration_id}, Data={msg.data}")
+        print(
+            f"Message sent successfully!\n Message Details: ID={msg.arbitration_id}, Data={msg.data}"
+        )
     except can.CanError as e:
         print(f"Message failed to send: {e}")
 
     # Cleanly shutdown the bus connection
     bus.shutdown()
+
 
 if __name__ == "__main__":
     transmit_can_message(args.channel)
