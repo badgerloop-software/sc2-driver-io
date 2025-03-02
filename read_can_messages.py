@@ -12,6 +12,7 @@ Message structure:
 .timestamp: the timestamp of the CAN message
 """
 
+
 logging.basicConfig(
     level=logging.ERROR,
     format="%(asctime)s - %(levelname)s - %(message)s",
@@ -34,6 +35,29 @@ signal_definitions = {
     "0x209": {2: {"name": "MCU_MC_ON", "data_type": "boolean"}},
     "0x206": {"default": {"name": "BRK_PRES_TELEM", "data_type": "float"}},
 }
+
+
+def preprocess_data_format(format: dict) -> dict:
+    """
+    Parse data format and return in a more friendly format for  CAN consumption:
+    <CAN ID>: {
+        <offset>: [<info>],
+        ...
+    },
+    ...
+    """
+    processed = {}
+    for s in format.items():
+        # Get the arbitration ID and offset
+        id = s.keys()[-2]
+        offset = s.keys()[-1]
+        # Drop the ID and offset
+        s = s[:-2]
+        # Add/Update the message data in the processed data format
+        p = processed.get(id, {})
+        p[offset] = s
+        processed[id] = p
+    return processed
 
 
 class MyListener(can.Listener):
@@ -112,3 +136,4 @@ if __name__ == "__main__":
         print("Stopping CAN receiver.")
         notifier.stop()
         bus.shutdown()
+    
