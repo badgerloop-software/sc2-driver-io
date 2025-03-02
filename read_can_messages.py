@@ -4,6 +4,8 @@ import time
 import logging
 from send_messages import transmit_can_message
 import argparse
+from typing import List, Dict, Any
+from dataclasses import dataclass, asdict
 
 """
 Message structure: 
@@ -11,6 +13,17 @@ Message structure:
 .data: the body content of the CAN message
 .timestamp: the timestamp of the CAN message
 """
+
+
+@dataclass
+class SignalInfo:
+    name: str
+    bytes: int
+    type: str
+    units: str
+    nominal_min: int
+    nominal_max: int
+    subsystem: str
 
 
 logging.basicConfig(
@@ -37,26 +50,30 @@ signal_definitions = {
 }
 
 
-def preprocess_data_format(format: dict) -> dict:
+def preprocess_data_format(format: Dict[str, List[Any]]) -> Dict[int, Dict[int, Any]]:
     """
     Parse data format and return in a more friendly format for  CAN consumption:
     <CAN ID>: {
-        <offset>: [<info>],
+        <offset>: {
+            <category 1>: ...
+            ...
+        }
         ...
     },
     ...
     """
     processed = {}
-    for s in format.items():
+    for key, s in format.items():
         # Get the arbitration ID and offset
-        id = s.keys()[-2]
-        offset = s.keys()[-1]
+        id = s[-2]
+        offset = s[-1]
         # Drop the ID and offset
         s = s[:-2]
         # Add/Update the message data in the processed data format
-        p = processed.get(id, {})
-        p[offset] = s
-        processed[id] = p
+        p = processed.setdefault(id, {})
+        categories = SignalInfo(key, s[0], s[1], s[2], s[3], s[4], s[5])
+        p[offset] = asdict(categories)
+
     return processed
 
 
@@ -136,4 +153,3 @@ if __name__ == "__main__":
         print("Stopping CAN receiver.")
         notifier.stop()
         bus.shutdown()
-    
