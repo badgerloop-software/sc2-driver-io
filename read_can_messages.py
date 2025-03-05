@@ -50,7 +50,7 @@ signal_definitions = {
 }
 
 
-def preprocess_data_format(format: Dict[str, List[Any]]) -> Dict[int, Dict[int, Any]]:
+def preprocess_data_format(format: Dict[str, List[Any]]) -> Dict[str, Dict[int, Any]]:
     """
     Parse data format and return in a more friendly format for  CAN consumption:
     <CAN ID>: {
@@ -65,8 +65,10 @@ def preprocess_data_format(format: Dict[str, List[Any]]) -> Dict[int, Dict[int, 
     processed = {}
     for key, s in format.items():
         # Get the arbitration ID and offset
-        id = s[-2]
+        id = int(s[-2], base=16)
         offset = s[-1]
+        print(type(id))
+        print(type(offset))
         # Drop the ID and offset
         s = s[:-2]
         # Add/Update the message data in the processed data format
