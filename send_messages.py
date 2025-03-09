@@ -3,18 +3,6 @@ import can
 import argparse
 import logging
 
-# Allow user to input CAN channel
-parser = argparse.ArgumentParser(description="Specify the CAN channel.")
-# Define a positional argument for channel
-parser.add_argument("channel", type=str, help="CAN channel (e.g., can0, vcan0)")
-args = parser.parse_args()
-# add logging
-logging.basicConfig(
-    level=logging.ERROR,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-)
-
 
 def transmit_can_message(channel, bustype="socketcan"):
     """
@@ -44,7 +32,7 @@ def transmit_can_message(channel, bustype="socketcan"):
             # Convert each input to an integer (assumed hex)
             data_byte = int(byte_str, 16)
             if not (0 <= data_byte <= 255):
-                print(f"Byte out of range (0-255): {data_byte}")
+                logging.debug(f"Byte out of range (0-255): {data_byte}")
                 bus.shutdown()
                 return
             data_bytes.append(data_byte)
@@ -61,15 +49,26 @@ def transmit_can_message(channel, bustype="socketcan"):
     # Send message using bus.send()
     try:
         bus.send(msg)
-        print(
+        logging.debug(
             f"Message sent successfully!\n Message Details: ID={msg.arbitration_id}, Data={msg.data}"
         )
     except can.CanError as e:
-        print(f"Message failed to send: {e}")
+        logging.error(f"Message failed to send: {e}")
 
     # Cleanly shutdown the bus connection
     bus.shutdown()
 
 
 if __name__ == "__main__":
+    # Allow user to input CAN channel
+    parser = argparse.ArgumentParser(description="Specify the CAN channel.")
+    # Define a positional argument for channel
+    parser.add_argument("channel", type=str, help="CAN channel (e.g., can0, vcan0)")
+    args = parser.parse_args()
+    # add logging
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
     transmit_can_message(args.channel)

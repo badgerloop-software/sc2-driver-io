@@ -6,6 +6,7 @@ from send_messages import transmit_can_message
 import argparse
 from typing import List, Dict, Any
 from dataclasses import dataclass, asdict
+import json
 
 """
 Message structure: 
@@ -27,7 +28,7 @@ class SignalInfo:
 
 
 logging.basicConfig(
-    level=logging.ERROR,
+    level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
 )
@@ -67,13 +68,19 @@ def preprocess_data_format(format: Dict[str, List[Any]]) -> Dict[str, Dict[int, 
         # Get the arbitration ID and offset
         id = int(s[-2], base=16)
         offset = s[-1]
-        print(type(id))
-        print(type(offset))
         # Drop the ID and offset
         s = s[:-2]
         # Add/Update the message data in the processed data format
         p = processed.setdefault(id, {})
-        categories = SignalInfo(key, s[0], s[1], s[2], s[3], s[4], s[5])
+        num_bytes = s[0]
+        data_type = s[1]
+        units = s[2]
+        nominal_min = s[3]
+        nominal_max = s[4]
+        subsystem = s[5]
+        categories = SignalInfo(
+            key, num_bytes, data_type, units, nominal_min, nominal_max, subsystem
+        )
         p[offset] = asdict(categories)
 
     return processed
@@ -93,13 +100,12 @@ class MyListener(can.Listener):
             logging.error(f"CAN ID {can_id} not found in signal definitions.")
             return
         signals = signal_definitions[can_id]
+        byte_array = bytes(message.data)
 
-        # handle floats
-        if "default" in signals:
-            signal = signals["default"]
-            if signal["data_type"] == "float":
-                # Convert message.data to a bytes object if it's not already one.
-                byte_array = bytes(message.data)
+        for offset, signals in signals.items():
+            data_type = signals.get("data_type")
+            signal_name = signals.get("keys")
+            if data_type == "float":
                 if len(byte_array) < 4:
                     logging.error(
                         f"Insufficient data for float signal in CAN ID {can_id}."
@@ -108,26 +114,14 @@ class MyListener(can.Listener):
                 else:
                     # Unpack the first 4 bytes as a little-endian float.
                     float_value = struct.unpack("<f", byte_array[:4])[0]
-                    print(
-                        f"New Message: ID={message_data['id']},Name={signal['name']} Value={float_value}, Time Stamp={message_data['timestamp']}"
+                    logging.debug(
+                        f"New Message: ID={message_data['id']},Name={signal_name} Value={float_value}, Time Stamp={message_data['timestamp']}"
                     )
-
-        # handle booleans
-        else:
-            for key in signals:
-                signal = signals[key]
-                if signal["data_type"] == "boolean":
-                    byte_array = bytes(message.data)
-                    if not byte_array:
-                        logging.error(
-                            f"No data available for boolean signal in CAN ID {can_id}."
-                        )
-                        continue
-                    bit_offset = key
-                    bool_value = bool((byte_array[0] >> bit_offset) & 1)
-                    print(
-                        f"New Message: ID={message_data['id']},Name={signals[key]['name']} Value={bool_value}, Time Stamp={message_data['timestamp']}"
-                    )
+            elif data_type == "boolean":
+                bool_value = bool((byte_array[0] >> offset) & 1)
+                print(
+                    f"New Message: ID={message_data['id']},Name={signal_name} Value={bool_value}, Time Stamp={message_data['timestamp']}"
+                )
 
 
 if __name__ == "__main__":
@@ -139,6 +133,11 @@ if __name__ == "__main__":
 
     # A Notifier runs in the background and listens for messages. When a new message arrives, it calls on_message in MyListener.
     notifier = can.Notifier(bus, [listener])
+
+    with open("sc1-data-format/format.json", "r") as file:
+        data = json.load(file)
+
+    data_format = preprocess_data_format(data)
 
     try:
         # create an infinite loop to keep listening to messages.
