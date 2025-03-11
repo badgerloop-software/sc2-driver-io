@@ -33,23 +33,6 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 
-signal_definitions = {
-    "0x20A": {"default": {"name": "ACC_IN", "data_type": "float"}},
-    "0x200": {"default": {"name": "MCU_ACC", "data_type": "float"}},
-    "0x201": {"default": {"name": "MCU_RGN_BRK", "data_type": "float"}},
-    "0x207": {
-        0: {"name": "MCU_DIR", "data_type": "boolean"},
-        1: {"name": "MCU_ECO", "data_type": "boolean"},
-        3: {"name": "PRK_BRK_TELEM", "data_type": "boolean"},
-    },
-    "0x202": {"default": {"name": "LV_12V_TELEM", "data_type": "float"}},
-    "0x203": {"default": {"name": "LV_5V_TELEM", "data_type": "float"}},
-    "0x204": {"default": {"name": "I_OUT_5V_TELEM", "data_type": "float"}},
-    "0x205": {"default": {"name": "I_IN_TELEM", "data_type": "float"}},
-    "0x209": {2: {"name": "MCU_MC_ON", "data_type": "boolean"}},
-    "0x206": {"default": {"name": "BRK_PRES_TELEM", "data_type": "float"}},
-}
-
 
 def preprocess_data_format(format: Dict[str, List[Any]]) -> Dict[str, Dict[int, Any]]:
     """
@@ -86,6 +69,12 @@ def preprocess_data_format(format: Dict[str, List[Any]]) -> Dict[str, Dict[int, 
     return processed
 
 
+with open("sc1-data-format/format.json", "r") as file:
+    data = json.load(file)
+
+signal_definitions = preprocess_data_format(data)
+
+
 class MyListener(can.Listener):
     def on_message_received(self, message):
         message_data = {
@@ -119,7 +108,7 @@ class MyListener(can.Listener):
                     )
             elif data_type == "boolean":
                 bool_value = bool((byte_array[0] >> offset) & 1)
-                print(
+                logging.debug(
                     f"New Message: ID={message_data['id']},Name={signal_name} Value={bool_value}, Time Stamp={message_data['timestamp']}"
                 )
 
@@ -133,11 +122,6 @@ if __name__ == "__main__":
 
     # A Notifier runs in the background and listens for messages. When a new message arrives, it calls on_message in MyListener.
     notifier = can.Notifier(bus, [listener])
-
-    with open("sc1-data-format/format.json", "r") as file:
-        data = json.load(file)
-
-    data_format = preprocess_data_format(data)
 
     try:
         # create an infinite loop to keep listening to messages.
