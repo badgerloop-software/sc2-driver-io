@@ -66,12 +66,7 @@ signal_definitions = preprocess_data_format(data)
 
 class MyListener(can.Listener):
     def on_message_received(self, message):
-        message_data = {
-            "id": message.arbitration_id,
-            "data": list(message.data),
-            "timestamp": message.timestamp,
-        }
-        self.parse_data(message_data)
+        self.parse_data(message)
 
     def parse_data(self, message_data):
         # loop through signal definitions to find can_id
@@ -93,7 +88,9 @@ class MyListener(can.Listener):
                     logging.error(
                         f"Insufficient data for float signal in CAN ID {can_id:0x}."
                     )
-                    return
+                    return {
+                        "debug message": f"Insufficient data for float signal in CAN ID {can_id}."
+                    }
                 else:
                     # Unpack the first 4 bytes as a little-endian float.
                     float_value = struct.unpack("<f", byte_array[:4])[0]
