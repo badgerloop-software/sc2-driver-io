@@ -86,7 +86,7 @@ class MyListener(can.Listener):
         # loop through signal definitions to find can_id
         can_id = message_data["id"]
         if can_id not in signal_definitions:
-            logging.error(f"CAN ID {can_id} not found in signal definitions.")
+            logging.error(f"CAN ID {can_id:0x} not found in signal definitions.")
             return
         signals = signal_definitions[can_id]
         byte_array = bytes(message.data)
@@ -97,19 +97,19 @@ class MyListener(can.Listener):
             if data_type == "float":
                 if len(byte_array) < 4:
                     logging.error(
-                        f"Insufficient data for float signal in CAN ID {can_id}."
+                        f"Insufficient data for float signal in CAN ID {can_id:0x}."
                     )
                     return
                 else:
                     # Unpack the first 4 bytes as a little-endian float.
                     float_value = struct.unpack("<f", byte_array[:4])[0]
                     logging.debug(
-                        f"New Message: ID={message_data['id']},Name={signal_name} Value={float_value}, Time Stamp={message_data['timestamp']}"
+                        f"New Message: ID={can_id:0x},Name={signal_name} Value={float_value}, Time Stamp={message_data['timestamp']}"
                     )
             elif data_type == "boolean":
                 bool_value = bool((byte_array[0] >> offset) & 1)
                 logging.debug(
-                    f"New Message: ID={message_data['id']},Name={signal_name} Value={bool_value}, Time Stamp={message_data['timestamp']}"
+                    f"New Message: ID={can_id:0x},Name={signal_name} Value={bool_value}, Time Stamp={message_data['timestamp']}"
                 )
 
 
