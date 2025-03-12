@@ -49,22 +49,22 @@ def preprocess_data_format(format: Dict[str, List[Any]]) -> Dict[str, Dict[int, 
     processed = {}
     for key, s in format.items():
         # Get the arbitration ID and offset
-        id = int(s[-2], base=16)
+        can_id = int(s[-2], base=16)
         offset = s[-1]
         # Drop the ID and offset
         s = s[:-2]
         # Add/Update the message data in the processed data format
-        p = processed.setdefault(id, {})
+        p = processed.setdefault(can_id, {})
         num_bytes = s[0]
         data_type = s[1]
         units = s[2]
         nominal_min = s[3]
         nominal_max = s[4]
         subsystem = s[5]
-        categories = SignalInfo(
+        signal_info = SignalInfo(
             key, num_bytes, data_type, units, nominal_min, nominal_max, subsystem
         )
-        p[offset] = asdict(categories)
+        p[offset] = signal_info
 
     return processed
 
@@ -91,9 +91,12 @@ class MyListener(can.Listener):
         signals = signal_definitions[can_id]
         byte_array = bytes(message.data)
 
-        for offset, signals in signals.items():
-            data_type = signals.get("data_type")
-            signal_name = signals.get("keys")
+        for offset, signals_info in signals.items():
+            logging.debug(f"Processing signal at offset {offset} for CAN ID {can_id:0x}")
+            print(offset)
+            print(signals_info)
+            data_type = signals_info.type
+            signal_name = signals_info.name
             if data_type == "float":
                 if len(byte_array) < 4:
                     logging.error(
@@ -130,7 +133,7 @@ if __name__ == "__main__":
         # Define a positional argument for channel
         parser.add_argument("channel", type=str, help="CAN channel (e.g., can0, vcan0)")
         args = parser.parse_args()
-        transmit_can_message(args.channel)
+        transmit_can_message()
         while True:
             time.sleep(1)
             # Infinite loop to keep listening

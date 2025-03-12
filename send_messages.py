@@ -4,7 +4,7 @@ import argparse
 import logging
 
 
-def transmit_can_message(channel, bustype="socketcan"):
+def transmit_can_message(channel="can0", bustype="socketcan"):
     """
     Initializes the CAN bus, prompts the user for message parameters,
     and transmits the CAN message.
