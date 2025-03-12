@@ -78,13 +78,13 @@ signal_definitions = preprocess_data_format(data)
 class MyListener(can.Listener):
     def on_message_received(self, message):
         message_data = {
-            "id": hex(message.arbitration_id),
+            "id": message.arbitration_id,
             "data": list(message.data),
             "timestamp": message.timestamp,
         }
 
         # loop through signal definitions to find can_id
-        can_id = hex(message.arbitration_id).lower()
+        can_id = message_data["id"]
         if can_id not in signal_definitions:
             logging.error(f"CAN ID {can_id} not found in signal definitions.")
             return
