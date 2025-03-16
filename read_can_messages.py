@@ -88,9 +88,6 @@ class MyListener(can.Listener):
                     logging.error(
                         f"Insufficient data for float signal in CAN ID {can_id:0x}."
                     )
-                    return {
-                        "debug message": f"Insufficient data for float signal in CAN ID {can_id}."
-                    }
                 else:
                     # Unpack the first 4 bytes as a little-endian float.
                     float_value = struct.unpack("<f", byte_array[:4])[0]
