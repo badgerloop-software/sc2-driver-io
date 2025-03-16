@@ -5,8 +5,8 @@ import logging
 from send_messages import transmit_can_message
 import argparse
 from typing import List, Dict, Any
-from dataclasses import dataclass, asdict
 import json
+from dataclasses import SignalInfo, ParsedData
 
 """
 Message structure: 
@@ -14,17 +14,6 @@ Message structure:
 .data: the body content of the CAN message
 .timestamp: the timestamp of the CAN message
 """
-
-
-@dataclass
-class SignalInfo:
-    name: str
-    bytes: int
-    type: str
-    units: str
-    nominal_min: int
-    nominal_max: int
-    subsystem: str
 
 
 logging.basicConfig(
@@ -82,19 +71,21 @@ class MyListener(can.Listener):
             "data": list(message.data),
             "timestamp": message.timestamp,
         }
+        self.parse_data(message_data)
 
+    def parse_data(self, message_data):
         # loop through signal definitions to find can_id
         can_id = message_data["id"]
         if can_id not in signal_definitions:
             logging.error(f"CAN ID {can_id:0x} not found in signal definitions.")
-            return
+            return None
         signals = signal_definitions[can_id]
-        byte_array = bytes(message.data)
+        byte_array = bytes(message_data["data"])
 
         for offset, signals_info in signals.items():
-            logging.debug(f"Processing signal at offset {offset} for CAN ID {can_id:0x}")
-            print(offset)
-            print(signals_info)
+            logging.debug(
+                f"Processing signal at offset {offset} for CAN ID {can_id:0x}"
+            )
             data_type = signals_info.type
             signal_name = signals_info.name
             if data_type == "float":
@@ -109,10 +100,17 @@ class MyListener(can.Listener):
                     logging.debug(
                         f"New Message: ID={can_id:0x},Name={signal_name} Value={float_value}, Time Stamp={message_data['timestamp']}"
                     )
+                    return ParsedData(
+                        can_id, signal_name, float_value, message_data["timestamp"]
+                    )
+
             elif data_type == "boolean":
                 bool_value = bool((byte_array[0] >> offset) & 1)
                 logging.debug(
                     f"New Message: ID={can_id:0x},Name={signal_name} Value={bool_value}, Time Stamp={message_data['timestamp']}"
+                )
+                return ParsedData(
+                    can_id, signal_name, bool_value, message_data["timestamp"]
                 )
 
 
