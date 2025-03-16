@@ -2,6 +2,14 @@ import asyncio
 import websockets
 import can
 import json
+from read_can_messages import MyListener
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
 
 # why websockets? websockets allow the server to push updates to client in real
 # time as supposed to HTTP requests, which require a client to repeatedly poll
@@ -13,21 +21,32 @@ clients = set()
 # Setup CAN Bus Interface
 bus = can.interface.Bus(channel="can0", bustype="socketcan")
 
-# Load CAN data format from a JSON file
-with open("sc1-data-format/format.json", "r") as file:
-    data_format = json.load(file)
 
+class WebSocketsListener(MyListener):
+    def __init__(self, loop, send_callback):
+        """
+        param loop: Reference to the asyncio event loop.
+        param send_callback: function that broadcasts messages to connected WebSocket clients.
+        """
+        self.loop = loop
+        self.send_callback = send_callback
 
-def preprocess_data_format(data):
-    """
-    preprocess data here
-    """
-    return data  # Just return the loaded JSON for now
+    def on_message_received(self, message):
+        message_data = {
+            "id": message.arbitration_id,
+            "data": message.data,  # bytes object
+            "timestamp": message.timestamp,
+        }
+        # Parse the message using parse_data, if cannot parse (data/canID is invalid), parsed is None
+        parsed = self.parse_data(message_data)
+        if parsed:
+            # Convert the parsed data into JSON.
+            json_data = json.dumps(parsed.__dict__)
+            # Schedule the send_callback coroutine on the event loop.
+            asyncio.run_coroutine_threadsafe(self.send_callback(json_data), self.loop)
 
 
 async def handle_connection(websocket, path):
-
-    print("Client connected")
     clients.add(websocket)  # Add client to the set of active connections
 
     try:
@@ -47,33 +66,14 @@ async def send_to_clients(message: str):
         await asyncio.wait([client.send(message) for client in clients])
 
 
-async def read_can_messages():
-
-    # reads CAN Hat messages and sends them to driver dashboard
-    while True:
-        message = bus.recv(timeout=0.1)  # Use timeout to prevent blocking execution
-        if message:
-            # Convert CAN message into a dictionary format
-            data = {
-                "id": message.arbitration_id,
-                "data": message.data.hex(),  # Convert binary data to hexadecimal string
-                "timestamp": message.timestamp,
-            }
-            print(f"Received CAN message: {data}")
-            await send_to_clients(json.dumps(data))  # Broadcast message in JSON format
-        await asyncio.sleep(0.01)  # Small delay to avoid excessive CPU usage
-
-
 async def start_server():
-
-    # start websocket server and CAN HAT Listener
-
     server = await websockets.serve(handle_connection, "0.0.0.0", 8765)
-    print("WebSocket server started on ws://0.0.0.0:8765")  # change this
+    loop = asyncio.get_running_loop()
+    # Create the WebsocketsListener, passing the loop and send_to_clients callback.
+    ws_listener = WebSocketsListener(loop, send_to_clients)
+    notifier = can.Notifier(bus, [ws_listener])
+    await asyncio.Future()  # Run indefinitely.
 
-    # Run both the WebSocket server and CAN message reader concurrently
-    await asyncio.gather(read_can_messages())
 
-
-# Run the WebSocket server and CAN listener
-asyncio.run(start_server())
+if __name__ == "__main__":
+    asyncio.run(start_server())
