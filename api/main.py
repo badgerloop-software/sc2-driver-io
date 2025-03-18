@@ -59,7 +59,6 @@ async def handle_connection(websocket, path):
 
 
 async def send_to_clients(message: str):
-
     # broad cast message to engineering dashboard
     if clients:
         # Use asyncio.wait to ensure all clients receive the message concurrently
