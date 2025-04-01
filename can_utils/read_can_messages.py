@@ -76,8 +76,9 @@ class MyListener(can.Listener):
         self.parse_data(message)
 
     def parse_data(self, message_data):
-        # loop through signal definitions to find can_id
+        # get can_id
         can_id = message_data["id"]
+        # loop to find can_id
         if can_id not in signal_definitions:
             logging.error(f"CAN ID {can_id:0x} not found in signal definitions.")
             return None
@@ -128,7 +129,7 @@ if __name__ == "__main__":
 
     try:
         # create an infinite loop to keep listening to messages.
-        print("Listening for CAN messages... Press Ctrl+C to stop.")
+        logging.debug("Listening for CAN messages... Press Ctrl+C to stop.")
         parser = argparse.ArgumentParser(description="Specify the CAN channel.")
         # Define a positional argument for channel
         parser.add_argument("channel", type=str, help="CAN channel (e.g., can0, vcan0)")
@@ -138,6 +139,6 @@ if __name__ == "__main__":
             time.sleep(1)
             # Infinite loop to keep listening
     except KeyboardInterrupt:
-        print("Stopping CAN receiver.")
+        logging.debug("Stopping CAN receiver.")
         notifier.stop()
         bus.shutdown()
