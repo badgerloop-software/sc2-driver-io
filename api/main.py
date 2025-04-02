@@ -2,7 +2,7 @@ import asyncio
 import websockets
 import can
 import json
-from read_can_messages import MyListener
+from can_utils.read_can_messages import MyListener
 import logging
 
 logging.basicConfig(

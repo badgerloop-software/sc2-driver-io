@@ -2,11 +2,12 @@ import can
 import struct
 import time
 import logging
-from send_messages import transmit_can_message
+from can_utils.send_messages import transmit_can_message
 import argparse
 from typing import List, Dict, Any
 import json
-from dataclasses import SignalInfo, ParsedData
+from can_utils.data_classes import SignalInfo, ParsedData
+import os
 
 """
 Message structure: 
@@ -58,8 +59,14 @@ def preprocess_data_format(format: Dict[str, List[Any]]) -> Dict[str, Dict[int, 
     return processed
 
 
-with open("sc1-data-format/format.json", "r") as file:
-    data = json.load(file)
+base_dir = os.path.dirname(os.path.abspath(__file__))
+json_path = os.path.normpath(
+    os.path.join(base_dir, "..", "sc1-data-format", "format.json")
+)
+
+with open(json_path, "r") as f:
+    data = json.load(f)
+
 
 signal_definitions = preprocess_data_format(data)
 
