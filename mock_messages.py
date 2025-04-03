@@ -20,7 +20,7 @@ clients = set()
 # --- WebSocket Handler ---
 
 
-async def handle_connection(websocket, path):
+async def handle_connection(websocket):
     clients.add(websocket)
     logging.info("Client connected")
 
@@ -36,7 +36,9 @@ async def handle_connection(websocket, path):
 # --- Broadcast Helper ---
 async def send_to_clients(message: str):
     if clients:
-        await asyncio.wait([client.send(message) for client in clients])
+        await asyncio.wait(
+            [asyncio.create_task(client.send(message)) for client in clients]
+        )
 
 
 class MockListener:
@@ -87,4 +89,7 @@ async def start_server():
 # --- Main Entry Point ---
 
 if __name__ == "__main__":
-    asyncio.run(start_server())
+    try:
+        asyncio.run(start_server())
+    except KeyboardInterrupt:
+        print("Server stopped by user.")
