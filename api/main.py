@@ -23,13 +23,13 @@ bus = can.interface.Bus(channel="can0", bustype="socketcan")
 
 
 class WebSocketsListener(MyListener):
-    def __init__(self, loop, send_callback):
+    def __init__(self, loop, send_to_clients):
         """
         param loop: Reference to the asyncio event loop.
-        param send_callback: function that broadcasts messages to connected WebSocket clients.
+        param send_to_clients: function that broadcasts messages to connected WebSocket clients.
         """
         self.loop = loop
-        self.send_callback = send_callback
+        self.send_to_clients = send_to_clients
 
     def on_message_received(self, message):
         message_data = {
@@ -43,13 +43,11 @@ class WebSocketsListener(MyListener):
             # Convert the parsed data into JSON.
             json_data = json.dumps(parsed.__dict__)
             # Schedule the send_callback coroutine on the event loop.
-            asyncio.run_coroutine_threadsafe(self.send_callback(json_data), self.loop)
+            asyncio.run_coroutine_threadsafe(self.send_to_clients(json_data), self.loop)
 
 
 # --- WebSocket Handler ---
-
-
-async def handle_connection(websocket):
+async def handle_connection(websocket, path):
     clients.add(websocket)
     logging.info("Client connected")
 
