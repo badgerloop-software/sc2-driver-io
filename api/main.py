@@ -46,23 +46,28 @@ class WebSocketsListener(MyListener):
             asyncio.run_coroutine_threadsafe(self.send_callback(json_data), self.loop)
 
 
-async def handle_connection(websocket, path):
-    clients.add(websocket)  # Add client to the set of active connections
+# --- WebSocket Handler ---
+
+
+async def handle_connection(websocket):
+    clients.add(websocket)
+    logging.info("Client connected")
 
     try:
         async for message in websocket:
-            print(f"Received from client: {message}")  # Log incoming messages
+            logging.info(f"Received from client: {message}")
     except websockets.exceptions.ConnectionClosed:
-        print("Client disconnected")
+        logging.info("Client disconnected")
     finally:
-        clients.remove(websocket)  # Remove client when disconnected
+        clients.remove(websocket)
 
 
+# --- Broadcast Helper ---
 async def send_to_clients(message: str):
-    # broad cast message to engineering dashboard
     if clients:
-        # Use asyncio.wait to ensure all clients receive the message concurrently
-        await asyncio.wait([client.send(message) for client in clients])
+        await asyncio.wait(
+            [asyncio.create_task(client.send(message)) for client in clients]
+        )
 
 
 async def start_server():
