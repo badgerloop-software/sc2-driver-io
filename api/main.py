@@ -42,12 +42,12 @@ class WebSocketsListener(MyListener):
         if parsed:
             # Convert the parsed data into JSON.
             json_data = json.dumps(parsed.__dict__)
-            # Schedule the send_callback coroutine on the event loop.
-            asyncio.run_coroutine_threadsafe(self.send_to_clients(json_data), self.loop)
+            # Send callback
+            asyncio.create_task(self.send_to_clients(json_data), self.loop)
 
 
 # --- WebSocket Handler ---
-async def handle_connection(websocket, path):
+async def handle_connection(websocket):
     clients.add(websocket)
     logging.info("Client connected")
 

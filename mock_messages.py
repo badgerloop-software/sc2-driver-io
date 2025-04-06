@@ -17,9 +17,8 @@ logging.basicConfig(
 # --- Connected Clients Set ---
 clients = set()
 
+
 # --- WebSocket Handler ---
-
-
 async def handle_connection(websocket):
     clients.add(websocket)
     logging.info("Client connected")
@@ -75,8 +74,6 @@ class MockListener:
 
 
 # --- Start Server ---
-
-
 async def start_server():
     await websockets.serve(handle_connection, "0.0.0.0", 8765)
     loop = asyncio.get_running_loop()
