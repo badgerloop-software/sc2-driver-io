@@ -43,7 +43,7 @@ class WebSocketsListener(MyListener):
             # Convert the parsed data into JSON.
             json_data = json.dumps(parsed.__dict__)
             # Send callback
-            asyncio.create_task(self.send_to_clients(json_data), self.loop)
+            self.loop.create_task(self.send_to_clients(json_data))
 
 
 # --- WebSocket Handler ---
