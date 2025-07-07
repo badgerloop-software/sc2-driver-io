@@ -25,12 +25,12 @@ def transmit_can_message(channel, bustype="socketcan"):
     bus = can.interface.Bus(channel=channel, bustype=bustype)
 
     # Prompt for the arbitration ID (CAN ID), this gets the arbitration id from the user and validates it
-    arb_id_input = input("Enter 3-digit hex message id (e.g. 0x123): ").strip()
+    arb_id_input = input("Enter 3-digit hex message ID (e.g. 0x123): ").strip()
     try:
         # Accept input as hex if it starts with 0x, otherwise assume hex too
         arbitration_id = int(arb_id_input, 16)
     except ValueError:
-        logging.error("Invalid data byte input.")
+        logging.error("Invalid message ID input.")
         bus.shutdown()
         return
 

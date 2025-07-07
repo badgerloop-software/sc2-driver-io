@@ -45,7 +45,7 @@ class MyListener(can.Listener):
         }
 
         # loop through signal definitions to find can_id
-        can_id = hex(message.arbitration_id).upper()
+        can_id = hex(message.arbitration_id).lower()
         if can_id not in signal_definitions:
             logging.error(f"CAN ID {can_id} not found in signal definitions.")
             return
