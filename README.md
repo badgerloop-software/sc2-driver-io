@@ -56,6 +56,20 @@ Create virtual environment using:
 - Windows: `virtualenv -p python3 .env`
 - Linux/MacOS: `python3 -m venv .env`
 
+## Setup Instructions
+
+### 1. Initialize Submodules
+This project uses git submodules. After cloning, initialize them with:
+```bash
+git submodule update --init --recursive
+```
+
+### 2. Install Dependencies
+Install the required Python libraries:
+```bash
+pip install -r requirements.txt
+```
+
 ### 3. Activate Virtual Environment
 Activate the virtual environment you created:
 
