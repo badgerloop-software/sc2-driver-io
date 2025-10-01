@@ -53,8 +53,27 @@ git submodule update --init --recursive
 ### 2. Create Virtual Environment
 Create virtual environment using:
 
-- Windows: `virtualenv -p python3 .env`
-- Linux/MacOS: `python3 -m venv .env`
+```
+can-snooper/
+├── api/                           # WebSocket server for real-time CAN data
+│   ├── __init__.py
+│   └── main.py                    # WebSocket server with real CAN bus
+├── can_utils/                     # Utility modules for CAN operations
+│   ├── __init__.py
+│   ├── data_classes.py           # Data structures for CAN messages
+│   ├── read_can_messages.py      # Enhanced CAN message reader with parsing
+│   └── send_messages.py          # CAN message transmission utilities
+├── frontend/                      # React web dashboard
+│   ├── src/
+│   ├── package.json
+│   └── ...                       # React/Vite frontend files
+├── sc1-data-format/              # Git submodule for CAN signal definitions
+├── mock_messages.py              # WebSocket server with simulated CAN data
+├── read_can_messages.py          # Simple CAN message listener
+├── send_messages.py              # Simple CAN message sender
+├── requirements.txt              # Python dependencies
+└── README.md
+```
 
 ## Setup Instructions
 
@@ -64,11 +83,11 @@ This project uses git submodules. After cloning, initialize them with:
 git submodule update --init --recursive
 ```
 
-### 2. Install Dependencies
-Install the required Python libraries:
-```bash
-pip install -r requirements.txt
-```
+### 2. Create Virtual Environment
+Create virtual environment using:
+
+- Windows: `virtualenv -p python3 .env`
+- Linux/MacOS: `python3 -m venv .env`
 
 ### 3. Activate Virtual Environment
 Activate the virtual environment you created:
