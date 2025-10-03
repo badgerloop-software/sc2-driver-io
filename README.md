@@ -1,4 +1,4 @@
-# Solar Car 1 Driver IO Program
+# Solar Car 2 Driver IO Program
 
 ## Solar Car Dashboard
 
@@ -53,3 +53,48 @@ CMake is a more popular project make system, it allows you to edit the project w
    make
    ./solar-car-dashboard
    ```
+
+## Project Structure
+
+This section provides an overview of the key folders and their purposes in the Solar Car 1 Driver IO project.
+
+### Root Directory
+- **CMakeLists.txt**: Build configuration file for CMake, used to compile the project.
+- **main.cpp**: Main entry point of the Qt application, sets up the QML engine, loads the UI, and initializes the DataUnpacker.
+- **Config.cpp/h**: Singleton class for reading and managing configuration from `config.json`.
+- **config.json**: JSON file containing application configuration settings.
+
+### 3rdparty/
+Contains third-party libraries used in the project.
+- **rapidjson/**: Header-only JSON parsing library for C++.
+- **serial/**: Library for serial communication (serialib), used for interfacing with serial devices like GPS.
+
+### backend/
+Handles backend data processing and communication.
+- **backendProcesses.cpp/h**: Manages backend processes, including telemetry data handling via TCP, UDP, and SQL connections. Runs in a separate thread to process incoming data.
+- **dataFetcher.cpp/h**: Fetches data from network sources (TCP server), integrates GPS data, and manages data buffers.
+- **file_sync/**: Contains scripts for synchronizing files, likely for uploading telemetry data.
+- **telemetrylib/**: Library for telemetry operations, including TCP, UDP, SQL, and DTI (Data Transmission Interface) handling.
+
+### DataProcessor/
+Responsible for processing and unpacking telemetry data.
+- **dataUnpacker.cpp/h**: Core class that unpacks binary data into readable properties exposed to the QML UI, such as fan speed, timestamps, LED statuses, and shutdown circuit states.
+- **CMakeLists.txt**: Build configuration for the DataProcessor module.
+
+### ethernet_sim/
+Simulation tools for testing ethernet communication.
+- **main.py**: Python script that simulates telemetry data transmission over ethernet, using the data format from `sc1-data-format` and GPS datasets.
+- **gps_dataset/**: Sample GPS data files (CSV, GPX, JSON) used in simulations.
+
+### gps/
+GPS functionality module.
+- **gps.cpp/h**: Class for interfacing with GPS devices via serial communication, parsing NMEA data to extract latitude, longitude, and altitude.
+
+### sc1-data-format/
+Git submodule containing the data format definitions for telemetry packets. This folder is empty until the submodule is initialized (see cloning instructions above).
+
+### UI/
+User interface components built with Qt QML.
+- **Items/**: QML files defining UI components like Dashboard, Speed, Batteries, Blinkers, etc.
+- **Images/**: Image assets (PNG, SVG) for the dashboard, such as needles, icons, and backgrounds.
+- **fonts/**: Font files (Work Sans) used in the UI, with licensing information.
