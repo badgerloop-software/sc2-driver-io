@@ -56,42 +56,6 @@ git submodule update --init --recursive
 
 Create virtual environment using:
 
-```
-can-snooper/
-├── api/                           # WebSocket server for real-time CAN data
-│   ├── __init__.py
-│   └── main.py                    # WebSocket server with real CAN bus
-├── can_utils/                     # Utility modules for CAN operations
-│   ├── __init__.py
-│   ├── data_classes.py           # Data structures for CAN messages
-│   ├── read_can_messages.py      # Enhanced CAN message reader with parsing
-│   └── send_messages.py          # CAN message transmission utilities
-├── frontend/                      # React web dashboard
-│   ├── src/
-│   ├── package.json
-│   └── ...                       # React/Vite frontend files
-├── sc1-data-format/              # Git submodule for CAN signal definitions
-├── mock_messages.py              # WebSocket server with simulated CAN data
-├── read_can_messages.py          # Simple CAN message listener
-├── send_messages.py              # Simple CAN message sender
-├── requirements.txt              # Python dependencies
-└── README.md
-```
-
-## Setup Instructions
-
-### 1. Initialize Submodules
-
-This project uses git submodules. After cloning, initialize them with:
-
-```bash
-git submodule update --init --recursive
-```
-
-### 2. Create Virtual Environment
-
-Create virtual environment using:
-
 - Windows: `virtualenv -p python3 .env`
 - Linux/MacOS: `python3 -m venv .env`
 
@@ -114,7 +78,7 @@ pip install -r requirements.txt
 
 ### For CAN Message Listening
 
-#### Simple Console Listener
+#### Simple Console Listener (Utility Module)
 
 Listen to CAN messages and print decoded values to console:
 
@@ -136,9 +100,9 @@ python api/main.py
 
 - Listens on CAN bus `can0`
 - WebSocket server runs on `ws://localhost:8765`
-- Broadcasts parsed CAN messages as JSON to all connected clients
+- Broadcasts parsed CAN messages as JSON to all connected clients via Websocket server
 
-#### Mock Data Server (Development/Testing)
+#### Mock Data Server (Development/Testing Frontend)
 
 Start WebSocket server with simulated CAN data for testing:
 
@@ -150,7 +114,7 @@ python mock_messages.py
 - WebSocket server runs on `ws://localhost:8765`
 - Useful for frontend development without real CAN hardware
 
-### For CAN Message Sending
+### For CAN Message Sending (Utility Module)
 
 Send custom CAN messages interactively:
 
@@ -190,14 +154,6 @@ npm run dev
 
 - Frontend runs on `http://localhost:5173`
 - Connects to WebSocket server for real-time CAN data
-
-#### Build for Production
-
-Build the frontend for production:
-
-```bash
-npm run build
-```
 
 ## Common Use Cases
 
