@@ -45,12 +45,15 @@ can-snooper/
 ## Setup Instructions
 
 ### 1. Initialize Submodules
+
 This project uses git submodules. After cloning, initialize them with:
+
 ```bash
 git submodule update --init --recursive
 ```
 
 ### 2. Create Virtual Environment
+
 Create virtual environment using:
 
 ```
@@ -78,25 +81,31 @@ can-snooper/
 ## Setup Instructions
 
 ### 1. Initialize Submodules
+
 This project uses git submodules. After cloning, initialize them with:
+
 ```bash
 git submodule update --init --recursive
 ```
 
 ### 2. Create Virtual Environment
+
 Create virtual environment using:
 
 - Windows: `virtualenv -p python3 .env`
 - Linux/MacOS: `python3 -m venv .env`
 
 ### 3. Activate Virtual Environment
+
 Activate the virtual environment you created:
 
 - Windows: `.env\Scripts\activate`
 - Linux/MacOS: `source .env/bin/activate`
 
 ### 4. Install Dependencies
+
 Install the required Python libraries:
+
 ```bash
 pip install -r requirements.txt
 ```
@@ -106,28 +115,37 @@ pip install -r requirements.txt
 ### For CAN Message Listening
 
 #### Simple Console Listener
+
 Listen to CAN messages and print decoded values to console:
+
 ```bash
 python read_can_messages.py
 ```
+
 - Connects to `can0` by default
 - Displays decoded signal names and values
 - Press `Ctrl+C` to stop
 
 #### WebSocket Server (Real CAN Bus)
+
 Start WebSocket server that broadcasts real CAN data to connected clients:
+
 ```bash
 python api/main.py
 ```
+
 - Listens on CAN bus `can0`
 - WebSocket server runs on `ws://localhost:8765`
 - Broadcasts parsed CAN messages as JSON to all connected clients
 
 #### Mock Data Server (Development/Testing)
+
 Start WebSocket server with simulated CAN data for testing:
+
 ```bash
 python mock_messages.py
 ```
+
 - Generates fake CAN messages every 2 seconds
 - WebSocket server runs on `ws://localhost:8765`
 - Useful for frontend development without real CAN hardware
@@ -135,38 +153,48 @@ python mock_messages.py
 ### For CAN Message Sending
 
 Send custom CAN messages interactively:
+
 ```bash
 python send_messages.py <channel>
 ```
 
 Example:
+
 ```bash
 python send_messages.py can0
 ```
 
 The script will prompt you for:
+
 - **Message ID**: Enter hex ID (e.g., `0x123`)
 - **Data bytes**: Enter hex bytes separated by spaces (e.g., `11 22 33 44`)
 
 ### For Web Dashboard
 
 #### Setup Frontend
+
 Navigate to the frontend directory and install dependencies:
+
 ```bash
 cd frontend
 npm install
 ```
 
 #### Run Development Server
+
 Start the React development server:
+
 ```bash
 npm run dev
 ```
+
 - Frontend runs on `http://localhost:5173`
 - Connects to WebSocket server for real-time CAN data
 
 #### Build for Production
+
 Build the frontend for production:
+
 ```bash
 npm run build
 ```
