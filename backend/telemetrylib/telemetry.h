@@ -5,6 +5,8 @@
 #include <iostream>
 #include <QTcpServer>
 #include <vector>
+#include <QThreadPool>
+#include <QRunnable>
 #include "DTI.h"
 #include <QDebug>
 /**
@@ -27,6 +29,10 @@ public:
      * @param timestamp the time which the byte array is created
      */
     void sendData(QByteArray data, long long timestamp);
+    /*
+     * Send data synchronously (blocks until all channels have sent the data)
+     */
+    void sendDataSync(QByteArray data, long long timestamp);
     /* NVM
      * receive data from telemetry
      * @return data
@@ -42,5 +48,25 @@ private:
     std::vector<QByteArray> dataCache;
     std::atomic<int> commChannel = -1;
     std::vector <DTI*> comm;
+    QThreadPool* threadPool;
+};
+
+/**
+ * Runnable task for sending data through a specific communication channel
+ */
+class SendDataTask : public QRunnable {
+public:
+    SendDataTask(DTI* channel, QByteArray bytes, long long timestamp)
+        : channel(channel), bytes(bytes), timestamp(timestamp) {
+            setAutoDelete(true);
+        }
+
+    void run() override {
+        channel->sendData(data, timestamp);
+    }
+private:
+    DTI* channel;
+    QByteArray bytes;
+    long long timestamp;
 };
 #endif //TELEMETRYLIB_LIBRARY_H
