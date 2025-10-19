@@ -1,39 +1,64 @@
 //
 // Created by Mingcan Li on 1/22/23.
+// Modernized to remove Qt dependencies
 //
 
 #ifndef TELEMETRYLIB_DTI_H
 #define TELEMETRYLIB_DTI_H
 
-#include <QtCore>
-#include <QtNetwork>
+#include <vector>
+#include <functional>
+#include <cstdint>
 #include <unistd.h>
 
-class DTI : public QObject{
-    Q_OBJECT
-public:
-    /* nope
-     * Receive bytes via channel to be implemented
-     * @return bytes received
-     */
-    //virtual std::string receiveData() = 0;
-signals:
-    /**
-     * for notifying telemetry class to redo polling.
-     */
-    void connectionStatusChanged();
+// Network socket state enum (replacement for QAbstractSocket::SocketState)
+enum class SocketState {
+    UnconnectedState,
+    HostLookupState,
+    ConnectingState,
+    ConnectedState,
+    BoundState,
+    ListeningState,
+    ClosingState
+};
 
-public slots:
+// Data Telemetry Interface base class
+class DTI {
+public:
+    // Callback types for event notifications
+    using ConnectionStatusCallback = std::function<void()>;
+    
+    virtual ~DTI() = default;
+    
     /**
      * Send bytes via channel to be implemented, do not record data in this function.
-     * @param bytes literally.
+     * @param bytes data buffer to send
+     * @param timestamp when the data was created
      */
-
-    //if inheritance instance needs slots, add them here as a VIRTUAL function, otherwise there will be a stupid vtable error
-    virtual void sendData(QByteArray bytes, long long timestamp) = 0;
-    virtual void onNewConnection() {};
-    virtual void onSocketStateChanged(QAbstractSocket::SocketState state) {};
-    virtual void readReply() {};
+    virtual void sendData(const std::vector<uint8_t>& bytes, long long timestamp) = 0;
+    
+    /**
+     * Set callback for connection status changes
+     */
+    void setConnectionStatusCallback(ConnectionStatusCallback callback) {
+        connectionStatusCallback = callback;
+    }
+    
+    // Virtual methods for derived classes to override
+    virtual void onNewConnection() {}
+    virtual void onSocketStateChanged(SocketState state) {}
+    virtual void readReply() {}
+    
+protected:
+    // Helper method to notify connection status changes
+    void notifyConnectionStatusChanged() {
+        if (connectionStatusCallback) {
+            connectionStatusCallback();
+        }
+    }
+    
+private:
+    ConnectionStatusCallback connectionStatusCallback;
 };
 
 #endif //TELEMETRY

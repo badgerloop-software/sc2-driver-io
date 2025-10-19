@@ -1,15 +1,6 @@
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-
 cmake_minimum_required(VERSION 3.5)
-project(solar-car-dashboard)
+project(sc2-driver-io)
 
-# Find the required Qt packages
-find_package(QT NAMES Qt5 Qt6 COMPONENTS Core Quick)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Quick REQUIRED)
-
-message(----------QT-VERSION:${QT_VERSION_MAJOR}-----------)
 # Set C++ standard to C++20
 set(CMAKE_CXX_STANDARD 20)
 
@@ -41,16 +32,13 @@ set(HEADERS
         Config.h
         )
 
-# Add the resource files
-qt_add_resources(RESOURCES
-        UI/Items/qml.qrc
-        UI/Images/images.qrc
-        UI/fonts/fonts.qrc
-        )
-
 # Add the executable target
-add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS} ${RESOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
-# Link against the required Qt modules
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick)
+# Link against standard libraries
+# Note: pthread linking will be platform-specific
+if(UNIX)
+    target_link_libraries(${PROJECT_NAME} PRIVATE pthread)
+endif()
+
 target_include_directories(${PROJECT_NAME} PRIVATE ./)

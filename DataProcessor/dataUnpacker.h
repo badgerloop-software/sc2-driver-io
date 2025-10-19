@@ -1,13 +1,17 @@
 //
 // Created by Mingcan Li on 11/16/21.
+// Modernized to remove Qt dependencies
 //
 
 #ifndef DATAPROCESSOR_DATAUNPACKER_H
 #define DATAPROCESSOR_DATAUNPACKER_H
 
-#include <QObject>
-#include <QThread>
-#include <QMutex>
+#include <mutex>
+#include <thread>
+#include <functional>
+#include <vector>
+#include <string>
+#include <atomic>
 #include "backend/backendProcesses.h"
 #include "backend/dataFetcher.h"
 #include "3rdparty/rapidjson/document.h"
@@ -15,100 +19,114 @@
 
 using namespace rapidjson;
 
-class DataUnpacker : public QObject
+// Forward declaration for GPS data structure
+struct GPSData;
+
+class DataUnpacker
 {
-    Q_OBJECT
-
-    // Include only the properties that need to be displayed on the driver dashboard
-    // Qml didn't want to play nice with uint8_t on the pi, so now it's int
-    Q_PROPERTY(int fan_speed MEMBER fan_speed NOTIFY dataChanged);
-    Q_PROPERTY(int tstamp_hr MEMBER tstamp_hr NOTIFY dataChanged);
-    Q_PROPERTY(int tstamp_mn MEMBER tstamp_mn NOTIFY dataChanged);
-    Q_PROPERTY(int tstamp_sc MEMBER tstamp_sc NOTIFY dataChanged);
-    Q_PROPERTY(int tstamp_ms MEMBER tstamp_ms NOTIFY dataChanged);
-
-    Q_PROPERTY(bool l_turn_led_en MEMBER l_turn_led_en NOTIFY dataChanged);
-    Q_PROPERTY(bool r_turn_led_en MEMBER r_turn_led_en NOTIFY dataChanged);
-    Q_PROPERTY(bool hazards MEMBER hazards NOTIFY dataChanged);
-    Q_PROPERTY(bool headlights MEMBER headlights NOTIFY dataChanged);
-    Q_PROPERTY(bool mainIO_heartbeat MEMBER mainIO_heartbeat NOTIFY dataChanged);
-    Q_PROPERTY(bool eng_dash_commfail MEMBER eng_dash_commfail NOTIFY dataChanged);
-    Q_PROPERTY(bool crz_pwr_mode MEMBER crz_pwr_mode NOTIFY dataChanged)
-    Q_PROPERTY(bool crz_spd_mode MEMBER crz_spd_mode NOTIFY dataChanged)
-
-    // Shutdown circuit
-    Q_PROPERTY(bool driver_eStop MEMBER driver_eStop NOTIFY dataChanged);
-    Q_PROPERTY(bool external_eStop MEMBER external_eStop NOTIFY dataChanged);
-    Q_PROPERTY(bool crash MEMBER crash NOTIFY dataChanged);
-    Q_PROPERTY(bool door MEMBER door NOTIFY dataChanged);
-    Q_PROPERTY(bool mcu_check MEMBER mcu_check NOTIFY dataChanged);
-    Q_PROPERTY(bool isolation MEMBER isolation NOTIFY dataChanged);
-    Q_PROPERTY(bool discharge_enable MEMBER discharge_enable NOTIFY dataChanged);
-    Q_PROPERTY(bool low_contactor MEMBER low_contactor NOTIFY dataChanged);
-    Q_PROPERTY(bool bms_can_heartbeat MEMBER bms_can_heartbeat NOTIFY dataChanged);
-    Q_PROPERTY(bool voltage_failsafe MEMBER voltage_failsafe NOTIFY dataChanged);
-    Q_PROPERTY(bool current_failsafe MEMBER current_failsafe NOTIFY dataChanged);
-    Q_PROPERTY(bool input_power_supply_failsafe MEMBER input_power_supply_failsafe NOTIFY dataChanged);
-    Q_PROPERTY(bool relay_failsafe MEMBER relay_failsafe NOTIFY dataChanged);
-    Q_PROPERTY(bool cell_balancing_active MEMBER cell_balancing_active NOTIFY dataChanged);
-    Q_PROPERTY(bool charge_interlock_failsafe MEMBER charge_interlock_failsafe NOTIFY dataChanged);
-    Q_PROPERTY(bool thermistor_b_value_table_invalid MEMBER thermistor_b_value_table_invalid NOTIFY dataChanged);
-    Q_PROPERTY(bool charge_enable MEMBER charge_enable NOTIFY dataChanged);
-    Q_PROPERTY(bool bps_fault MEMBER bps_fault NOTIFY dataChanged);
-    Q_PROPERTY(bool use_dcdc MEMBER use_dcdc NOTIFY dataChanged);
-    Q_PROPERTY(bool supplemental_valid MEMBER supplemental_valid NOTIFY dataChanged);
-    Q_PROPERTY(bool mcu_hv_en MEMBER mcu_hv_en NOTIFY dataChanged);
-    Q_PROPERTY(bool mcu_stat_fdbk MEMBER mcu_stat_fdbk NOTIFY dataChanged);
-    Q_PROPERTY(bool parking_brake MEMBER parking_brake NOTIFY dataChanged);
-    Q_PROPERTY(bool eco MEMBER eco NOTIFY dataChanged);
-    Q_PROPERTY(bool main_telem MEMBER main_telem NOTIFY dataChanged);
-    Q_PROPERTY(int mc_status MEMBER mc_status NOTIFY dataChanged);
-    // Not in the data format, but shared with controls
-    Q_PROPERTY(bool restart_enable MEMBER restart_enable NOTIFY dataChanged);
-
-    Q_PROPERTY(float speed MEMBER speed NOTIFY dataChanged);
-    Q_PROPERTY(float accelerator_pedal MEMBER accelerator_pedal NOTIFY dataChanged);
-    Q_PROPERTY(float soc MEMBER soc NOTIFY dataChanged);
-    Q_PROPERTY(float mppt_current_out MEMBER mppt_current_out NOTIFY dataChanged);
-    Q_PROPERTY(float pack_voltage MEMBER pack_voltage NOTIFY dataChanged);
-    Q_PROPERTY(float pack_current MEMBER pack_current NOTIFY dataChanged);
-    Q_PROPERTY(float pack_temp MEMBER pack_temp NOTIFY dataChanged);
-    Q_PROPERTY(float bms_input_voltage MEMBER bms_input_voltage NOTIFY dataChanged);
-    Q_PROPERTY(float motor_temp MEMBER motor_temp NOTIFY dataChanged);
-    Q_PROPERTY(float motor_power MEMBER motor_power NOTIFY dataChanged);
-    Q_PROPERTY(float driverIO_temp MEMBER driverIO_temp NOTIFY dataChanged);
-    Q_PROPERTY(float mainIO_temp MEMBER mainIO_temp NOTIFY dataChanged);
-    Q_PROPERTY(float motor_controller_temp MEMBER motor_controller_temp NOTIFY dataChanged);
-    Q_PROPERTY(float cabin_temp MEMBER cabin_temp NOTIFY dataChanged);
-    Q_PROPERTY(float string1_temp MEMBER string1_temp NOTIFY dataChanged);
-    Q_PROPERTY(float string2_temp MEMBER string2_temp NOTIFY dataChanged);
-    Q_PROPERTY(float string3_temp MEMBER string3_temp NOTIFY dataChanged);
-    Q_PROPERTY(float crz_pwr_setpt MEMBER crz_pwr_setpt NOTIFY dataChanged);
-    Q_PROPERTY(float crz_spd_setpt MEMBER crz_spd_setpt NOTIFY dataChanged);
-    Q_PROPERTY(float supplemental_voltage MEMBER supplemental_voltage NOTIFY dataChanged);
-    Q_PROPERTY(float est_supplemental_soc MEMBER est_supplemental_soc NOTIFY dataChanged);
-    // NOTE: char data is displayed as its ASCII decimal value, not the character, so QString is used instead
-    Q_PROPERTY(QString state MEMBER state NOTIFY dataChanged);
-    Q_PROPERTY(float lat MEMBER lat NOTIFY dataChanged);
-    Q_PROPERTY(float lon MEMBER lon NOTIFY dataChanged);
-    Q_PROPERTY(float elev MEMBER elev NOTIFY dataChanged);
-
-    Q_PROPERTY(QVector<float> cell_group_voltages MEMBER cell_group_voltages NOTIFY dataChanged);
-
 public:
-    explicit DataUnpacker(QObject *parent = nullptr);
+    // Callback function type for data change notifications
+    using DataChangeCallback = std::function<void()>;
+    
+    explicit DataUnpacker();
     ~DataUnpacker();
-public slots:
+    
+    // Start and stop the data processing
+    void start();
+    void stop();
+    
+    // Set callback for data change notifications
+    void setDataChangeCallback(DataChangeCallback callback);
+    
+    // Public interface methods (replacements for Qt slots)
     void unpack();
     void eng_dash_connection(bool state);
     void enableRestart();
-signals:
-    void dataChanged();
-    void sendSignal(QByteArray data);
+    
+    // Getter methods for telemetry data (replacements for Q_PROPERTY)
+    int getFanSpeed() const { return fan_speed; }
+    int getTstampHr() const { return tstamp_hr; }
+    int getTstampMn() const { return tstamp_mn; }
+    int getTstampSc() const { return tstamp_sc; }
+    int getTstampMs() const { return tstamp_ms; }
+    
+    bool getLTurnLedEn() const { return l_turn_led_en; }
+    bool getRTurnLedEn() const { return r_turn_led_en; }
+    bool getHazards() const { return hazards; }
+    bool getHeadlights() const { return headlights; }
+    bool getMainIOHeartbeat() const { return mainIO_heartbeat; }
+    bool getEngDashCommfail() const { return eng_dash_commfail; }
+    bool getCrzPwrMode() const { return crz_pwr_mode; }
+    bool getCrzSpdMode() const { return crz_spd_mode; }
+
+    
+    // Additional getter methods for shutdown circuit data
+    bool getDriverEStop() const { return driver_eStop; }
+    bool getExternalEStop() const { return external_eStop; }
+    bool getCrash() const { return crash; }
+    bool getDoor() const { return door; }
+    bool getMcuCheck() const { return mcu_check; }
+    bool getIsolation() const { return isolation; }
+    bool getDischargeEnable() const { return discharge_enable; }
+    bool getLowContactor() const { return low_contactor; }
+    bool getBmsCanHeartbeat() const { return bms_can_heartbeat; }
+    bool getVoltageFailsafe() const { return voltage_failsafe; }
+    bool getCurrentFailsafe() const { return current_failsafe; }
+    bool getInputPowerSupplyFailsafe() const { return input_power_supply_failsafe; }
+    bool getRelayFailsafe() const { return relay_failsafe; }
+    bool getCellBalancingActive() const { return cell_balancing_active; }
+    bool getChargeInterlockFailsafe() const { return charge_interlock_failsafe; }
+    bool getThermistorBValueTableInvalid() const { return thermistor_b_value_table_invalid; }
+    bool getChargeEnable() const { return charge_enable; }
+    bool getBpsFault() const { return bps_fault; }
+    bool getUseDcdc() const { return use_dcdc; }
+    bool getSupplementalValid() const { return supplemental_valid; }
+    bool getMcuHvEn() const { return mcu_hv_en; }
+    bool getMcuStatFdbk() const { return mcu_stat_fdbk; }
+    bool getParkingBrake() const { return parking_brake; }
+    bool getEco() const { return eco; }
+    bool getMainTelem() const { return main_telem; }
+    int getMcStatus() const { return mc_status; }
+    bool getRestartEnable() const { return restart_enable; }
+
+    
+    // Float getters  
+    float getSpeed() const { return speed; }
+    float getAcceleratorPedal() const { return accelerator_pedal; }
+    float getSoc() const { return soc; }
+    float getMpptCurrentOut() const { return mppt_current_out; }
+    float getPackVoltage() const { return pack_voltage; }
+    float getPackCurrent() const { return pack_current; }
+    float getPackTemp() const { return pack_temp; }
+    float getBmsInputVoltage() const { return bms_input_voltage; }
+    float getMotorTemp() const { return motor_temp; }
+    float getMotorPower() const { return motor_power; }
+    float getDriverIOTemp() const { return driverIO_temp; }
+    float getMainIOTemp() const { return mainIO_temp; }
+    float getMotorControllerTemp() const { return motor_controller_temp; }
+    float getCabinTemp() const { return cabin_temp; }
+    float getString1Temp() const { return string1_temp; }
+    float getString2Temp() const { return string2_temp; }
+    float getString3Temp() const { return string3_temp; }
+    float getCrzPwrSetpt() const { return crz_pwr_setpt; }
+    float getCrzSpdSetpt() const { return crz_spd_setpt; }
+    float getSupplementalVoltage() const { return supplemental_voltage; }
+    float getEstSupplementalSoc() const { return est_supplemental_soc; }
+    std::string getState() const { return state; }
+    float getLat() const { return lat; }
+    float getLon() const { return lon; }
+    float getElev() const { return elev; }
+    
+    const std::vector<float>& getCellGroupVoltages() const { return cell_group_voltages; }
 private:
     bool checkRestartEnable();
-
-    QThread dataFetchThread, backendThread;
+    
+    // Callback for data changes
+    DataChangeCallback dataChangeCallback;
+    
+    // Threading control
+    std::thread dataFetchThread, backendThread;
+    std::atomic<bool> running{false};
 
     // TODO Include only the properties that need to be displayed on the driver dashboard
     uint8_t fan_speed, tstamp_hr, tstamp_mn, tstamp_sc;
@@ -122,7 +140,7 @@ private:
     float lat, lon, elev;
     bool headlights, l_turn_led_en, r_turn_led_en, hazards, mainIO_heartbeat, crz_pwr_mode, crz_spd_mode, eco, main_telem, parking_brake;
     bool eng_dash_commfail=1;
-    QString state;
+    std::string state;
     // Data for shutdown circuit
     // TODO Check initial values (should be nominal values, except for contactors, which should be open/false during restart)
     float bms_input_voltage;
@@ -135,20 +153,22 @@ private:
     bool discharge_enable=false, charge_enable=false, bms_can_heartbeat=false;
     bool mcu_hv_en=false, mcu_stat_fdbk=false, use_dcdc=false, supplemental_valid=false, mppt_contactor=false, low_contactor=false, motor_controller_contactor=false;
     bool voltage_failsafe=false, current_failsafe=false, relay_failsafe=false, cell_balancing_active=true, charge_interlock_failsafe=false, thermistor_b_value_table_invalid=false, input_power_supply_failsafe=false;
-    QVector<float> cell_group_voltages;
+    std::vector<float> cell_group_voltages;
     bool restart_enable=true;
     int mc_status=0;
 
-
     int cell_group_voltages_begin, cell_group_voltages_end; // First and last indices of the cell group voltages in data format
 
-    QByteArray bytes;
+    std::vector<uint8_t> bytes;
     GPSData gpsOffset;
     std::vector<std::string> names;
     std::vector<int> byteNums;
     std::vector<std::string> types;
-    QMutex mutex;
+    std::mutex mutex;
     DataFetcher * fetcher;
+    
+    // Helper method to trigger data change callbacks
+    void notifyDataChanged();
 };
 
 

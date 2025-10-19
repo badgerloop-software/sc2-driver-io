@@ -1,0 +1,4 @@
+# SC2 Driver IO - Textual Dashboard Requirements
+textual>=0.50.0
+psutil>=5.9.0
+rich>=13.0.0

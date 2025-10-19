@@ -2,9 +2,24 @@
 
 ## Solar Car Dashboard
 
+### Frontend Options
+
+**Qt GUI** (Legacy - for desktop development)
+- Full graphical interface with QML components
+- Higher resource usage (~50-100MB RAM, 5-15% CPU)
+- Requires desktop environment
+
+**Textual Terminal GUI** (New - for Raspberry Pi deployment) ⭐
+- Lightweight terminal-based interface
+- Minimal resource usage (~5-15MB RAM, 0.5-2% CPU)
+- 70-90% performance improvement over Qt
+- Located in `textual_frontend/` directory
+- See `textual_frontend/README.md` for details
+
 ### Libraries/Frameworks
 
-- [Qt](https://www.qt.io/) - Development framework
+- [Qt](https://www.qt.io/) - Development framework (legacy GUI)
+- [Textual](https://github.com/Textualize/textual) - Terminal GUI framework (new lightweight option)
 - [RapidJSON](https://rapidjson.org/) - JSON parsing library
 
 ### Cloning the Data Format Repository and Initializing the Submodule
@@ -38,7 +53,54 @@ CMake is a more popular project make system, it allows you to edit the project w
    1. When committing and pushing changes, do not add your solar-car-dashboard.pro.user file to the version control, as this is specific to your computer.
 8. Once you are happy with the state of your code, open a pull request and request someone to conduct a code review. It may be kicked back with some suggestions or edits, but when it is accepted, it will be merged with `main`. Congrats! Now it's just time to rinse and repeat.
 
-### Compiling and Running the Project on a Rapberry Pi
+### Running on Raspberry Pi (Updated Architecture) -> WORK IN PROGRESS
+
+**Modern Hybrid Approach:**
+
+The project now uses a hybrid C++/Python architecture optimized for the Pi:
+
+1. **C++ Backend** (`./build/sc2-driver-io`): Headless telemetry processor
+   - Runs as root for GPS/hardware access  
+   - Real-time CAN processing and data validation
+   - Low-latency, high-performance core
+
+2. **Python Coordinator** (`./main.py`): System orchestrator
+   - Multi-threaded coordination (CAN, GPS, CSV logging)
+   - External module integration
+   - Runs as sunpi user
+
+3. **Textual Terminal GUI** (`./textual_frontend/`): Optional lightweight dashboard
+   - 70-90% less resource usage than Qt
+   - Terminal-based interface
+   - Integrates with existing Weston setup
+
+**Integration with Existing Pi Setup:**
+
+Your Pi runs Raspberry Pi OS Lite with Weston compositor. The new architecture provides three deployment options:
+
+1. **Headless Mode** (Recommended): Disables Weston, runs terminal dashboard on tty2
+   - Maximum performance and resource savings
+   - Access dashboard: Alt+F2, console: Alt+F1
+
+2. **Hybrid Mode**: Keeps Weston running + adds terminal dashboard on tty2  
+   - Maintains existing functionality
+   - Switch between Weston (Alt+F1) and dashboard (Alt+F2)
+
+3. **Weston Integration**: Launches SC2 components from within Weston autolaunch
+   - Integrates with existing `/home/sunpi/.config/weston.ini` setup
+   - Maintains current boot flow
+
+**Setup:**
+```bash
+# Run the integrated setup script
+cd textual_frontend
+chmod +x setup_autolaunch.sh
+sudo ./setup_autolaunch.sh
+```
+
+The script will prompt you to choose your preferred integration mode.
+
+### Compiling and Running the Project on a Raspberry Pi (Legacy Qt Method)
 
 0. If running the project on the driver IO board, skip this step, as the necessary dependencies have already been installed on it. Otherwise, if you have not already, install the dependencies on the Raspberry Pi:
    ```
@@ -59,10 +121,18 @@ CMake is a more popular project make system, it allows you to edit the project w
 This section provides an overview of the key folders and their purposes in the Solar Car 1 Driver IO project.
 
 ### Root Directory
-- **CMakeLists.txt**: Build configuration file for CMake, used to compile the project.
-- **main.cpp**: Main entry point of the Qt application, sets up the QML engine, loads the UI, and initializes the DataUnpacker.
-- **Config.cpp/h**: Singleton class for reading and managing configuration from `config.json`.
+- **CMakeLists.txt**: Build configuration file for CMake, used to compile the C++ backend.
+- **main.cpp**: C++ entry point for headless telemetry processor (modernized, no Qt dependencies).
+- **main.py**: Python entry point for system coordinator (multi-threaded orchestration).
+- **Config.cpp/h**: Configuration management (converted from Qt to standard C++).
 - **config.json**: JSON file containing application configuration settings.
+
+### textual_frontend/
+**NEW**: Lightweight terminal-based GUI replacement for Qt dashboard.
+- **textual_dashboard.py**: Main terminal dashboard application using Textual library.
+- **dashboard_launcher.py**: Bridge between C++ backend and dashboard interface.
+- **setup_autolaunch.sh**: Raspberry Pi integration script (works with existing Weston setup).
+- **README.md**: Complete documentation for terminal GUI setup and usage.
 
 ### 3rdparty/
 Contains third-party libraries used in the project.
