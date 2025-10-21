@@ -1,42 +1,65 @@
 #ifndef DATAFETCHER_H
 #define DATAFETCHER_H
 
-#include <QObject>
 #include <vector>
-#include <QMutex>
-#include <QTcpSocket>
-#include <QTcpServer>
-#include <QGuiApplication>
-#include <QThread>
+#include <mutex>
+#include <thread>
+#include <atomic>
+#include <functional>
+#include <cstdint>
 #include "gps/gps.h"
-class DataFetcher : public QObject
-{
-    Q_OBJECT
 
+class DataFetcher
+{
 public:
-    explicit DataFetcher(QByteArray &bytes, int byteSize, QMutex &mutex, GPSData gpsOffset, QObject *parent = nullptr);
+    // Callback type for data fetched events
+    using DataFetchedCallback = std::function<void()>;
+
+    explicit DataFetcher(std::vector<uint8_t> &bytes, int byteSize, std::mutex &mutex, GPSData gpsOffset);
     ~DataFetcher();
-public slots:
+
+    // Start and stop data fetching
+    void start();
+    void stop();
+    
+    // Set callback for data fetched events
+    void setDataFetchedCallback(DataFetchedCallback callback) {
+        dataFetchedCallback = callback;
+    }
+    
+    // Interface methods (replacements for Qt slots)
     void threadProcedure();
     void startThread();
     void onNewConnection();
     void onReadyRead();
     void onDisconnected();
-    void sendData(QByteArray data);
-signals:
-    void dataFetched();
+    void sendData(const std::vector<uint8_t>& data);
+
 private:
-    QByteArray &bytes;
+    // Helper method to notify data fetched
+    void notifyDataFetched() {
+        if (dataFetchedCallback) {
+            dataFetchedCallback();
+        }
+    }
+
+    std::vector<uint8_t> &bytes;
     int byteSize;
-    QMutex &mutex;
+    std::mutex &mutex;
     std::atomic<bool> connected = false;
-    QThread* thread;
+    std::atomic<bool> running = false;
+    std::thread* thread;
 
     GPS* gps;
     GPSData gpsOffset;
-    QThread gpsThread;
-    QTcpServer* ethServer;
-    QTcpSocket* clientSocket;
+    std::thread gpsThread;
+    
+    // Network communication (will need to be replaced with standard socket implementation)
+    // QTcpServer* ethServer;  // TODO: Replace with standard socket server
+    // QTcpSocket* clientSocket;  // TODO: Replace with standard socket client
+    
+    // Callback function
+    DataFetchedCallback dataFetchedCallback;
 };
 
 #endif // DATAFETCHER_H

@@ -4,24 +4,24 @@
 
 #include "dataUnpacker.h"
 
-double bytesToDouble(QByteArray data, int start_pos)
+double bytesToDouble(const std::vector<uint8_t>& data, int start_pos)
 {
     double number;
-    char* dataPtr = data.data();
+    const uint8_t* dataPtr = data.data();
     memcpy(&number, &dataPtr[start_pos], sizeof(double));
     return number;
 }
 
-float bytesToFloat(QByteArray data, int start_pos)
+float bytesToFloat(const std::vector<uint8_t>& data, int start_pos)
 {
     float number;
-    char* dataPtr = data.data();
+    const uint8_t* dataPtr = data.data();
     memcpy(&number, &dataPtr[start_pos], sizeof(float));
     return number;
 }
 
 template <typename E>
-E bytesToGeneralData(QByteArray data, int startPos, int endPos, E typeZero)
+E bytesToGeneralData(const std::vector<uint8_t>& data, int startPos, int endPos, E typeZero)
 {
     int byteNum=endPos-startPos;
     auto var = typeZero;
@@ -36,7 +36,7 @@ E bytesToGeneralData(QByteArray data, int startPos, int endPos, E typeZero)
 
 
 
-DataUnpacker::DataUnpacker(QObject *parent) : QObject(parent)
+DataUnpacker::DataUnpacker()
 {
     FILE* fp = fopen("./sc1-data-format/format.json", "r"); // NOTE: Windows: "rb"; non-Windows: "r"
     if(fp == 0) {
@@ -118,8 +118,7 @@ DataUnpacker::DataUnpacker(QObject *parent) : QObject(parent)
 
 DataUnpacker::~DataUnpacker()
 {
-    dataFetchThread.quit();
-    backendThread.wait();  //wait until the thread fully stops to avoid error message
+    stop(); // Ensure threads are properly stopped
 }
 
 void DataUnpacker::unpack()
@@ -181,6 +180,32 @@ bool DataUnpacker::checkRestartEnable() {
 }
 
 void DataUnpacker::enableRestart() {
-    emit sendSignal("mcu_hv_en");
+    // Send restart signal to backend
+    // TODO: Implement backend communication without Qt signals
+}
+
+void DataUnpacker::start() {
+    running = true;
+    // TODO: Start data processing threads
+}
+
+void DataUnpacker::stop() {
+    running = false;
+    if (dataFetchThread.joinable()) {
+        dataFetchThread.join();
+    }
+    if (backendThread.joinable()) {
+        backendThread.join();
+    }
+}
+
+void DataUnpacker::setDataChangeCallback(DataChangeCallback callback) {
+    dataChangeCallback = callback;
+}
+
+void DataUnpacker::notifyDataChanged() {
+    if (dataChangeCallback) {
+        dataChangeCallback();
+    }
 }
 

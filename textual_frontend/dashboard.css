@@ -1,0 +1,54 @@
+/* CSS for SC2 Dashboard Textual Application */
+
+.main-container {
+    layout: horizontal;
+    height: 100%;
+}
+
+.left-panel {
+    width: 50%;
+    padding: 1;
+}
+
+.right-panel {
+    width: 50%;
+    padding: 1;
+}
+
+TelemetryDisplay {
+    border: solid $primary;
+    height: 60%;
+    margin: 1;
+    padding: 1;
+}
+
+SystemInfo {
+    border: solid $secondary;
+    height: 60%;
+    margin: 1;
+    padding: 1;
+}
+
+StatusIndicators {
+    border: solid $accent;
+    height: 40%;
+    margin: 1;
+    padding: 1;
+}
+
+BatteryIndicator {
+    border: solid $success;
+    height: 40%;
+    margin: 1;
+    padding: 1;
+}
+
+.label {
+    text-align: center;
+    margin-bottom: 1;
+    text-style: bold;
+}
+
+.battery {
+    margin: 1;
+}

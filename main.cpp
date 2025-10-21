@@ -1,63 +1,79 @@
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
-#include <QQmlContext>
-#include <QCursor>
-#include <QFileInfo>
-#include <QProcess>
-// #include <QDir>
-// #include <QRegularExpression>
+#include <iostream>
+#include <thread>
+#include <chrono>
+#include <filesystem>
+#include <cstdlib>
+#include <signal.h>
 #include <DataProcessor/dataUnpacker.h>
-#include <vector>
 
+// Global flag for clean shutdown
+volatile bool g_running = true;
 
-int main(int argc, char *argv[])
-{
-//#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    //QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-//#endif
-    /*argc = 3;
-    argv[0] = (char*)"Appname";
-    argv[1] = (char*)"--platform";
-    argv[2] = (char*)"android:dpiawareness=0";*/
-    QGuiApplication app(argc, argv);
-    DataUnpacker unpacker;
+// Signal handler for graceful shutdown
+void signalHandler(int signal) {
+    std::cout << "\nReceived signal " << signal << ". Shutting down gracefully..." << std::endl;
+    g_running = false;
+}
 
-    QQmlApplicationEngine engine;
-    QQmlContext * rootContext = engine.rootContext();
-    rootContext->setContextProperty("backEnd", &unpacker);
-
-    // Hide mouse cursor
-    app.setOverrideCursor(QCursor(Qt::BlankCursor));
-
-    const QUrl url(QStringLiteral("qrc:/main.qml"));
-    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
-                     &app, [url](QObject *obj, const QUrl &objUrl) {
-        if (!obj && url == objUrl)
-            QCoreApplication::exit(-1);
-    }, Qt::QueuedConnection);
-
-    engine.load(url);
-
-    // run the Python file sync uploader if it's been cloned
-    {
-        // we look for file_sync/file_sync_up/main.py in two locations to handle 
-        //  different OSs and build systems
-        QProcess *process = new QProcess();
-        process->setProcessChannelMode(QProcess::MergedChannels); // show the python process's stdout interleaved
-        QFileInfo check_file_p1("../backend/file_sync/file_sync_up/main.py");
-        QFileInfo check_file_p2("./backend/file_sync/file_sync_up/main.py");
-        if (check_file_p1.exists() && check_file_p1.isFile()) {
-            process->start("python3", QStringList() << "../backend/file_sync/file_sync_up/main.py");
-        } else if (check_file_p2.exists() && check_file_p2.isFile()) {
-            process->start("python3", QStringList() << "./backend/file_sync/file_sync_up/main.py");
-        } else {
-            qDebug()<<"\n";
-            qDebug()<<"WARNING: running without file sync";
-            qDebug()<<"   * Check whether you've cloned all the submodules";
-            qDebug()<<"   * If that didn't work, your build output is probably in a nonstandard directory";
-            qDebug()<<"\n";
+// Function to start file sync process
+void startFileSync() {
+    // Check for file_sync/file_sync_up/main.py in different locations
+    std::filesystem::path sync_paths[] = {
+        "../backend/file_sync/file_sync_up/main.py",
+        "./backend/file_sync/file_sync_up/main.py"
+    };
+    
+    for (const auto& path : sync_paths) {
+        if (std::filesystem::exists(path) && std::filesystem::is_regular_file(path)) {
+            std::cout << "Starting file sync from: " << path << std::endl;
+            std::string command = "python3 " + path.string() + " &";
+            int result = std::system(command.c_str());
+            if (result == 0) {
+                std::cout << "File sync started successfully" << std::endl;
+                return;
+            } else {
+                std::cout << "Failed to start file sync process" << std::endl;
+            }
         }
     }
+    
+    std::cout << "\nWARNING: running without file sync" << std::endl;
+    std::cout << "   * Check whether you've cloned all the submodules" << std::endl;
+    std::cout << "   * If that didn't work, your build output is probably in a nonstandard directory" << std::endl;
+}
 
-    return app.exec();
+int main(int argc, char *argv[]) {
+    std::cout << "SC2 Driver IO - Headless Telemetry System" << std::endl;
+    std::cout << "===========================================" << std::endl;
+    
+    // Set up signal handlers for graceful shutdown
+    signal(SIGINT, signalHandler);
+    signal(SIGTERM, signalHandler);
+    
+    // Initialize the data unpacker (telemetry processor)
+    DataUnpacker unpacker;
+    
+    // Start file sync process in background
+    startFileSync();
+    
+    // Start the telemetry processing
+    std::cout << "Starting telemetry data processing..." << std::endl;
+    unpacker.start();
+    
+    // Main application loop
+    std::cout << "System running. Press Ctrl+C to shutdown gracefully." << std::endl;
+    while (g_running) {
+        // Sleep for a short period to avoid busy waiting
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        
+        // Here we could add periodic status checks or maintenance tasks
+        // For now, just keep the application alive
+    }
+    
+    // Graceful shutdown
+    std::cout << "Shutting down telemetry system..." << std::endl;
+    unpacker.stop();
+    
+    std::cout << "SC2 Driver IO shutdown complete." << std::endl;
+    return 0;
 }
