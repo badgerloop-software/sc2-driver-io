@@ -37,6 +37,52 @@
 
 ## New Architecture Plan
 
+### 0. Python Coordinator (main.py) - NEW ARCHITECTURE
+**Location**: `main.py` (root level)
+**Language**: Python
+**Purpose**: Multi-threaded coordinator for real-time data pipeline
+
+#### Architecture Overview:
+See `ARCHITECTURE.md` for complete technical documentation including:
+- Detailed data flow diagrams
+- Thread architecture and priorities
+- Queue configurations and overflow handling
+- Performance targets and latency requirements
+- Error handling and recovery strategies
+
+#### Data Pipeline (3 Hz CAN Message Rate):
+```
+CAN Bus (byte array) 
+  → Thread 0: CAN RX + GPS + Lap Counter (< 50ms)
+    → Inject lap data into byte array
+      → Queue for parallel processing
+        ├→ Thread 1: LTE Upload (Cloud SQL)
+        ├→ Thread 2: Radio TX (Chase car)
+        ├→ Thread 3: CAN TX (Publish back to bus)
+        ├→ Thread 4: CSV Logger (Batch writes @ 1Hz)
+        ├→ Thread 5: NN Buffer (Future: inference)
+        └→ Thread 6: Dashboard Update (1Hz refresh)
+```
+
+#### Key Design Decisions:
+1. **Critical Path Optimization**: GPS + lap counter integrated into Thread 0 to minimize latency
+2. **Parallel Processing**: Transmission and logging happen in parallel after modification
+3. **Batch CSV Writes**: Accumulate 1 second of data (30-50 messages) for efficient I/O
+4. **Fire-and-Forget Transmissions**: LTE and Radio use separate queues with retry logic
+5. **NN Buffer Accumulation**: Collect data until threshold, then trigger inference (future)
+
+#### Performance Targets:
+- **Thread 0 (Critical)**: < 50ms processing time (6.6x headroom @ 3Hz)
+- **CSV Writes**: Async batch writes every 1 second
+- **Dashboard**: 1Hz refresh rate (low priority)
+- **Message Rate**: 3 messages/second from CAN bus
+
+#### Integration with Existing System:
+- **C++ Telemetry Backend**: LTE/Radio transmission via DTI interface
+- **Textual Dashboard**: JSON file or named pipe for real-time display
+- **SocketCAN**: Direct integration with Waveshare CAN HAT
+- **EG25-G GPS**: AT command interface for lat/lon extraction
+
 ### 1. CAN Snooper Module (EXISTING - Separate Repository)
 **Location**: External repository to be integrated
 **Language**: Python + React frontend
@@ -98,13 +144,25 @@ def update_position(lat: float, lon: float) -> bytes:
 Add to `sc1-data-format/format.json`:
 ```json
 {
-  "lap_count": [4, "uint32", "", 0, 9999, "Lap Counter;Race Data"],
-  "current_section": [1, "uint8", "", 0, 255, "Lap Counter;Race Data"],
-  "section_time": [4, "float", "s", 0, 999.9, "Lap Counter;Race Timing"],
-  "lap_time": [4, "float", "s", 0, 9999.9, "Lap Counter;Race Timing"],
-  "position_valid": [1, "bool", "", 0, 1, "Lap Counter;GPS Status"]
+  "lap_count": [2, "uint16", "", 0, 9999, "Software;Lap Counter"],
+  "current_section": [1, "uint8", "", 0, 255, "Software;Lap Counter"],
+  "lap_duration": [4, "uint32", "ms", 0, 600000, "Software;Lap Counter"],
+  "optimized_target_power": [4, "float", "kW", 0, 10, "Race Strategy;Model Outputs"]
 }
 ```
+
+**Data Format Specification**:
+- `lap_count`: 2-byte uint16 (0-9999 laps)
+- `current_section`: 1-byte uint8 (0-255 track sections)
+- `lap_duration`: 4-byte uint32 in milliseconds (0-600000ms = 0-10 minutes)
+- `optimized_target_power`: 4-byte float in kilowatts (future NN output)
+
+**Byte Array Injection Strategy** (see `ARCHITECTURE.md` for details):
+- Original firmware CAN message: N bytes
+- Append lap counter data: +7 bytes (lap_count + current_section + lap_duration)
+- Future: Append NN output: +4 bytes (optimized_target_power)
+- Total modified array: N + 11 bytes
+
 **Note**: Current format.json uses 6-element arrays, needs investigation of 7th element purpose (CAN ID/offset)
 
 #### Integration with Existing System:
@@ -255,6 +313,7 @@ Add to `sc1-data-format/format.json`:
   - **Location Technology**: Qualcomm IZat Gen8C Lite positioning
   - **Thermal Management**: Software thermal mitigation with AT commands
   - **Form Factor**: Mini PCIe (51.0mm x 30.0mm x 4.9mm)
+  - **GPS Interface**: AT+QGPSLOC? command for lat/lon extraction
 - **RFD900A Radio Module** for chase car telemetry
   - **Frequency**: 902-928 MHz ISM band
   - **Data Rate**: Up to 250 Kbps (sufficient for telemetry + lap data)

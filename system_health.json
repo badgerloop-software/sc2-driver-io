@@ -1,0 +1,42 @@
+{
+  "uptime_seconds": 165.33309173583984,
+  "total_messages": 497,
+  "message_rate_hz": 3.01,
+  "queues": {
+    "processed_data": 0,
+    "lte_tx": 0,
+    "radio_tx": 0,
+    "can_tx": 0,
+    "csv": 0
+  },
+  "threads_alive": 8,
+  "threads_total": 8,
+  "thread_status": {
+    "can_reception": true,
+    "lte_tx": true,
+    "radio_tx": true,
+    "can_tx": true,
+    "csv_logging": true,
+    "nn_buffer": true,
+    "dashboard": true,
+    "system_management": true
+  },
+  "network": {
+    "lte": {
+      "connected": true,
+      "rssi": 19,
+      "bars": 3,
+      "carrier": "T-Mobile",
+      "signal_dbm": -75
+    },
+    "wifi": {
+      "connected": false,
+      "ssid": "Not Connected",
+      "signal_dbm": -100,
+      "bars": 0
+    }
+  },
+  "system_status": "RUNNING",
+  "recent_errors": [],
+  "recent_warnings": []
+}

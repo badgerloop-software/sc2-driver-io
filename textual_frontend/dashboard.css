@@ -1,54 +1,89 @@
-/* CSS for SC2 Dashboard Textual Application */
+/* CSS for SC2 Dashboard Textual Application - Extra Large Text Version */
+
+/* Network status bar at top */
+NetworkStatusBar {
+    dock: top;
+    height: 1;
+    background: $panel;
+    padding: 0 2;
+    content-align: center middle;
+    text-style: bold;
+}
 
 .main-container {
     layout: horizontal;
-    height: 100%;
+    height: 45%;  /* Reduced to make room for diagnostics + logs */
 }
 
 .left-panel {
     width: 50%;
-    padding: 1;
+    padding: 3;
 }
 
 .right-panel {
     width: 50%;
-    padding: 1;
+    padding: 3;
 }
 
 TelemetryDisplay {
     border: solid $primary;
-    height: 60%;
-    margin: 1;
-    padding: 1;
+    height: 65%;
+    margin: 2;
+    padding: 3;
+    text-style: bold;
 }
 
 SystemInfo {
     border: solid $secondary;
-    height: 60%;
-    margin: 1;
-    padding: 1;
+    height: 65%;
+    margin: 2;
+    padding: 3;
+    text-style: bold;
 }
 
 StatusIndicators {
     border: solid $accent;
-    height: 40%;
-    margin: 1;
-    padding: 1;
+    height: 35%;
+    margin: 2;
+    padding: 3;
+    text-style: bold;
 }
 
 BatteryIndicator {
     border: solid $success;
-    height: 40%;
+    height: 35%;
+    margin: 2;
+    padding: 3;
+}
+
+/* Compact diagnostics panel (one-line status bar) */
+DiagnosticsPanel {
+    border: solid yellow;
+    height: 5%;
+    width: 100%;
     margin: 1;
     padding: 1;
+    text-style: bold;
+}
+
+/* Live log viewer (scrollable, takes remaining space) */
+LiveLogViewer {
+    border: solid cyan;
+    height: 45%;
+    width: 100%;
+    margin: 2;
+    padding: 2;
+    overflow-y: auto;
 }
 
 .label {
     text-align: center;
-    margin-bottom: 1;
+    margin-bottom: 2;
     text-style: bold;
+    height: 4;
 }
 
 .battery {
-    margin: 1;
+    margin: 2;
+    height: 4;
 }

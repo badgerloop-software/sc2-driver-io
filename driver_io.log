@@ -1,0 +1,962 @@
+2025-10-30 22:52:30,510 - __main__ - INFO - SC2 Driver IO System Starting...
+2025-10-30 22:52:30,510 - __main__ - INFO - Starting Driver IO System...
+2025-10-30 22:52:30,515 - __main__ - INFO - CAN reception and processing thread started
+2025-10-30 22:52:30,515 - __main__ - INFO - LTE transmission thread started
+2025-10-30 22:52:30,515 - __main__ - INFO - Radio transmission thread started
+2025-10-30 22:52:30,515 - __main__ - INFO - CAN transmission thread started
+2025-10-30 22:52:30,515 - __main__ - INFO - CSV logging thread started
+2025-10-30 22:52:30,519 - __main__ - INFO - Neural network buffer thread started
+2025-10-30 22:52:30,519 - __main__ - INFO - Dashboard update thread started
+2025-10-30 22:52:30,522 - __main__ - INFO - System management thread started
+2025-10-30 22:52:30,523 - __main__ - INFO - All threads started successfully
+2025-10-30 22:52:30,524 - __main__ - INFO - Driver IO System is running...
+2025-10-30 22:52:30,525 - __main__ - INFO - Expected CAN message rate: 3 Hz
+2025-10-30 22:52:30,855 - __main__ - WARNING - CAN processing took 340.4ms (target < 50ms)
+2025-10-30 22:52:31,188 - __main__ - WARNING - CAN processing took 332.4ms (target < 50ms)
+2025-10-30 22:52:31,522 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 22:52:31,854 - __main__ - WARNING - CAN processing took 330.5ms (target < 50ms)
+2025-10-30 22:52:32,186 - __main__ - WARNING - CAN processing took 330.7ms (target < 50ms)
+2025-10-30 22:52:32,518 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 22:52:32,849 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 22:52:33,183 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 22:52:33,520 - __main__ - WARNING - CAN processing took 337.7ms (target < 50ms)
+2025-10-30 22:52:33,853 - __main__ - WARNING - CAN processing took 330.7ms (target < 50ms)
+2025-10-30 22:52:34,184 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 22:52:34,517 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 22:52:34,848 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 22:52:35,180 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 22:52:35,513 - __main__ - WARNING - CAN processing took 332.5ms (target < 50ms)
+2025-10-30 22:52:35,844 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 22:52:36,175 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 22:52:36,507 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 22:52:36,838 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 22:52:37,170 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 22:52:37,503 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 22:52:37,835 - __main__ - WARNING - CAN processing took 330.3ms (target < 50ms)
+2025-10-30 22:52:38,171 - __main__ - WARNING - CAN processing took 335.5ms (target < 50ms)
+2025-10-30 22:52:38,507 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 22:52:38,838 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 22:52:39,170 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 22:52:39,501 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 22:52:39,833 - __main__ - WARNING - CAN processing took 330.8ms (target < 50ms)
+2025-10-30 22:52:40,164 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 22:52:40,496 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 22:52:40,543 - __main__ - INFO - Performance Stats: {'uptime_sec': 10.0, 'total_messages': 30, 'message_rate_hz': 2.99, 'processed_queue': 0, 'lte_queue': 0, 'radio_queue': 0, 'can_tx_queue': 0, 'csv_queue': 0, 'nn_buffer_size': 0, 'threads_alive': 8}
+2025-10-30 22:52:40,827 - __main__ - WARNING - CAN processing took 330.4ms (target < 50ms)
+2025-10-30 22:52:41,159 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 22:52:41,490 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 22:52:41,822 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 22:52:42,154 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 22:52:42,486 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 22:52:42,819 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 22:52:43,154 - __main__ - WARNING - CAN processing took 330.6ms (target < 50ms)
+2025-10-30 22:52:43,486 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 22:52:43,818 - __main__ - WARNING - CAN processing took 332.5ms (target < 50ms)
+2025-10-30 22:52:44,150 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 22:52:44,481 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 22:52:44,814 - __main__ - WARNING - CAN processing took 332.6ms (target < 50ms)
+2025-10-30 22:52:45,146 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 22:52:45,479 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 22:52:45,810 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 22:52:46,141 - __main__ - WARNING - CAN processing took 330.4ms (target < 50ms)
+2025-10-30 22:52:46,473 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 22:52:46,804 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 22:52:47,136 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 22:52:47,468 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 22:52:47,800 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 22:52:48,132 - __main__ - WARNING - CAN processing took 332.4ms (target < 50ms)
+2025-10-30 22:52:48,464 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 22:52:48,796 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 22:52:49,128 - __main__ - WARNING - CAN processing took 332.4ms (target < 50ms)
+2025-10-30 22:52:49,460 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 22:52:49,791 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 22:52:50,122 - __main__ - WARNING - CAN processing took 330.7ms (target < 50ms)
+2025-10-30 22:52:50,454 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 22:52:50,548 - __main__ - INFO - Performance Stats: {'uptime_sec': 20.0, 'total_messages': 60, 'message_rate_hz': 2.99, 'processed_queue': 0, 'lte_queue': 0, 'radio_queue': 0, 'can_tx_queue': 0, 'csv_queue': 0, 'nn_buffer_size': 0, 'threads_alive': 8}
+2025-10-30 22:52:50,787 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 22:52:51,119 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 22:52:51,450 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 22:52:51,782 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 22:52:52,114 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 22:52:52,445 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 22:52:52,775 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 22:52:53,106 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 22:52:53,439 - __main__ - WARNING - CAN processing took 332.3ms (target < 50ms)
+2025-10-30 22:52:53,772 - __main__ - WARNING - CAN processing took 330.5ms (target < 50ms)
+2025-10-30 22:52:54,103 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 22:52:54,434 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 22:52:54,659 - __main__ - INFO - Received signal 2, initiating shutdown...
+2025-10-30 22:52:54,662 - __main__ - INFO - Shutting down Driver IO System...
+2025-10-30 22:52:54,662 - __main__ - INFO - Waiting for can_reception thread to stop...
+2025-10-30 22:52:54,672 - __main__ - INFO - CSV logging thread stopped
+2025-10-30 22:52:54,674 - __main__ - INFO - Dashboard update thread stopped
+2025-10-30 22:52:54,767 - __main__ - WARNING - CAN processing took 330.7ms (target < 50ms)
+2025-10-30 22:52:54,767 - __main__ - INFO - LTE transmission thread stopped
+2025-10-30 22:52:54,767 - __main__ - INFO - Radio transmission thread stopped
+2025-10-30 22:52:54,767 - __main__ - INFO - CAN transmission thread stopped
+2025-10-30 22:52:54,767 - __main__ - INFO - CAN reception and processing thread stopped
+2025-10-30 22:52:54,768 - __main__ - INFO - Waiting for lte_tx thread to stop...
+2025-10-30 22:52:54,768 - __main__ - INFO - Waiting for radio_tx thread to stop...
+2025-10-30 22:52:54,769 - __main__ - INFO - Waiting for can_tx thread to stop...
+2025-10-30 22:52:54,769 - __main__ - INFO - Waiting for csv_logging thread to stop...
+2025-10-30 22:52:54,769 - __main__ - INFO - Waiting for nn_buffer thread to stop...
+2025-10-30 22:52:55,534 - __main__ - INFO - Neural network buffer thread stopped
+2025-10-30 22:52:55,534 - __main__ - INFO - Received signal 2, initiating shutdown...
+2025-10-30 22:52:55,534 - __main__ - INFO - Shutting down Driver IO System...
+2025-10-30 22:52:55,534 - __main__ - INFO - Waiting for can_reception thread to stop...
+2025-10-30 22:52:55,534 - __main__ - INFO - Waiting for lte_tx thread to stop...
+2025-10-30 22:52:55,538 - __main__ - INFO - Waiting for radio_tx thread to stop...
+2025-10-30 22:52:55,539 - __main__ - INFO - Waiting for can_tx thread to stop...
+2025-10-30 22:52:55,539 - __main__ - INFO - Waiting for csv_logging thread to stop...
+2025-10-30 22:52:55,540 - __main__ - INFO - Waiting for nn_buffer thread to stop...
+2025-10-30 22:52:55,553 - __main__ - INFO - System management thread stopped
+2025-10-30 22:53:00,551 - __main__ - INFO - Received signal 2, initiating shutdown...
+2025-10-30 22:53:00,551 - __main__ - INFO - Shutting down Driver IO System...
+2025-10-30 22:53:00,551 - __main__ - INFO - Waiting for can_reception thread to stop...
+2025-10-30 22:53:00,551 - __main__ - INFO - Waiting for lte_tx thread to stop...
+2025-10-30 22:53:00,551 - __main__ - INFO - Waiting for radio_tx thread to stop...
+2025-10-30 22:53:00,551 - __main__ - INFO - Waiting for can_tx thread to stop...
+2025-10-30 22:53:00,551 - __main__ - INFO - Waiting for csv_logging thread to stop...
+2025-10-30 22:53:00,551 - __main__ - INFO - Waiting for nn_buffer thread to stop...
+2025-10-30 22:53:05,566 - __main__ - WARNING - nn_buffer thread did not stop gracefully
+2025-10-30 22:53:05,566 - __main__ - INFO - Waiting for dashboard thread to stop...
+2025-10-30 22:53:05,566 - __main__ - INFO - Waiting for system_management thread to stop...
+2025-10-30 22:53:05,566 - __main__ - INFO - Driver IO System shutdown complete
+2025-10-30 22:53:05,566 - __main__ - WARNING - nn_buffer thread did not stop gracefully
+2025-10-30 22:53:05,566 - __main__ - INFO - Waiting for dashboard thread to stop...
+2025-10-30 22:53:05,566 - __main__ - INFO - Waiting for system_management thread to stop...
+2025-10-30 22:53:05,566 - __main__ - INFO - Driver IO System shutdown complete
+2025-10-30 22:53:05,566 - __main__ - INFO - Waiting for dashboard thread to stop...
+2025-10-30 22:53:05,566 - __main__ - INFO - Waiting for system_management thread to stop...
+2025-10-30 22:53:05,566 - __main__ - INFO - Driver IO System shutdown complete
+2025-10-30 22:53:05,566 - __main__ - INFO - Shutting down Driver IO System...
+2025-10-30 22:53:05,566 - __main__ - INFO - Waiting for can_reception thread to stop...
+2025-10-30 22:53:05,572 - __main__ - INFO - Waiting for lte_tx thread to stop...
+2025-10-30 22:53:05,572 - __main__ - INFO - Waiting for radio_tx thread to stop...
+2025-10-30 22:53:05,572 - __main__ - INFO - Waiting for can_tx thread to stop...
+2025-10-30 22:53:05,572 - __main__ - INFO - Waiting for csv_logging thread to stop...
+2025-10-30 22:53:05,574 - __main__ - INFO - Waiting for nn_buffer thread to stop...
+2025-10-30 22:53:05,574 - __main__ - INFO - Waiting for dashboard thread to stop...
+2025-10-30 22:53:05,576 - __main__ - INFO - Waiting for system_management thread to stop...
+2025-10-30 22:53:05,577 - __main__ - INFO - Driver IO System shutdown complete
+2025-10-30 22:53:05,577 - __main__ - INFO - SC2 Driver IO System stopped
+2025-10-30 22:56:16,573 - __main__ - INFO - SC2 Driver IO System Starting...
+2025-10-30 22:56:16,574 - __main__ - INFO - Starting Driver IO System...
+2025-10-30 22:56:16,576 - __main__ - INFO - CAN reception and processing thread started
+2025-10-30 22:56:16,577 - __main__ - INFO - LTE transmission thread started
+2025-10-30 22:56:16,578 - __main__ - INFO - Radio transmission thread started
+2025-10-30 22:56:16,578 - __main__ - INFO - CAN transmission thread started
+2025-10-30 22:56:16,580 - __main__ - INFO - CSV logging thread started
+2025-10-30 22:56:16,580 - __main__ - INFO - Neural network buffer thread started
+2025-10-30 22:56:16,581 - __main__ - INFO - Dashboard update thread started
+2025-10-30 22:56:16,581 - __main__ - INFO - System management thread started
+2025-10-30 22:56:16,581 - __main__ - INFO - All threads started successfully
+2025-10-30 22:56:16,583 - __main__ - INFO - Driver IO System is running...
+2025-10-30 22:56:16,584 - __main__ - INFO - Expected CAN message rate: 3 Hz
+2025-10-30 22:56:16,584 - __main__ - INFO - Pipeline: CAN RX -> GPS -> Lap Counter -> Modify Array -> [LTE|Radio|CAN TX|CSV|NN Buffer|Dashboard]
+2025-10-30 22:56:16,917 - __main__ - WARNING - CAN processing took 339.8ms (target < 50ms)
+2025-10-30 22:56:17,248 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 22:56:17,580 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 22:56:17,912 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 22:56:18,245 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 22:56:18,576 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 22:56:18,909 - __main__ - WARNING - CAN processing took 332.7ms (target < 50ms)
+2025-10-30 22:56:19,240 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 22:56:19,572 - __main__ - WARNING - CAN processing took 330.1ms (target < 50ms)
+2025-10-30 22:56:19,904 - __main__ - WARNING - CAN processing took 330.8ms (target < 50ms)
+2025-10-30 22:56:20,236 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 22:56:20,567 - __main__ - WARNING - CAN processing took 330.6ms (target < 50ms)
+2025-10-30 22:56:20,899 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 22:56:21,230 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 22:56:21,562 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 22:56:21,894 - __main__ - WARNING - CAN processing took 332.1ms (target < 50ms)
+2025-10-30 22:56:22,226 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 22:56:22,557 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 22:56:22,888 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 22:56:23,219 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 22:56:23,551 - __main__ - WARNING - CAN processing took 330.4ms (target < 50ms)
+2025-10-30 22:56:23,883 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 22:56:23,983 - __main__ - INFO - Received signal 2, initiating shutdown...
+2025-10-30 22:56:23,983 - __main__ - INFO - Shutting down Driver IO System...
+2025-10-30 22:56:23,983 - __main__ - INFO - Waiting for can_reception thread to stop...
+2025-10-30 22:56:23,998 - __main__ - INFO - Dashboard update thread stopped
+2025-10-30 22:56:24,099 - __main__ - INFO - CSV logging thread stopped
+2025-10-30 22:56:24,214 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 22:56:24,214 - __main__ - INFO - LTE transmission thread stopped
+2025-10-30 22:56:24,214 - __main__ - INFO - Radio transmission thread stopped
+2025-10-30 22:56:24,214 - __main__ - INFO - CAN transmission thread stopped
+2025-10-30 22:56:24,214 - __main__ - INFO - CAN reception and processing thread stopped
+2025-10-30 22:56:24,214 - __main__ - INFO - Waiting for lte_tx thread to stop...
+2025-10-30 22:56:24,214 - __main__ - INFO - Waiting for radio_tx thread to stop...
+2025-10-30 22:56:24,214 - __main__ - INFO - Waiting for can_tx thread to stop...
+2025-10-30 22:56:24,214 - __main__ - INFO - Waiting for csv_logging thread to stop...
+2025-10-30 22:56:24,217 - __main__ - INFO - Waiting for nn_buffer thread to stop...
+2025-10-30 22:56:24,586 - __main__ - INFO - Neural network buffer thread stopped
+2025-10-30 22:56:24,587 - __main__ - INFO - System management thread stopped
+2025-10-30 22:56:24,587 - __main__ - INFO - Waiting for dashboard thread to stop...
+2025-10-30 22:56:24,587 - __main__ - INFO - Waiting for system_management thread to stop...
+2025-10-30 22:56:24,587 - __main__ - INFO - Driver IO System shutdown complete
+2025-10-30 22:56:24,590 - __main__ - INFO - Shutting down Driver IO System...
+2025-10-30 22:56:24,590 - __main__ - INFO - Waiting for can_reception thread to stop...
+2025-10-30 22:56:24,590 - __main__ - INFO - Waiting for lte_tx thread to stop...
+2025-10-30 22:56:24,590 - __main__ - INFO - Waiting for radio_tx thread to stop...
+2025-10-30 22:56:24,590 - __main__ - INFO - Waiting for can_tx thread to stop...
+2025-10-30 22:56:24,590 - __main__ - INFO - Waiting for csv_logging thread to stop...
+2025-10-30 22:56:24,593 - __main__ - INFO - Waiting for nn_buffer thread to stop...
+2025-10-30 22:56:24,593 - __main__ - INFO - Waiting for dashboard thread to stop...
+2025-10-30 22:56:24,593 - __main__ - INFO - Waiting for system_management thread to stop...
+2025-10-30 22:56:24,593 - __main__ - INFO - Driver IO System shutdown complete
+2025-10-30 22:56:24,593 - __main__ - INFO - SC2 Driver IO System stopped
+2025-10-30 23:44:12,492 - __main__ - INFO - SC2 Driver IO System Starting...
+2025-10-30 23:44:12,507 - __main__ - INFO - Starting Driver IO System...
+2025-10-30 23:44:12,510 - __main__ - INFO - CAN reception and processing thread started
+2025-10-30 23:44:12,510 - __main__ - INFO - LTE transmission thread started
+2025-10-30 23:44:12,510 - __main__ - INFO - Radio transmission thread started
+2025-10-30 23:44:12,510 - __main__ - INFO - CAN transmission thread started
+2025-10-30 23:44:12,510 - __main__ - INFO - CSV logging thread started
+2025-10-30 23:44:12,510 - __main__ - INFO - Neural network buffer thread started
+2025-10-30 23:44:12,510 - __main__ - INFO - Dashboard update thread started
+2025-10-30 23:44:12,510 - __main__ - INFO - System management thread started
+2025-10-30 23:44:12,510 - __main__ - INFO - All threads started successfully
+2025-10-30 23:44:12,510 - __main__ - INFO - Driver IO System is running...
+2025-10-30 23:44:12,510 - __main__ - INFO - Expected CAN message rate: 3 Hz
+2025-10-30 23:44:12,510 - __main__ - INFO - Pipeline: CAN RX -> GPS -> Lap Counter -> Modify Array -> [LTE|Radio|CAN TX|CSV|NN Buffer|Dashboard]
+2025-10-30 23:44:12,856 - __main__ - WARNING - CAN processing took 346.5ms (target < 50ms)
+2025-10-30 23:44:13,187 - __main__ - WARNING - CAN processing took 330.5ms (target < 50ms)
+2025-10-30 23:44:13,519 - __main__ - WARNING - CAN processing took 330.3ms (target < 50ms)
+2025-10-30 23:44:13,851 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:44:14,182 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:44:14,514 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:44:14,845 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:44:15,176 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:44:15,508 - __main__ - WARNING - CAN processing took 330.7ms (target < 50ms)
+2025-10-30 23:44:15,839 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:44:16,171 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:44:16,502 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 23:44:16,833 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:44:17,165 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:44:17,497 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:44:17,829 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:44:18,160 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:44:18,492 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:44:18,824 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:44:19,156 - __main__ - WARNING - CAN processing took 332.3ms (target < 50ms)
+2025-10-30 23:44:19,489 - __main__ - WARNING - CAN processing took 332.4ms (target < 50ms)
+2025-10-30 23:44:19,821 - __main__ - WARNING - CAN processing took 332.4ms (target < 50ms)
+2025-10-30 23:44:20,153 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 23:44:20,485 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:44:20,817 - __main__ - WARNING - CAN processing took 332.4ms (target < 50ms)
+2025-10-30 23:44:21,149 - __main__ - WARNING - CAN processing took 332.1ms (target < 50ms)
+2025-10-30 23:44:21,481 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:44:21,813 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:44:22,148 - __main__ - WARNING - CAN processing took 334.4ms (target < 50ms)
+2025-10-30 23:44:22,479 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 23:44:22,524 - __main__ - INFO - Performance Stats: {'uptime_sec': 10.0, 'total_messages': 30, 'message_rate_hz': 3.0, 'processed_queue': 0, 'lte_queue': 0, 'radio_queue': 0, 'can_tx_queue': 0, 'csv_queue': 0, 'nn_buffer_size': 0, 'threads_alive': 8}
+2025-10-30 23:44:22,811 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:44:23,143 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:44:23,475 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:44:23,807 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:44:24,139 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:44:24,471 - __main__ - WARNING - CAN processing took 332.4ms (target < 50ms)
+2025-10-30 23:44:24,802 - __main__ - WARNING - CAN processing took 330.4ms (target < 50ms)
+2025-10-30 23:44:25,134 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:44:25,465 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:44:25,797 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:44:26,129 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:44:26,459 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:44:26,791 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:44:27,123 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:44:27,454 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:44:27,785 - __main__ - WARNING - CAN processing took 330.4ms (target < 50ms)
+2025-10-30 23:44:28,117 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:44:28,449 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:44:28,780 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:44:29,114 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:44:29,446 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:44:29,777 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:44:30,110 - __main__ - WARNING - CAN processing took 332.6ms (target < 50ms)
+2025-10-30 23:44:30,442 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:44:30,774 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:44:31,105 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:44:31,437 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:44:31,768 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:44:32,100 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:44:32,432 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 23:44:32,531 - __main__ - INFO - Performance Stats: {'uptime_sec': 20.0, 'total_messages': 60, 'message_rate_hz': 3.0, 'processed_queue': 0, 'lte_queue': 0, 'radio_queue': 0, 'can_tx_queue': 0, 'csv_queue': 0, 'nn_buffer_size': 0, 'threads_alive': 8}
+2025-10-30 23:44:32,764 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:44:33,096 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:44:33,427 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:44:33,759 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:44:34,092 - __main__ - WARNING - CAN processing took 330.3ms (target < 50ms)
+2025-10-30 23:44:34,425 - __main__ - WARNING - CAN processing took 333.4ms (target < 50ms)
+2025-10-30 23:44:34,757 - __main__ - WARNING - CAN processing took 330.5ms (target < 50ms)
+2025-10-30 23:44:35,089 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:44:35,421 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:44:35,753 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:44:36,084 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 23:44:36,417 - __main__ - WARNING - CAN processing took 332.3ms (target < 50ms)
+2025-10-30 23:44:36,749 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:44:37,080 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:44:37,411 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:44:37,743 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:44:38,074 - __main__ - WARNING - CAN processing took 330.6ms (target < 50ms)
+2025-10-30 23:44:38,405 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:44:38,736 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:44:39,069 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:44:39,401 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:44:39,733 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:44:40,064 - __main__ - WARNING - CAN processing took 330.6ms (target < 50ms)
+2025-10-30 23:44:40,395 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:44:40,727 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:44:41,059 - __main__ - WARNING - CAN processing took 332.1ms (target < 50ms)
+2025-10-30 23:44:41,391 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 23:44:41,722 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:44:42,055 - __main__ - WARNING - CAN processing took 332.4ms (target < 50ms)
+2025-10-30 23:44:42,386 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:44:42,539 - __main__ - INFO - Performance Stats: {'uptime_sec': 30.0, 'total_messages': 90, 'message_rate_hz': 3.0, 'processed_queue': 0, 'lte_queue': 0, 'radio_queue': 0, 'can_tx_queue': 0, 'csv_queue': 0, 'nn_buffer_size': 0, 'threads_alive': 8}
+2025-10-30 23:44:42,718 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:44:43,050 - __main__ - WARNING - CAN processing took 330.8ms (target < 50ms)
+2025-10-30 23:44:43,382 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:44:43,714 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:44:44,045 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:44:44,377 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:44:44,709 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:44:45,043 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:44:45,375 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:44:45,708 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:44:46,040 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:44:46,372 - __main__ - WARNING - CAN processing took 330.7ms (target < 50ms)
+2025-10-30 23:44:46,704 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:44:47,035 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:44:47,367 - __main__ - WARNING - CAN processing took 330.8ms (target < 50ms)
+2025-10-30 23:44:47,699 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:44:48,031 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:44:48,363 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:44:48,697 - __main__ - WARNING - CAN processing took 330.6ms (target < 50ms)
+2025-10-30 23:44:49,028 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:44:49,360 - __main__ - WARNING - CAN processing took 332.3ms (target < 50ms)
+2025-10-30 23:44:49,694 - __main__ - WARNING - CAN processing took 333.1ms (target < 50ms)
+2025-10-30 23:44:50,025 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:44:50,358 - __main__ - WARNING - CAN processing took 332.5ms (target < 50ms)
+2025-10-30 23:44:50,692 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:44:51,024 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:44:51,356 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:44:51,688 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:44:52,019 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:44:52,351 - __main__ - WARNING - CAN processing took 330.7ms (target < 50ms)
+2025-10-30 23:44:52,545 - __main__ - INFO - Performance Stats: {'uptime_sec': 40.0, 'total_messages': 120, 'message_rate_hz': 3.0, 'processed_queue': 0, 'lte_queue': 0, 'radio_queue': 0, 'can_tx_queue': 0, 'csv_queue': 0, 'nn_buffer_size': 0, 'threads_alive': 8}
+2025-10-30 23:44:52,683 - __main__ - WARNING - CAN processing took 332.1ms (target < 50ms)
+2025-10-30 23:44:52,864 - __main__ - INFO - Received signal 2, initiating shutdown...
+2025-10-30 23:44:52,864 - __main__ - INFO - Shutting down Driver IO System...
+2025-10-30 23:44:52,864 - __main__ - INFO - Waiting for can_reception thread to stop...
+2025-10-30 23:44:52,898 - __main__ - INFO - CSV logging thread stopped
+2025-10-30 23:44:52,919 - __main__ - INFO - Dashboard update thread stopped
+2025-10-30 23:44:53,024 - __main__ - WARNING - CAN processing took 340.5ms (target < 50ms)
+2025-10-30 23:44:53,024 - __main__ - INFO - LTE transmission thread stopped
+2025-10-30 23:44:53,024 - __main__ - INFO - Radio transmission thread stopped
+2025-10-30 23:44:53,024 - __main__ - INFO - CAN transmission thread stopped
+2025-10-30 23:44:53,027 - __main__ - INFO - CAN reception and processing thread stopped
+2025-10-30 23:44:53,027 - __main__ - INFO - Waiting for lte_tx thread to stop...
+2025-10-30 23:44:53,027 - __main__ - INFO - Waiting for radio_tx thread to stop...
+2025-10-30 23:44:53,027 - __main__ - INFO - Waiting for can_tx thread to stop...
+2025-10-30 23:44:53,027 - __main__ - INFO - Waiting for csv_logging thread to stop...
+2025-10-30 23:44:53,027 - __main__ - INFO - Waiting for nn_buffer thread to stop...
+2025-10-30 23:44:53,546 - __main__ - INFO - Neural network buffer thread stopped
+2025-10-30 23:44:53,547 - __main__ - INFO - System management thread stopped
+2025-10-30 23:44:53,547 - __main__ - INFO - Waiting for dashboard thread to stop...
+2025-10-30 23:44:53,547 - __main__ - INFO - Waiting for system_management thread to stop...
+2025-10-30 23:44:53,547 - __main__ - INFO - Driver IO System shutdown complete
+2025-10-30 23:44:53,547 - __main__ - INFO - Shutting down Driver IO System...
+2025-10-30 23:44:53,547 - __main__ - INFO - Waiting for can_reception thread to stop...
+2025-10-30 23:44:53,547 - __main__ - INFO - Waiting for lte_tx thread to stop...
+2025-10-30 23:44:53,547 - __main__ - INFO - Waiting for radio_tx thread to stop...
+2025-10-30 23:44:53,547 - __main__ - INFO - Waiting for can_tx thread to stop...
+2025-10-30 23:44:53,547 - __main__ - INFO - Waiting for csv_logging thread to stop...
+2025-10-30 23:44:53,547 - __main__ - INFO - Waiting for nn_buffer thread to stop...
+2025-10-30 23:44:53,547 - __main__ - INFO - Waiting for dashboard thread to stop...
+2025-10-30 23:44:53,547 - __main__ - INFO - Waiting for system_management thread to stop...
+2025-10-30 23:44:53,547 - __main__ - INFO - Driver IO System shutdown complete
+2025-10-30 23:44:53,547 - __main__ - INFO - SC2 Driver IO System stopped
+2025-10-30 23:47:44,149 - __main__ - INFO - SC2 Driver IO System Starting...
+2025-10-30 23:47:44,149 - __main__ - INFO - Starting Driver IO System...
+2025-10-30 23:47:44,149 - __main__ - INFO - CAN reception and processing thread started
+2025-10-30 23:47:44,157 - __main__ - INFO - LTE transmission thread started
+2025-10-30 23:47:44,157 - __main__ - INFO - Radio transmission thread started
+2025-10-30 23:47:44,157 - __main__ - INFO - CAN transmission thread started
+2025-10-30 23:47:44,157 - __main__ - INFO - CSV logging thread started
+2025-10-30 23:47:44,157 - __main__ - INFO - Neural network buffer thread started
+2025-10-30 23:47:44,157 - __main__ - INFO - Dashboard update thread started
+2025-10-30 23:47:44,157 - __main__ - INFO - System management thread started
+2025-10-30 23:47:44,165 - __main__ - INFO - All threads started successfully
+2025-10-30 23:47:44,166 - __main__ - INFO - Driver IO System is running...
+2025-10-30 23:47:44,166 - __main__ - INFO - Expected CAN message rate: 3 Hz
+2025-10-30 23:47:44,166 - __main__ - INFO - Pipeline: CAN RX -> GPS -> Lap Counter -> Modify Array -> [LTE|Radio|CAN TX|CSV|NN Buffer|Dashboard]
+2025-10-30 23:47:44,500 - __main__ - WARNING - CAN processing took 342.6ms (target < 50ms)
+2025-10-30 23:47:44,832 - __main__ - WARNING - CAN processing took 330.8ms (target < 50ms)
+2025-10-30 23:47:45,164 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:47:45,496 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:47:45,829 - __main__ - WARNING - CAN processing took 333.4ms (target < 50ms)
+2025-10-30 23:47:46,161 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:47:46,493 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:47:46,824 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:47:47,156 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:47:47,489 - __main__ - WARNING - CAN processing took 330.6ms (target < 50ms)
+2025-10-30 23:47:47,822 - __main__ - WARNING - CAN processing took 330.6ms (target < 50ms)
+2025-10-30 23:47:48,154 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:47:48,506 - __main__ - WARNING - CAN processing took 351.0ms (target < 50ms)
+2025-10-30 23:47:48,847 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 23:47:49,179 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:47:49,512 - __main__ - WARNING - CAN processing took 332.3ms (target < 50ms)
+2025-10-30 23:47:49,844 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:47:50,176 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:47:50,507 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:47:50,839 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:47:51,171 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:47:51,503 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:47:51,835 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 23:47:52,167 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:47:52,499 - __main__ - WARNING - CAN processing took 332.4ms (target < 50ms)
+2025-10-30 23:47:52,831 - __main__ - WARNING - CAN processing took 332.1ms (target < 50ms)
+2025-10-30 23:47:53,164 - __main__ - WARNING - CAN processing took 333.0ms (target < 50ms)
+2025-10-30 23:47:53,496 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:47:53,828 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:47:54,160 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:47:54,171 - __main__ - INFO - Performance Stats: {'uptime_sec': 10.0, 'total_messages': 30, 'message_rate_hz': 2.99, 'processed_queue': 0, 'lte_queue': 0, 'radio_queue': 0, 'can_tx_queue': 0, 'csv_queue': 0, 'nn_buffer_size': 0, 'threads_alive': 8}
+2025-10-30 23:47:54,492 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:47:54,824 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:47:55,158 - __main__ - WARNING - CAN processing took 334.0ms (target < 50ms)
+2025-10-30 23:47:55,489 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:47:55,822 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:47:56,154 - __main__ - WARNING - CAN processing took 332.5ms (target < 50ms)
+2025-10-30 23:47:56,486 - __main__ - WARNING - CAN processing took 330.6ms (target < 50ms)
+2025-10-30 23:47:56,818 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:47:57,150 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:47:57,482 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:47:57,813 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:47:58,146 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:47:58,478 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:47:58,809 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:47:59,141 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:47:59,473 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:47:59,805 - __main__ - WARNING - CAN processing took 332.6ms (target < 50ms)
+2025-10-30 23:48:00,138 - __main__ - WARNING - CAN processing took 332.6ms (target < 50ms)
+2025-10-30 23:48:00,471 - __main__ - WARNING - CAN processing took 332.6ms (target < 50ms)
+2025-10-30 23:48:00,802 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:48:01,134 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:48:01,465 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 23:48:01,797 - __main__ - WARNING - CAN processing took 332.3ms (target < 50ms)
+2025-10-30 23:48:02,129 - __main__ - WARNING - CAN processing took 332.1ms (target < 50ms)
+2025-10-30 23:48:02,461 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:48:02,792 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:48:03,124 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:48:03,456 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:48:03,787 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:48:04,119 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:48:04,179 - __main__ - INFO - Performance Stats: {'uptime_sec': 20.0, 'total_messages': 60, 'message_rate_hz': 3.0, 'processed_queue': 0, 'lte_queue': 0, 'radio_queue': 0, 'can_tx_queue': 0, 'csv_queue': 0, 'nn_buffer_size': 0, 'threads_alive': 8}
+2025-10-30 23:48:04,451 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:48:04,782 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:48:05,115 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:48:05,447 - __main__ - WARNING - CAN processing took 332.9ms (target < 50ms)
+2025-10-30 23:48:05,780 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:48:06,111 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:48:06,443 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:48:06,775 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:48:07,107 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:48:07,440 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 23:48:07,772 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:48:08,104 - __main__ - WARNING - CAN processing took 332.4ms (target < 50ms)
+2025-10-30 23:48:08,436 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:48:08,768 - __main__ - WARNING - CAN processing took 332.1ms (target < 50ms)
+2025-10-30 23:48:09,100 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:48:09,432 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:48:09,763 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:48:10,096 - __main__ - WARNING - CAN processing took 332.1ms (target < 50ms)
+2025-10-30 23:48:10,427 - __main__ - WARNING - CAN processing took 330.6ms (target < 50ms)
+2025-10-30 23:48:10,758 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:48:11,091 - __main__ - WARNING - CAN processing took 332.7ms (target < 50ms)
+2025-10-30 23:48:11,423 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:48:11,755 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:48:12,087 - __main__ - WARNING - CAN processing took 332.3ms (target < 50ms)
+2025-10-30 23:48:12,418 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:48:12,751 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:48:13,083 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:48:13,415 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:48:13,747 - __main__ - WARNING - CAN processing took 330.7ms (target < 50ms)
+2025-10-30 23:48:14,078 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:48:14,186 - __main__ - INFO - Performance Stats: {'uptime_sec': 30.0, 'total_messages': 90, 'message_rate_hz': 3.0, 'processed_queue': 0, 'lte_queue': 0, 'radio_queue': 0, 'can_tx_queue': 0, 'csv_queue': 0, 'nn_buffer_size': 0, 'threads_alive': 8}
+2025-10-30 23:48:14,410 - __main__ - WARNING - CAN processing took 332.3ms (target < 50ms)
+2025-10-30 23:48:14,742 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:48:15,073 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:48:15,405 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:48:15,738 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:48:16,070 - __main__ - WARNING - CAN processing took 332.5ms (target < 50ms)
+2025-10-30 23:48:16,401 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:48:16,733 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:48:17,064 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:48:17,396 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:48:17,727 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:48:18,059 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:48:18,393 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:48:18,724 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 23:48:19,057 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:48:19,389 - __main__ - WARNING - CAN processing took 332.1ms (target < 50ms)
+2025-10-30 23:48:19,721 - __main__ - WARNING - CAN processing took 332.3ms (target < 50ms)
+2025-10-30 23:48:20,053 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:48:20,385 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:48:20,716 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:48:21,051 - __main__ - WARNING - CAN processing took 335.2ms (target < 50ms)
+2025-10-30 23:48:21,388 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:48:21,720 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:48:22,052 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:48:22,383 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:48:22,715 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:48:23,048 - __main__ - WARNING - CAN processing took 330.7ms (target < 50ms)
+2025-10-30 23:48:23,379 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:48:23,710 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:48:24,042 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:48:24,191 - __main__ - INFO - Performance Stats: {'uptime_sec': 40.0, 'total_messages': 120, 'message_rate_hz': 3.0, 'processed_queue': 0, 'lte_queue': 0, 'radio_queue': 0, 'can_tx_queue': 0, 'csv_queue': 0, 'nn_buffer_size': 0, 'threads_alive': 8}
+2025-10-30 23:48:24,373 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 23:48:24,705 - __main__ - WARNING - CAN processing took 330.8ms (target < 50ms)
+2025-10-30 23:48:25,037 - __main__ - WARNING - CAN processing took 330.8ms (target < 50ms)
+2025-10-30 23:48:25,369 - __main__ - WARNING - CAN processing took 332.3ms (target < 50ms)
+2025-10-30 23:48:25,701 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:48:26,032 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:48:26,364 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:48:26,695 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 23:48:27,027 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:48:27,359 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:48:27,690 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:48:28,021 - __main__ - WARNING - CAN processing took 330.7ms (target < 50ms)
+2025-10-30 23:48:28,352 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:48:28,685 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:48:29,016 - __main__ - WARNING - CAN processing took 330.8ms (target < 50ms)
+2025-10-30 23:48:29,348 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:48:29,679 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:48:30,010 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 23:48:30,342 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:48:30,672 - __main__ - WARNING - CAN processing took 330.6ms (target < 50ms)
+2025-10-30 23:48:31,004 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:48:31,336 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:48:31,668 - __main__ - WARNING - CAN processing took 330.7ms (target < 50ms)
+2025-10-30 23:48:31,999 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:48:32,332 - __main__ - WARNING - CAN processing took 332.4ms (target < 50ms)
+2025-10-30 23:48:32,663 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:48:32,995 - __main__ - WARNING - CAN processing took 330.4ms (target < 50ms)
+2025-10-30 23:48:33,327 - __main__ - WARNING - CAN processing took 332.1ms (target < 50ms)
+2025-10-30 23:48:33,658 - __main__ - WARNING - CAN processing took 330.4ms (target < 50ms)
+2025-10-30 23:48:33,991 - __main__ - WARNING - CAN processing took 332.9ms (target < 50ms)
+2025-10-30 23:48:34,196 - __main__ - INFO - Performance Stats: {'uptime_sec': 50.0, 'total_messages': 150, 'message_rate_hz': 3.0, 'processed_queue': 0, 'lte_queue': 0, 'radio_queue': 0, 'can_tx_queue': 0, 'csv_queue': 0, 'nn_buffer_size': 0, 'threads_alive': 8}
+2025-10-30 23:48:34,322 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:48:34,654 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:48:34,985 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:48:35,317 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:48:35,648 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:48:35,980 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:48:36,312 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:48:36,643 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:48:36,975 - __main__ - WARNING - CAN processing took 332.3ms (target < 50ms)
+2025-10-30 23:48:37,307 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:48:37,638 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:48:37,970 - __main__ - WARNING - CAN processing took 330.7ms (target < 50ms)
+2025-10-30 23:48:38,301 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 23:48:38,633 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:48:38,964 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:48:39,295 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:48:39,626 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:48:39,957 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:48:40,289 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:48:40,620 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:48:40,953 - __main__ - WARNING - CAN processing took 330.5ms (target < 50ms)
+2025-10-30 23:48:41,285 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:48:41,617 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:48:41,948 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:48:42,280 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:48:42,612 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:48:42,943 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:48:43,275 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:48:43,607 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:48:43,938 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:48:44,202 - __main__ - INFO - Performance Stats: {'uptime_sec': 60.1, 'total_messages': 180, 'message_rate_hz': 3.0, 'processed_queue': 0, 'lte_queue': 0, 'radio_queue': 0, 'can_tx_queue': 0, 'csv_queue': 0, 'nn_buffer_size': 0, 'threads_alive': 8}
+2025-10-30 23:48:44,269 - __main__ - WARNING - CAN processing took 330.6ms (target < 50ms)
+2025-10-30 23:48:44,601 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:48:44,933 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:48:45,264 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:48:45,595 - __main__ - WARNING - CAN processing took 330.3ms (target < 50ms)
+2025-10-30 23:48:45,927 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 23:48:46,258 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:48:46,591 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:48:46,923 - __main__ - WARNING - CAN processing took 330.3ms (target < 50ms)
+2025-10-30 23:48:47,254 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:48:47,586 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:48:47,918 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:48:48,250 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:48:48,583 - __main__ - WARNING - CAN processing took 332.5ms (target < 50ms)
+2025-10-30 23:48:48,914 - __main__ - WARNING - CAN processing took 330.8ms (target < 50ms)
+2025-10-30 23:48:49,245 - __main__ - WARNING - CAN processing took 330.8ms (target < 50ms)
+2025-10-30 23:48:49,576 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:48:49,908 - __main__ - WARNING - CAN processing took 330.6ms (target < 50ms)
+2025-10-30 23:48:50,239 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:48:50,572 - __main__ - WARNING - CAN processing took 332.8ms (target < 50ms)
+2025-10-30 23:48:50,903 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 23:48:51,234 - __main__ - WARNING - CAN processing took 330.7ms (target < 50ms)
+2025-10-30 23:48:51,566 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:48:51,897 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:48:52,230 - __main__ - WARNING - CAN processing took 332.1ms (target < 50ms)
+2025-10-30 23:48:52,562 - __main__ - WARNING - CAN processing took 330.8ms (target < 50ms)
+2025-10-30 23:48:52,894 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:48:53,225 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:48:53,556 - __main__ - WARNING - CAN processing took 330.8ms (target < 50ms)
+2025-10-30 23:48:53,889 - __main__ - WARNING - CAN processing took 332.5ms (target < 50ms)
+2025-10-30 23:48:54,209 - __main__ - INFO - Performance Stats: {'uptime_sec': 70.1, 'total_messages': 210, 'message_rate_hz': 3.0, 'processed_queue': 0, 'lte_queue': 0, 'radio_queue': 0, 'can_tx_queue': 0, 'csv_queue': 0, 'nn_buffer_size': 0, 'threads_alive': 8}
+2025-10-30 23:48:54,220 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:48:54,551 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:48:54,883 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:48:55,216 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:48:55,548 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:48:55,880 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:48:56,211 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 23:48:56,542 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:48:56,873 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:48:57,206 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:48:57,537 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 23:48:57,870 - __main__ - WARNING - CAN processing took 330.8ms (target < 50ms)
+2025-10-30 23:48:58,202 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:48:58,534 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:48:58,865 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:48:59,197 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:48:59,528 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:48:59,860 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:49:00,191 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:49:00,523 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:49:00,855 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:49:01,186 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:49:01,518 - __main__ - WARNING - CAN processing took 332.1ms (target < 50ms)
+2025-10-30 23:49:01,850 - __main__ - WARNING - CAN processing took 330.8ms (target < 50ms)
+2025-10-30 23:49:02,184 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:49:02,516 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:49:02,847 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:49:03,179 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:49:03,511 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:49:03,843 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:49:04,175 - __main__ - WARNING - CAN processing took 332.4ms (target < 50ms)
+2025-10-30 23:49:04,216 - __main__ - INFO - Performance Stats: {'uptime_sec': 80.1, 'total_messages': 241, 'message_rate_hz': 3.01, 'processed_queue': 0, 'lte_queue': 0, 'radio_queue': 0, 'can_tx_queue': 0, 'csv_queue': 0, 'nn_buffer_size': 0, 'threads_alive': 8}
+2025-10-30 23:49:04,507 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:49:04,838 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:49:05,174 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:49:05,508 - __main__ - WARNING - CAN processing took 332.7ms (target < 50ms)
+2025-10-30 23:49:05,842 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:49:06,175 - __main__ - WARNING - CAN processing took 333.3ms (target < 50ms)
+2025-10-30 23:49:06,508 - __main__ - WARNING - CAN processing took 330.6ms (target < 50ms)
+2025-10-30 23:49:06,839 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:49:07,170 - __main__ - WARNING - CAN processing took 330.5ms (target < 50ms)
+2025-10-30 23:49:07,503 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 23:49:07,835 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:49:08,166 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:49:08,498 - __main__ - WARNING - CAN processing took 330.6ms (target < 50ms)
+2025-10-30 23:49:08,828 - __main__ - WARNING - CAN processing took 330.7ms (target < 50ms)
+2025-10-30 23:49:09,160 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:49:09,491 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:49:09,822 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:49:10,154 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:49:10,485 - __main__ - WARNING - CAN processing took 330.4ms (target < 50ms)
+2025-10-30 23:49:10,817 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:49:11,149 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:49:11,480 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:49:11,811 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:49:12,143 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:49:12,474 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:49:12,806 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:49:13,139 - __main__ - WARNING - CAN processing took 332.4ms (target < 50ms)
+2025-10-30 23:49:13,470 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:49:13,802 - __main__ - WARNING - CAN processing took 332.1ms (target < 50ms)
+2025-10-30 23:49:14,135 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:49:14,223 - __main__ - INFO - Performance Stats: {'uptime_sec': 90.1, 'total_messages': 271, 'message_rate_hz': 3.01, 'processed_queue': 0, 'lte_queue': 0, 'radio_queue': 0, 'can_tx_queue': 0, 'csv_queue': 0, 'nn_buffer_size': 0, 'threads_alive': 8}
+2025-10-30 23:49:14,466 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:49:14,797 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:49:15,129 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:49:15,460 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:49:15,792 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:49:16,124 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:49:16,455 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:49:16,788 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:49:17,119 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:49:17,450 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:49:17,782 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:49:18,114 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:49:18,446 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:49:18,778 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:49:19,109 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:49:19,441 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:49:19,772 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 23:49:20,104 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:49:20,437 - __main__ - WARNING - CAN processing took 333.7ms (target < 50ms)
+2025-10-30 23:49:20,769 - __main__ - WARNING - CAN processing took 330.7ms (target < 50ms)
+2025-10-30 23:49:21,101 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:49:21,432 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:49:21,763 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:49:22,095 - __main__ - WARNING - CAN processing took 330.8ms (target < 50ms)
+2025-10-30 23:49:22,427 - __main__ - WARNING - CAN processing took 330.4ms (target < 50ms)
+2025-10-30 23:49:22,761 - __main__ - WARNING - CAN processing took 330.5ms (target < 50ms)
+2025-10-30 23:49:23,093 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:49:23,424 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:49:23,755 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:49:24,087 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:49:24,238 - __main__ - INFO - Performance Stats: {'uptime_sec': 100.1, 'total_messages': 301, 'message_rate_hz': 3.01, 'processed_queue': 0, 'lte_queue': 0, 'radio_queue': 0, 'can_tx_queue': 0, 'csv_queue': 0, 'nn_buffer_size': 0, 'threads_alive': 8}
+2025-10-30 23:49:24,421 - __main__ - WARNING - CAN processing took 333.2ms (target < 50ms)
+2025-10-30 23:49:24,753 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:49:25,084 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:49:25,417 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:49:25,749 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:49:26,080 - __main__ - WARNING - CAN processing took 330.3ms (target < 50ms)
+2025-10-30 23:49:26,411 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:49:26,742 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 23:49:27,074 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:49:27,405 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:49:27,737 - __main__ - WARNING - CAN processing took 330.3ms (target < 50ms)
+2025-10-30 23:49:28,068 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:49:28,399 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:49:28,731 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:49:29,062 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:49:29,395 - __main__ - WARNING - CAN processing took 332.4ms (target < 50ms)
+2025-10-30 23:49:29,727 - __main__ - WARNING - CAN processing took 332.8ms (target < 50ms)
+2025-10-30 23:49:30,059 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 23:49:30,391 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:49:30,722 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:49:31,054 - __main__ - WARNING - CAN processing took 332.4ms (target < 50ms)
+2025-10-30 23:49:31,387 - __main__ - WARNING - CAN processing took 330.8ms (target < 50ms)
+2025-10-30 23:49:31,719 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:49:32,051 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:49:32,382 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:49:32,714 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:49:33,046 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:49:33,377 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:49:33,709 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:49:34,041 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:49:34,253 - __main__ - INFO - Performance Stats: {'uptime_sec': 110.1, 'total_messages': 331, 'message_rate_hz': 3.01, 'processed_queue': 0, 'lte_queue': 0, 'radio_queue': 0, 'can_tx_queue': 0, 'csv_queue': 0, 'nn_buffer_size': 0, 'threads_alive': 8}
+2025-10-30 23:49:34,372 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:49:34,706 - __main__ - WARNING - CAN processing took 332.6ms (target < 50ms)
+2025-10-30 23:49:35,041 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:49:35,372 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:49:35,704 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:49:36,036 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:49:36,367 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:49:36,699 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:49:37,031 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:49:37,362 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:49:37,694 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:49:38,025 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:49:38,357 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:49:38,702 - __main__ - WARNING - CAN processing took 344.9ms (target < 50ms)
+2025-10-30 23:49:39,061 - __main__ - WARNING - CAN processing took 330.5ms (target < 50ms)
+2025-10-30 23:49:39,393 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:49:39,724 - __main__ - WARNING - CAN processing took 330.8ms (target < 50ms)
+2025-10-30 23:49:40,055 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:49:40,387 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:49:40,720 - __main__ - WARNING - CAN processing took 333.0ms (target < 50ms)
+2025-10-30 23:49:41,052 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:49:41,384 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:49:41,716 - __main__ - WARNING - CAN processing took 332.4ms (target < 50ms)
+2025-10-30 23:49:42,048 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:49:42,380 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:49:42,711 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:49:43,043 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:49:43,375 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:49:43,706 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:49:44,038 - __main__ - WARNING - CAN processing took 330.8ms (target < 50ms)
+2025-10-30 23:49:44,261 - __main__ - INFO - Performance Stats: {'uptime_sec': 120.1, 'total_messages': 361, 'message_rate_hz': 3.01, 'processed_queue': 0, 'lte_queue': 0, 'radio_queue': 0, 'can_tx_queue': 0, 'csv_queue': 0, 'nn_buffer_size': 0, 'threads_alive': 8}
+2025-10-30 23:49:44,370 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:49:44,701 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:49:45,033 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:49:45,364 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:49:45,697 - __main__ - WARNING - CAN processing took 330.5ms (target < 50ms)
+2025-10-30 23:49:46,028 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:49:46,360 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:49:46,691 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:49:47,023 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:49:47,355 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:49:47,687 - __main__ - WARNING - CAN processing took 332.5ms (target < 50ms)
+2025-10-30 23:49:48,020 - __main__ - WARNING - CAN processing took 330.4ms (target < 50ms)
+2025-10-30 23:49:48,352 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:49:48,684 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:49:49,016 - __main__ - WARNING - CAN processing took 332.1ms (target < 50ms)
+2025-10-30 23:49:49,349 - __main__ - WARNING - CAN processing took 332.4ms (target < 50ms)
+2025-10-30 23:49:49,681 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:49:50,012 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 23:49:50,343 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:49:50,675 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:49:51,007 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:49:51,339 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:49:51,671 - __main__ - WARNING - CAN processing took 330.5ms (target < 50ms)
+2025-10-30 23:49:52,003 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:49:52,334 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:49:52,666 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:49:52,998 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:49:53,330 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:49:53,662 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:49:53,994 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:49:54,268 - __main__ - INFO - Performance Stats: {'uptime_sec': 130.1, 'total_messages': 391, 'message_rate_hz': 3.0, 'processed_queue': 0, 'lte_queue': 0, 'radio_queue': 0, 'can_tx_queue': 0, 'csv_queue': 0, 'nn_buffer_size': 0, 'threads_alive': 8}
+2025-10-30 23:49:54,326 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:49:54,657 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:49:54,989 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:49:55,321 - __main__ - WARNING - CAN processing took 332.4ms (target < 50ms)
+2025-10-30 23:49:55,654 - __main__ - WARNING - CAN processing took 332.6ms (target < 50ms)
+2025-10-30 23:49:55,985 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:49:56,317 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:49:56,649 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:49:56,981 - __main__ - WARNING - CAN processing took 332.0ms (target < 50ms)
+2025-10-30 23:49:57,314 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:49:57,645 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:49:57,978 - __main__ - WARNING - CAN processing took 332.4ms (target < 50ms)
+2025-10-30 23:49:58,310 - __main__ - WARNING - CAN processing took 332.1ms (target < 50ms)
+2025-10-30 23:49:58,642 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:49:58,973 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:49:59,304 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:49:59,636 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:49:59,968 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:50:00,300 - __main__ - WARNING - CAN processing took 332.4ms (target < 50ms)
+2025-10-30 23:50:00,631 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:50:00,963 - __main__ - WARNING - CAN processing took 330.8ms (target < 50ms)
+2025-10-30 23:50:01,296 - __main__ - WARNING - CAN processing took 332.3ms (target < 50ms)
+2025-10-30 23:50:01,627 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:50:01,959 - __main__ - WARNING - CAN processing took 330.8ms (target < 50ms)
+2025-10-30 23:50:02,291 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:50:02,623 - __main__ - WARNING - CAN processing took 332.5ms (target < 50ms)
+2025-10-30 23:50:02,955 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:50:03,287 - __main__ - WARNING - CAN processing took 332.1ms (target < 50ms)
+2025-10-30 23:50:03,619 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:50:03,961 - __main__ - WARNING - CAN processing took 341.4ms (target < 50ms)
+2025-10-30 23:50:04,275 - __main__ - INFO - Performance Stats: {'uptime_sec': 140.1, 'total_messages': 421, 'message_rate_hz': 3.0, 'processed_queue': 0, 'lte_queue': 0, 'radio_queue': 0, 'can_tx_queue': 0, 'csv_queue': 0, 'nn_buffer_size': 0, 'threads_alive': 8}
+2025-10-30 23:50:04,293 - __main__ - WARNING - CAN processing took 330.7ms (target < 50ms)
+2025-10-30 23:50:04,626 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:50:04,957 - __main__ - WARNING - CAN processing took 330.5ms (target < 50ms)
+2025-10-30 23:50:05,288 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:50:05,620 - __main__ - WARNING - CAN processing took 330.4ms (target < 50ms)
+2025-10-30 23:50:05,952 - __main__ - WARNING - CAN processing took 330.6ms (target < 50ms)
+2025-10-30 23:50:06,285 - __main__ - WARNING - CAN processing took 332.8ms (target < 50ms)
+2025-10-30 23:50:06,618 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:50:06,949 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:50:07,281 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:50:07,612 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:50:07,945 - __main__ - WARNING - CAN processing took 332.1ms (target < 50ms)
+2025-10-30 23:50:08,277 - __main__ - WARNING - CAN processing took 332.6ms (target < 50ms)
+2025-10-30 23:50:08,609 - __main__ - WARNING - CAN processing took 332.1ms (target < 50ms)
+2025-10-30 23:50:08,941 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:50:09,273 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:50:09,604 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:50:09,937 - __main__ - WARNING - CAN processing took 332.1ms (target < 50ms)
+2025-10-30 23:50:10,269 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:50:10,600 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:50:10,932 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:50:11,264 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:50:11,595 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:50:11,927 - __main__ - WARNING - CAN processing took 331.1ms (target < 50ms)
+2025-10-30 23:50:12,259 - __main__ - WARNING - CAN processing took 330.4ms (target < 50ms)
+2025-10-30 23:50:12,591 - __main__ - WARNING - CAN processing took 332.3ms (target < 50ms)
+2025-10-30 23:50:12,923 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:50:13,255 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:50:13,586 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:50:13,917 - __main__ - WARNING - CAN processing took 330.7ms (target < 50ms)
+2025-10-30 23:50:14,249 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:50:14,283 - __main__ - INFO - Performance Stats: {'uptime_sec': 150.1, 'total_messages': 452, 'message_rate_hz': 3.01, 'processed_queue': 0, 'lte_queue': 0, 'radio_queue': 0, 'can_tx_queue': 0, 'csv_queue': 0, 'nn_buffer_size': 0, 'threads_alive': 8}
+2025-10-30 23:50:14,581 - __main__ - WARNING - CAN processing took 332.5ms (target < 50ms)
+2025-10-30 23:50:14,914 - __main__ - WARNING - CAN processing took 330.2ms (target < 50ms)
+2025-10-30 23:50:15,245 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:50:15,577 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:50:15,909 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:50:16,254 - __main__ - WARNING - CAN processing took 345.8ms (target < 50ms)
+2025-10-30 23:50:16,587 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:50:16,920 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:50:17,253 - __main__ - WARNING - CAN processing took 332.1ms (target < 50ms)
+2025-10-30 23:50:17,585 - __main__ - WARNING - CAN processing took 332.5ms (target < 50ms)
+2025-10-30 23:50:17,917 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:50:18,249 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:50:18,580 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:50:18,913 - __main__ - WARNING - CAN processing took 332.5ms (target < 50ms)
+2025-10-30 23:50:19,244 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:50:19,576 - __main__ - WARNING - CAN processing took 332.1ms (target < 50ms)
+2025-10-30 23:50:19,908 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:50:20,239 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:50:20,571 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:50:20,902 - __main__ - WARNING - CAN processing took 330.6ms (target < 50ms)
+2025-10-30 23:50:21,238 - __main__ - WARNING - CAN processing took 335.9ms (target < 50ms)
+2025-10-30 23:50:21,570 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:50:21,903 - __main__ - WARNING - CAN processing took 332.3ms (target < 50ms)
+2025-10-30 23:50:22,234 - __main__ - WARNING - CAN processing took 330.5ms (target < 50ms)
+2025-10-30 23:50:22,566 - __main__ - WARNING - CAN processing took 331.9ms (target < 50ms)
+2025-10-30 23:50:22,897 - __main__ - WARNING - CAN processing took 330.6ms (target < 50ms)
+2025-10-30 23:50:23,229 - __main__ - WARNING - CAN processing took 331.0ms (target < 50ms)
+2025-10-30 23:50:23,560 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:50:23,891 - __main__ - WARNING - CAN processing took 331.5ms (target < 50ms)
+2025-10-30 23:50:24,223 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:50:24,290 - __main__ - INFO - Performance Stats: {'uptime_sec': 160.1, 'total_messages': 482, 'message_rate_hz': 3.01, 'processed_queue': 0, 'lte_queue': 0, 'radio_queue': 0, 'can_tx_queue': 0, 'csv_queue': 0, 'nn_buffer_size': 0, 'threads_alive': 8}
+2025-10-30 23:50:24,555 - __main__ - WARNING - CAN processing took 332.2ms (target < 50ms)
+2025-10-30 23:50:24,888 - __main__ - WARNING - CAN processing took 332.9ms (target < 50ms)
+2025-10-30 23:50:25,227 - __main__ - WARNING - CAN processing took 338.9ms (target < 50ms)
+2025-10-30 23:50:25,565 - __main__ - WARNING - CAN processing took 331.2ms (target < 50ms)
+2025-10-30 23:50:25,896 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:50:26,228 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:50:26,559 - __main__ - WARNING - CAN processing took 330.8ms (target < 50ms)
+2025-10-30 23:50:26,891 - __main__ - WARNING - CAN processing took 331.7ms (target < 50ms)
+2025-10-30 23:50:27,223 - __main__ - WARNING - CAN processing took 330.3ms (target < 50ms)
+2025-10-30 23:50:27,555 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:50:27,886 - __main__ - WARNING - CAN processing took 330.2ms (target < 50ms)
+2025-10-30 23:50:28,217 - __main__ - WARNING - CAN processing took 330.9ms (target < 50ms)
+2025-10-30 23:50:28,548 - __main__ - WARNING - CAN processing took 331.3ms (target < 50ms)
+2025-10-30 23:50:28,880 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:50:29,211 - __main__ - WARNING - CAN processing took 331.4ms (target < 50ms)
+2025-10-30 23:50:29,543 - __main__ - WARNING - CAN processing took 331.6ms (target < 50ms)
+2025-10-30 23:50:29,870 - __main__ - INFO - Received signal 2, initiating shutdown...
+2025-10-30 23:50:29,871 - __main__ - INFO - Shutting down Driver IO System...
+2025-10-30 23:50:29,871 - __main__ - INFO - Waiting for can_reception thread to stop...
+2025-10-30 23:50:29,875 - __main__ - WARNING - CAN processing took 331.8ms (target < 50ms)
+2025-10-30 23:50:29,875 - __main__ - INFO - LTE transmission thread stopped
+2025-10-30 23:50:29,875 - __main__ - INFO - Radio transmission thread stopped
+2025-10-30 23:50:29,875 - __main__ - INFO - CAN transmission thread stopped
+2025-10-30 23:50:29,875 - __main__ - INFO - CSV logging thread stopped
+2025-10-30 23:50:29,875 - __main__ - INFO - CAN reception and processing thread stopped
+2025-10-30 23:50:29,875 - __main__ - INFO - Waiting for lte_tx thread to stop...
+2025-10-30 23:50:29,878 - __main__ - INFO - Waiting for radio_tx thread to stop...
+2025-10-30 23:50:29,878 - __main__ - INFO - Waiting for can_tx thread to stop...
+2025-10-30 23:50:29,878 - __main__ - INFO - Waiting for csv_logging thread to stop...
+2025-10-30 23:50:29,878 - __main__ - INFO - Waiting for nn_buffer thread to stop...
+2025-10-30 23:50:29,888 - __main__ - INFO - Dashboard update thread stopped
+2025-10-30 23:50:30,270 - __main__ - INFO - Neural network buffer thread stopped
+2025-10-30 23:50:30,272 - __main__ - INFO - Received signal 2, initiating shutdown...
+2025-10-30 23:50:30,272 - __main__ - INFO - Shutting down Driver IO System...
+2025-10-30 23:50:30,275 - __main__ - INFO - Waiting for can_reception thread to stop...
+2025-10-30 23:50:30,275 - __main__ - INFO - Waiting for lte_tx thread to stop...
+2025-10-30 23:50:30,275 - __main__ - INFO - Waiting for radio_tx thread to stop...
+2025-10-30 23:50:30,275 - __main__ - INFO - Waiting for can_tx thread to stop...
+2025-10-30 23:50:30,275 - __main__ - INFO - Waiting for csv_logging thread to stop...
+2025-10-30 23:50:30,275 - __main__ - INFO - Waiting for nn_buffer thread to stop...
+2025-10-30 23:50:30,295 - __main__ - INFO - System management thread stopped
+2025-10-30 23:50:35,286 - __main__ - INFO - Received signal 2, initiating shutdown...
+2025-10-30 23:50:35,286 - __main__ - INFO - Shutting down Driver IO System...
+2025-10-30 23:50:35,286 - __main__ - INFO - Waiting for can_reception thread to stop...
+2025-10-30 23:50:35,288 - __main__ - INFO - Waiting for lte_tx thread to stop...
+2025-10-30 23:50:35,288 - __main__ - INFO - Waiting for radio_tx thread to stop...
+2025-10-30 23:50:35,288 - __main__ - INFO - Waiting for can_tx thread to stop...
+2025-10-30 23:50:35,288 - __main__ - INFO - Waiting for csv_logging thread to stop...
+2025-10-30 23:50:35,288 - __main__ - INFO - Waiting for nn_buffer thread to stop...
+2025-10-30 23:50:40,303 - __main__ - WARNING - nn_buffer thread did not stop gracefully
+2025-10-30 23:50:40,303 - __main__ - INFO - Waiting for dashboard thread to stop...
+2025-10-30 23:50:40,303 - __main__ - INFO - Waiting for system_management thread to stop...
+2025-10-30 23:50:40,303 - __main__ - INFO - Driver IO System shutdown complete
+2025-10-30 23:50:40,303 - __main__ - WARNING - nn_buffer thread did not stop gracefully
+2025-10-30 23:50:40,303 - __main__ - INFO - Waiting for dashboard thread to stop...
+2025-10-30 23:50:40,303 - __main__ - INFO - Waiting for system_management thread to stop...
+2025-10-30 23:50:40,303 - __main__ - INFO - Driver IO System shutdown complete
+2025-10-30 23:50:40,303 - __main__ - INFO - Waiting for dashboard thread to stop...
+2025-10-30 23:50:40,303 - __main__ - INFO - Waiting for system_management thread to stop...
+2025-10-30 23:50:40,303 - __main__ - INFO - Driver IO System shutdown complete
+2025-10-30 23:50:40,303 - __main__ - INFO - Shutting down Driver IO System...
+2025-10-30 23:50:40,303 - __main__ - INFO - Waiting for can_reception thread to stop...
+2025-10-30 23:50:40,313 - __main__ - INFO - Waiting for lte_tx thread to stop...
+2025-10-30 23:50:40,313 - __main__ - INFO - Waiting for radio_tx thread to stop...
+2025-10-30 23:50:40,313 - __main__ - INFO - Waiting for can_tx thread to stop...
+2025-10-30 23:50:40,314 - __main__ - INFO - Waiting for csv_logging thread to stop...
+2025-10-30 23:50:40,314 - __main__ - INFO - Waiting for nn_buffer thread to stop...
+2025-10-30 23:50:40,314 - __main__ - INFO - Waiting for dashboard thread to stop...
+2025-10-30 23:50:40,314 - __main__ - INFO - Waiting for system_management thread to stop...
+2025-10-30 23:50:40,314 - __main__ - INFO - Driver IO System shutdown complete
+2025-10-30 23:50:40,317 - __main__ - INFO - SC2 Driver IO System stopped

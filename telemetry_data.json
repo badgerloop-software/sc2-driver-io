@@ -1,13 +1,30 @@
 {
-  "speed": 90.93377702427688,
-  "soc": 25.64280453364919,
-  "pack_voltage": 330.2653823279523,
-  "pack_current": -20.26816961387492,
-  "motor_temp": 47.796620090163344,
-  "headlights": false,
-  "l_turn_led_en": true,
-  "r_turn_led_en": true,
-  "hazards": false,
-  "parking_brake": false,
-  "timestamp": 1760915724.2113209
+  "lap_count": 1,
+  "current_section": 7,
+  "lap_duration_ms": 150791,
+  "lap_time_formatted": "2:30.79",
+  "gps_latitude": 43.07405735063902,
+  "gps_longitude": -89.4019838536563,
+  "speed": 45.0,
+  "battery_soc": 85.0,
+  "pack_voltage": 380.0,
+  "pack_current": 25.0,
+  "lte_signal": {
+    "connected": true,
+    "rssi": 19,
+    "bars": 3,
+    "carrier": "T-Mobile",
+    "signal_dbm": -75
+  },
+  "wifi_status": {
+    "connected": false,
+    "ssid": "Not Connected",
+    "signal_dbm": -100,
+    "bars": 0
+  },
+  "timestamp": 1761886229.2118006,
+  "system_status": "RUNNING",
+  "message_rate_hz": 3.01,
+  "errors": [],
+  "warnings": []
 }
