@@ -5,6 +5,7 @@ import math
 # ======================
 
 class Point:
+    """Simple 2D point with x and y coordinates in the local XY plane."""
     def __init__(self, x: float, y: float):
         self.x = x
         self.y = y
