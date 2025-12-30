@@ -95,12 +95,70 @@ class BatteryIndicator(Container):
         progress_bar = self.query_one(ProgressBar)
         progress_bar.progress = soc
 
+class FaultsDisplay(Static):
+    """Widget to display active faults"""
+    
+    faults = reactive({})
+    
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.border_title = "Vehicle Faults"
+        # Define all possible faults
+        self.all_faults = [
+            "bps_fault",
+            "voltage_failsafe",
+            "current_failsafe",
+            "relay_failsafe",
+            "charge_interlock_failsafe",
+            "thermistor_b_value_table_invalid",
+            "input_power_supply_failsafe",
+            "discharge_limit_enforcement_fault",
+            "charger_safety_relay_fault",
+            "internal_hardware_fault",
+            "internal_heatsink_fault",
+            "internal_software_fault",
+            "highest_cell_voltage_too_high_fault",
+            "lowest_cell_voltage_too_low_fault",
+            "pack_too_hot_fault",
+            "high_voltage_interlock_signal_fault",
+            "precharge_circuit_malfunction",
+            "abnormal_state_of_charge_behavior",
+            "internal_communication_fault",
+            "cell_balancing_stuck_off_fault",
+            "weak_cell_fault",
+            "low_cell_voltage_fault",
+            "open_wiring_fault",
+            "current_sensor_fault",
+            "highest_cell_voltage_over_5V_fault",
+            "cell_asic_fault",
+            "weak_pack_fault",
+            "fan_monitor_fault",
+            "thermistor_fault",
+            "external_communication_fault",
+            "redundant_power_supply_fault",
+            "high_voltage_isolation_fault",
+            "input_power_supply_fault",
+            "charge_limit_enforcement_fault"
+        ]
+    
+    def render(self) -> str:
+        active_faults = [fault for fault in self.all_faults if self.faults.get(fault, False)]
+        if not active_faults:
+            return "[green]No active faults[/]"
+        
+        fault_lines = []
+        for fault in active_faults:
+            # Format fault name for display
+            display_name = fault.replace('_', ' ').title()
+            fault_lines.append(f"[bold red]●[/] {display_name}")
+        
+        return "\n".join(fault_lines)
+
 class SC2Dashboard(App):
     """Main Textual dashboard application"""
     
     CSS_PATH = "dashboard.css"
     TITLE = "SC2 Driver IO Dashboard"
-    SUB_TITLE = "Terminal-based Vehicle Telemetry"
     
     def __init__(self):
         super().__init__()
@@ -120,6 +178,10 @@ class SC2Dashboard(App):
                 Vertical(
                     SystemInfo(id="system"),
                     StatusIndicators(id="status"),
+                    classes="middle-panel"
+                ),
+                Vertical(
+                    FaultsDisplay(id="faults"),
                     classes="right-panel"
                 ),
                 classes="main-container"
@@ -161,6 +223,13 @@ class SC2Dashboard(App):
                 status_widget.r_turn = data.get("r_turn_led_en", False)
                 status_widget.hazards = data.get("hazards", False)
                 status_widget.parking_brake = data.get("parking_brake", False)
+                
+                # Update faults display
+                faults_widget = self.query_one("#faults", FaultsDisplay)
+                faults_data = {}
+                for fault in faults_widget.all_faults:
+                    faults_data[fault] = data.get(fault, False)
+                faults_widget.faults = faults_data
                 
         except Exception as e:
             # Handle data reading errors gracefully

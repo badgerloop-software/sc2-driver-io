@@ -6,12 +6,17 @@
 }
 
 .left-panel {
-    width: 50%;
+    width: 40%;
+    padding: 1;
+}
+
+.middle-panel {
+    width: 30%;
     padding: 1;
 }
 
 .right-panel {
-    width: 50%;
+    width: 30%;
     padding: 1;
 }
 
@@ -43,10 +48,11 @@ BatteryIndicator {
     padding: 1;
 }
 
-.label {
-    text-align: center;
-    margin-bottom: 1;
-    text-style: bold;
+FaultsDisplay {
+    border: solid $error;
+    height: 100%;
+    margin: 1;
+    padding: 1;
 }
 
 .battery {

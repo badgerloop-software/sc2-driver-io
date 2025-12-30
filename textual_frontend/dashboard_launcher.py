@@ -21,15 +21,14 @@ class TelemetryBridge:
         self.lock = threading.Lock()
         self.dashboard = None
         
-    def start_dashboard(self):
-        """Start the Textual dashboard in a separate thread"""
-        def run_dashboard():
-            self.dashboard = SC2Dashboard()
-            self.dashboard.run()
+    def start_telemetry_simulation(self):
+        """Start telemetry simulation in a background thread"""
+        def run_simulation():
+            self.simulate_telemetry_data()
         
-        dashboard_thread = threading.Thread(target=run_dashboard, daemon=True)
-        dashboard_thread.start()
-        return dashboard_thread
+        sim_thread = threading.Thread(target=run_simulation, daemon=True)
+        sim_thread.start()
+        return sim_thread
     
     def update_telemetry_file(self, telemetry_data):
         """Write telemetry data to JSON file for dashboard consumption"""
@@ -43,6 +42,44 @@ class TelemetryBridge:
     def simulate_telemetry_data(self):
         """Simulate telemetry data for testing (replace with actual C++ interface)"""
         import random
+        
+        # Define all possible faults
+        all_faults = [
+            "bps_fault",
+            "voltage_failsafe",
+            "current_failsafe", 
+            "relay_failsafe",
+            "charge_interlock_failsafe",
+            "thermistor_b_value_table_invalid",
+            "input_power_supply_failsafe",
+            "discharge_limit_enforcement_fault",
+            "charger_safety_relay_fault",
+            "internal_hardware_fault",
+            "internal_heatsink_fault",
+            "internal_software_fault",
+            "highest_cell_voltage_too_high_fault",
+            "lowest_cell_voltage_too_low_fault",
+            "pack_too_hot_fault",
+            "high_voltage_interlock_signal_fault",
+            "precharge_circuit_malfunction",
+            "abnormal_state_of_charge_behavior",
+            "internal_communication_fault",
+            "cell_balancing_stuck_off_fault",
+            "weak_cell_fault",
+            "low_cell_voltage_fault",
+            "open_wiring_fault",
+            "current_sensor_fault",
+            "highest_cell_voltage_over_5V_fault",
+            "cell_asic_fault",
+            "weak_pack_fault",
+            "fan_monitor_fault",
+            "thermistor_fault",
+            "external_communication_fault",
+            "redundant_power_supply_fault",
+            "high_voltage_isolation_fault",
+            "input_power_supply_fault",
+            "charge_limit_enforcement_fault"
+        ]
         
         while self.running:
             # Simulate realistic telemetry data
@@ -60,6 +97,17 @@ class TelemetryBridge:
                 "timestamp": time.time()
             }
             
+            # Add faults - mostly false, but occasionally set some to true
+            for fault in all_faults:
+                telemetry_data[fault] = False
+            
+            # 15% chance to have 1-3 random faults active
+            if random.random() < 0.15:
+                num_faults = random.randint(1, 3)
+                active_faults = random.sample(all_faults, num_faults)
+                for fault in active_faults:
+                    telemetry_data[fault] = True
+            
             self.update_telemetry_file(telemetry_data)
             time.sleep(0.1)  # 10Hz updates
     
@@ -67,8 +115,7 @@ class TelemetryBridge:
         """Handle shutdown signals gracefully"""
         print("\nShutting down SC2 Dashboard...")
         self.running = False
-        if self.dashboard:
-            self.dashboard.exit()
+        # Textual handles its own shutdown when running in main thread
         sys.exit(0)
 
 def main():
@@ -82,12 +129,13 @@ def main():
     signal.signal(signal.SIGTERM, bridge.signal_handler)
     
     try:
-        # Start the dashboard
-        dashboard_thread = bridge.start_dashboard()
-        
-        # Start telemetry simulation (replace with actual C++ interface)
+        # Start telemetry simulation in background thread
         print("Starting telemetry bridge...")
-        bridge.simulate_telemetry_data()
+        sim_thread = bridge.start_telemetry_simulation()
+        
+        # Run dashboard in main thread (required for Textual)
+        bridge.dashboard = SC2Dashboard()
+        bridge.dashboard.run()
         
     except KeyboardInterrupt:
         bridge.signal_handler(signal.SIGINT, None)
