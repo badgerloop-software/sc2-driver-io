@@ -2,59 +2,71 @@
 
 .main-container {
     layout: horizontal;
-    height: 100%;
+    height: auto;
+    min-height: 20;
 }
 
 .left-panel {
     width: 40%;
-    padding: 1;
+    padding: 0;
 }
 
 .middle-panel {
     width: 30%;
-    padding: 1;
+    padding: 0;
 }
 
 .right-panel {
     width: 30%;
-    padding: 1;
+    padding: 0;
 }
 
 TelemetryDisplay {
     border: solid $primary;
     height: 60%;
-    margin: 1;
-    padding: 1;
+    margin: 0;
+    padding: 0;
 }
 
 SystemInfo {
     border: solid $secondary;
     height: 60%;
-    margin: 1;
-    padding: 1;
+    margin: 0;
+    padding: 0;
 }
 
 StatusIndicators {
     border: solid $accent;
     height: 40%;
-    margin: 1;
-    padding: 1;
+    margin: 0;
+    padding: 0;
 }
 
 BatteryIndicator {
     border: solid $success;
     height: 40%;
-    margin: 1;
-    padding: 1;
+    margin: 0;
+    padding: 0;
 }
 
 FaultsDisplay {
     border: solid $error;
     height: 100%;
-    margin: 1;
-    padding: 1;
+    margin: 0;
+    padding: 0;
+}
+
+NetworkInfo {
+    border: solid $warning;
+    height: 4;
+    margin: 0;
+    padding: 0;
 }
 
 .battery {
     margin: 1;
+}
+
+.scrollable-content {
+    height: auto;
 }

@@ -12,7 +12,10 @@ import asyncio
 import psutil
 import json
 import time
+import sys
 from pathlib import Path
+sys.path.append('..')
+from lte_network import LTENetworkManager
 
 class TelemetryDisplay(Static):
     """Widget to display telemetry data"""
@@ -28,13 +31,7 @@ class TelemetryDisplay(Static):
         self.border_title = "Vehicle Telemetry"
     
     def render(self) -> str:
-        return f"""
-[bold cyan]Speed:[/] {self.speed:.1f} km/h
-[bold green]Battery SoC:[/] {self.soc:.1f}%
-[bold yellow]Pack Voltage:[/] {self.pack_voltage:.1f}V
-[bold red]Pack Current:[/] {self.pack_current:.1f}A
-[bold magenta]Motor Temp:[/] {self.motor_temp:.1f}°C
-        """.strip()
+        return f"[bold cyan]Speed:[/] {self.speed:.1f} km/h  [bold green]SoC:[/] {self.soc:.1f}%  [bold yellow]Pack V:[/] {self.pack_voltage:.1f}V  [bold red]Pack I:[/] {self.pack_current:.1f}A  [bold magenta]Motor T:[/] {self.motor_temp:.1f}°C"
 
 class SystemInfo(Static):
     """Widget to display system information"""
@@ -49,12 +46,40 @@ class SystemInfo(Static):
         self.border_title = "System Status"
     
     def render(self) -> str:
-        return f"""
-[bold blue]CPU Usage:[/] {self.cpu_percent:.1f}%
-[bold orange3]Memory:[/] {self.memory_percent:.1f}%
-[bold red]CPU Temp:[/] {self.cpu_temp:.1f}°C
-[bold green]Power Draw:[/] {self.power_draw:.1f}W
-        """.strip()
+        return f"[bold blue]CPU:[/] {self.cpu_percent:.1f}%  [bold orange3]Mem:[/] {self.memory_percent:.1f}%  [bold red]CPU T:[/] {self.cpu_temp:.1f}°C  [bold green]Power:[/] {self.power_draw:.1f}W"
+
+class NetworkInfo(Static):
+    """Widget to display network information (cellular, WiFi, and radio)"""
+    
+    cellular_carrier = reactive("Unknown")
+    cellular_signal_bars = reactive(0)
+    wifi_network = reactive("Not Connected")
+    wifi_signal_bars = reactive(0)
+    radio_connected = reactive(False)
+    
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.border_title = "Network Settings"
+    
+    def render(self) -> str:
+        # Create signal bar displays
+        cellular_bars = ""
+        for i in range(4):
+            if i < self.cellular_signal_bars:
+                cellular_bars += "[bold green]▮[/]"
+            else:
+                cellular_bars += "[dim]▯[/]"
+        
+        wifi_bars = ""
+        for i in range(4):
+            if i < self.wifi_signal_bars:
+                wifi_bars += "[bold blue]▮[/]"
+            else:
+                wifi_bars += "[dim]▯[/]"
+        
+        radio_status = "[bold red]●[/]" if self.radio_connected else "[dim]○[/]"
+        
+        return f"[bold cyan]Cell:[/] {self.cellular_carrier} {cellular_bars} | [bold blue]WiFi:[/] {self.wifi_network} {wifi_bars} | [bold yellow]Radio:[/] {radio_status}"
 
 class StatusIndicators(Static):
     """Widget for boolean status indicators"""
@@ -73,13 +98,7 @@ class StatusIndicators(Static):
         def status_icon(active: bool) -> str:
             return "[bold green]●[/]" if active else "[dim]○[/]"
         
-        return f"""
-Headlights: {status_icon(self.headlights)}
-Left Turn: {status_icon(self.l_turn)}
-Right Turn: {status_icon(self.r_turn)}
-Hazards: {status_icon(self.hazards)}
-Parking Brake: {status_icon(self.parking_brake)}
-        """.strip()
+        return f"Headlights: {status_icon(self.headlights)}  Left: {status_icon(self.l_turn)}  Right: {status_icon(self.r_turn)}  Hazards: {status_icon(self.hazards)}  Park: {status_icon(self.parking_brake)}"
 
 class BatteryIndicator(Container):
     """Battery level indicator with progress bar"""
@@ -164,29 +183,35 @@ class SC2Dashboard(App):
         super().__init__()
         self.telemetry_data = {}
         self.last_update = 0
+        self.lte_manager = LTENetworkManager()
     
     def compose(self) -> ComposeResult:
         """Create the dashboard layout"""
         yield Header()
-        yield Container(
-            Horizontal(
-                Vertical(
-                    TelemetryDisplay(id="telemetry"),
-                    BatteryIndicator(id="battery"),
-                    classes="left-panel"
+        yield Vertical(
+            Vertical(
+                NetworkInfo(id="network"),
+                Container(
+                    Horizontal(
+                        Vertical(
+                            TelemetryDisplay(id="telemetry"),
+                            BatteryIndicator(id="battery"),
+                            classes="left-panel"
+                        ),
+                        Vertical(
+                            SystemInfo(id="system"),
+                            StatusIndicators(id="status"),
+                            classes="middle-panel"
+                        ),
+                        Vertical(
+                            FaultsDisplay(id="faults"),
+                            classes="right-panel"
+                        ),
+                        classes="main-container"
+                    ),
+                    id="main"
                 ),
-                Vertical(
-                    SystemInfo(id="system"),
-                    StatusIndicators(id="status"),
-                    classes="middle-panel"
-                ),
-                Vertical(
-                    FaultsDisplay(id="faults"),
-                    classes="right-panel"
-                ),
-                classes="main-container"
             ),
-            id="main"
         )
         yield Footer()
     
@@ -194,6 +219,7 @@ class SC2Dashboard(App):
         """Start background tasks when app starts"""
         self.set_interval(0.1, self.update_telemetry)  # 10Hz telemetry updates
         self.set_interval(1.0, self.update_system_info)  # 1Hz system updates
+        self.set_interval(5.0, self.update_cellular_info)  # 5 second cellular updates
     
     async def update_telemetry(self) -> None:
         """Update telemetry data from C++ backend"""
@@ -263,6 +289,126 @@ class SC2Dashboard(App):
             
         except Exception as e:
             # Handle system metric errors gracefully
+            pass
+    
+    async def update_cellular_info(self) -> None:
+        """Update network information (cellular and WiFi)"""
+        try:
+            # Get cellular info
+            cellular_data = self.lte_manager.get_cellular_info()
+            
+            # Get WiFi info
+            wifi_network = "Not Connected"
+            wifi_signal_bars = 0
+            
+            try:
+                # Try to get WiFi info using nmcli
+                result = await asyncio.create_subprocess_exec(
+                    "nmcli", "-t", "-f", "active,ssid,signal", "device", "wifi", "list",
+                    stdout=asyncio.subprocess.PIPE,
+                    stderr=asyncio.subprocess.PIPE
+                )
+                stdout, stderr = await result.communicate()
+                
+                if result.returncode == 0:
+                    lines = stdout.decode().strip().split('\n')
+                    for line in lines:
+                        if line.startswith('yes:'):
+                            parts = line.split(':')
+                            if len(parts) >= 3:
+                                wifi_network = parts[1]
+                                try:
+                                    signal = int(parts[2])
+                                    # Convert signal percentage to bars
+                                    if signal >= 75:
+                                        wifi_signal_bars = 4
+                                    elif signal >= 50:
+                                        wifi_signal_bars = 3
+                                    elif signal >= 25:
+                                        wifi_signal_bars = 2
+                                    elif signal > 0:
+                                        wifi_signal_bars = 1
+                                except ValueError:
+                                    pass
+                                break
+            except Exception as e:
+                # Fallback to iwconfig if nmcli fails
+                try:
+                    result = await asyncio.create_subprocess_exec(
+                        "iwconfig", "wlan0",
+                        stdout=asyncio.subprocess.PIPE,
+                        stderr=asyncio.subprocess.PIPE
+                    )
+                    stdout, stderr = await result.communicate()
+                    
+                    if result.returncode == 0:
+                        output = stdout.decode()
+                        # Parse ESSID and signal from iwconfig output
+                        for line in output.split('\n'):
+                            if 'ESSID:' in line:
+                                essid_part = line.split('ESSID:')[1].strip()
+                                if essid_part != 'off/any':
+                                    wifi_network = essid_part.strip('"')
+                            elif 'Signal level=' in line:
+                                signal_part = line.split('Signal level=')[1].split()[0]
+                                try:
+                                    signal = int(float(signal_part))
+                                    # iwconfig gives dBm, convert to bars
+                                    if signal >= -50:
+                                        wifi_signal_bars = 4
+                                    elif signal >= -60:
+                                        wifi_signal_bars = 3
+                                    elif signal >= -70:
+                                        wifi_signal_bars = 2
+                                    elif signal >= -80:
+                                        wifi_signal_bars = 1
+                                except ValueError:
+                                    pass
+                except Exception:
+                    pass
+            
+            # Check radio connection (RFD900A)
+            radio_connected = False
+            try:
+                # Check for RFD900A radio (typically appears as ttyUSB or ttyACM device)
+                result = await asyncio.create_subprocess_exec(
+                    "ls", "/dev/ttyUSB*", "/dev/ttyACM*",
+                    stdout=asyncio.subprocess.PIPE,
+                    stderr=asyncio.subprocess.PIPE
+                )
+                stdout, stderr = await result.communicate()
+                
+                if result.returncode == 0:
+                    devices = stdout.decode().strip().split('\n')
+                    # Look for radio-specific patterns (this is a basic check)
+                    for device in devices:
+                        if 'ttyUSB' in device or 'ttyACM' in device:
+                            # Additional check: try to access the device
+                            try:
+                                test_result = await asyncio.create_subprocess_exec(
+                                    "timeout", "1", "cat", device,
+                                    stdout=asyncio.subprocess.PIPE,
+                                    stderr=asyncio.subprocess.PIPE
+                                )
+                                await test_result.wait()
+                                if test_result.returncode == 124:  # timeout occurred, device is accessible
+                                    radio_connected = True
+                                    break
+                            except:
+                                pass
+            except Exception:
+                pass
+            
+            # Update network info display
+            network_widget = self.query_one("#network", NetworkInfo)
+            network_widget.cellular_carrier = cellular_data.get('carrier', 'Unknown')
+            network_widget.cellular_signal_bars = cellular_data.get('signal_bars', 0)
+            network_widget.wifi_network = wifi_network
+            network_widget.wifi_signal_bars = wifi_signal_bars
+            network_widget.radio_connected = radio_connected
+            
+        except Exception as e:
+            # Handle network info errors gracefully
             pass
 
 def main():
