@@ -188,11 +188,25 @@ class SC2Dashboard(App):
     
     def on_mount(self) -> None:
         """Start background tasks when app starts"""
-        # Initialize network info immediately
-        self.call_later(self.update_cellular_info)
+        # Initialize network info immediately with defaults
+        try:
+            network_widget = self.query_one("#network", NetworkInfo)
+            # Trigger initial render by setting reactive properties
+            network_widget.cellular_carrier = "Unknown"
+            network_widget.cellular_signal_bars = 0
+            network_widget.wifi_network = "Not Connected"
+            network_widget.wifi_signal_bars = 0
+            network_widget.radio_connected = False
+        except Exception as e:
+            pass
+        
+        # Start update tasks
         self.set_interval(1.0, self.update_system_info)  # 1Hz system updates
         self.set_interval(5.0, self.update_cellular_info)  # 5 second cellular updates
         self.set_interval(0.1, self.update_logs)  # 10Hz log updates
+        
+        # Initial cellular info update after a short delay
+        self.set_timer(0.5, self.update_cellular_info)
     
     async def update_logs(self) -> None:
         """Update logs from the main application"""
