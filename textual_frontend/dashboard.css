@@ -1,72 +1,51 @@
 /* CSS for SC2 Dashboard Textual Application */
 
-.main-container {
+#main-container {
     layout: horizontal;
-    height: auto;
-    min-height: 20;
+    height: 1fr;
+    width: 100%;
 }
 
-.left-panel {
-    width: 40%;
-    padding: 0;
-}
-
-.middle-panel {
-    width: 30%;
-    padding: 0;
-}
-
-.right-panel {
-    width: 30%;
-    padding: 0;
-}
-
-TelemetryDisplay {
-    border: solid $primary;
-    height: 60%;
-    margin: 0;
-    padding: 0;
+#left-column {
+    layout: vertical;
+    width: 35%;
+    height: 100%;
 }
 
 SystemInfo {
     border: solid $secondary;
-    height: 60%;
+    width: 100%;
+    height: 50%;
     margin: 0;
-    padding: 0;
-}
-
-StatusIndicators {
-    border: solid $accent;
-    height: 40%;
-    margin: 0;
-    padding: 0;
-}
-
-BatteryIndicator {
-    border: solid $success;
-    height: 40%;
-    margin: 0;
-    padding: 0;
+    padding: 1;
 }
 
 FaultsDisplay {
     border: solid $error;
-    height: 100%;
+    width: 100%;
+    height: 50%;
     margin: 0;
+    padding: 1;
+    overflow-y: auto;
+}
+
+ActiveLogging {
+    border: solid $primary;
+    width: 65%;
+    height: 100%;
     padding: 0;
+}
+
+#rich_log {
+    height: 100%;
+    width: 100%;
+    padding: 1;
 }
 
 NetworkInfo {
     border: solid $warning;
     height: 4;
     margin: 0;
-    padding: 0;
-}
-
-.battery {
-    margin: 1;
-}
-
-.scrollable-content {
-    height: auto;
+    padding: 1;
+    width: 100%;
 }

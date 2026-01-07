@@ -78,3 +78,6 @@ CMakeCache.txt
 CMakeFiles
 .qt
 build/
+
+# Logs and databases
+dashboard_logs.json

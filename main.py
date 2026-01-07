@@ -23,7 +23,10 @@ import signal
 import sys
 import os
 import logging
+import json
+import subprocess
 from typing import Optional, Dict, Any
+from pathlib import Path
 
 # External module imports (to be implemented separately)
 try:
@@ -37,10 +40,45 @@ except ImportError:
     print("WARNING: External modules not available, running in skeleton mode")
     EXTERNAL_MODULES_AVAILABLE = False
 
+# Custom log handler for dashboard integration
+class DashboardLogHandler(logging.Handler):
+    """Custom log handler that writes to shared file for dashboard"""
+    
+    def __init__(self, log_file_path):
+        super().__init__()
+        self.log_file_path = Path(log_file_path)
+        self.messages = []
+        self.max_messages = 100
+    
+    def emit(self, record):
+        try:
+            log_entry = {
+                'timestamp': record.created,
+                'level': record.levelname,
+                'message': self.format(record)
+            }
+            
+            # Keep only last max_messages
+            self.messages.append(log_entry)
+            if len(self.messages) > self.max_messages:
+                self.messages = self.messages[-self.max_messages:]
+            
+            # Write to file atomically
+            with open(self.log_file_path, 'w') as f:
+                json.dump({'messages': self.messages}, f)
+        except Exception:
+            pass
+
 # Configure logging
+log_file = Path(__file__).parent / 'dashboard_logs.json'
+dashboard_handler = DashboardLogHandler(log_file)
+dashboard_handler.setLevel(logging.DEBUG)
+dashboard_handler.setFormatter(logging.Formatter('%(name)s - %(message)s'))
+
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[dashboard_handler]
 )
 logger = logging.getLogger(__name__)
 
@@ -50,6 +88,7 @@ class DriverIOSystem:
     def __init__(self):
         self.running = False
         self.threads = {}
+        self.dashboard_process = None
         
         # Initialize external modules (if available)
         if EXTERNAL_MODULES_AVAILABLE:
@@ -317,6 +356,22 @@ class DriverIOSystem:
         """Start all system threads"""
         logger.info("Starting Driver IO System...")
         
+        # Launch the textual dashboard in a separate process
+        dashboard_script = Path(__file__).parent / 'textual_frontend' / 'textual_dashboard.py'
+        if dashboard_script.exists():
+            logger.info("Launching Textual Dashboard...")
+            try:
+                self.dashboard_process = subprocess.Popen(
+                    [sys.executable, str(dashboard_script)],
+                    cwd=str(dashboard_script.parent)
+                )
+                logger.info("Dashboard launched successfully")
+                time.sleep(1)  # Give dashboard time to start
+            except Exception as e:
+                logger.error(f"Failed to launch dashboard: {e}")
+        else:
+            logger.warning("Dashboard script not found, running without UI")
+        
         self.running = True
         self.start_time = time.time()
         
@@ -357,6 +412,19 @@ class DriverIOSystem:
         logger.info("Shutting down Driver IO System...")
         
         self.running = False
+        
+        # Terminate dashboard process
+        if self.dashboard_process:
+            logger.info("Shutting down dashboard...")
+            try:
+                self.dashboard_process.terminate()
+                self.dashboard_process.wait(timeout=5)
+            except Exception as e:
+                logger.warning(f"Error shutting down dashboard: {e}")
+                try:
+                    self.dashboard_process.kill()
+                except:
+                    pass
         
         # Wait for threads to finish
         for name, thread in self.threads.items():
