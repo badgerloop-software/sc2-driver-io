@@ -1,0 +1,13 @@
+{
+  "speed": 90.93377702427688,
+  "soc": 25.64280453364919,
+  "pack_voltage": 330.2653823279523,
+  "pack_current": -20.26816961387492,
+  "motor_temp": 47.796620090163344,
+  "headlights": false,
+  "l_turn_led_en": true,
+  "r_turn_led_en": true,
+  "hazards": false,
+  "parking_brake": false,
+  "timestamp": 1760915724.2113209
+}

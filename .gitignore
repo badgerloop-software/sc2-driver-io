@@ -33,6 +33,7 @@ qrc_*.cpp
 Thumbs.db
 *.res
 *.rc
+*.venv
 
 # xemacs temporary files
 *.flc

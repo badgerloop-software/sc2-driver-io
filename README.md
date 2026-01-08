@@ -1,16 +1,31 @@
-# Solar Car 1 Driver IO Program
+# Solar Car 2 Driver IO Program
 
 ## Solar Car Dashboard
 
+### Frontend Options
+
+**Qt GUI** (Legacy - for desktop development)
+- Full graphical interface with QML components
+- Higher resource usage (~50-100MB RAM, 5-15% CPU)
+- Requires desktop environment
+
+**Textual Terminal GUI** (New - for Raspberry Pi deployment) ⭐
+- Lightweight terminal-based interface
+- Minimal resource usage (~5-15MB RAM, 0.5-2% CPU)
+- 70-90% performance improvement over Qt
+- Located in `textual_frontend/` directory
+- See `textual_frontend/README.md` for details
+
 ### Libraries/Frameworks
 
-- [Qt](https://www.qt.io/) - Development framework
+- [Qt](https://www.qt.io/) - Development framework (legacy GUI)
+- [Textual](https://github.com/Textualize/textual) - Terminal GUI framework (new lightweight option)
 - [RapidJSON](https://rapidjson.org/) - JSON parsing library
 
 ### Cloning the Data Format Repository and Initializing the Submodule
 
 0. If you don't already have an SSH key, [generate a new SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) (only the steps under "Generating a new SSH key" are required) and [add it to your GitHub account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
-1. Once you have an SSH key, clone the [sc1-data-format repository](https://github.com/badgerloop-software/sc1-data-format) to your computer. Make sure to clone it using SSH (when you go to copy the clone link, there will be an SSH option above the link).
+1. Once you have an SSH key, clone this repository to your computer. Make sure to clone it using SSH (when you go to copy the clone link, there will be an SSH option above the link).
 2. Next, `cd` into the `sc1-driver-io` repository and run `git submodule update --init`.
 
 ### Running with CMake
@@ -38,7 +53,54 @@ CMake is a more popular project make system, it allows you to edit the project w
    1. When committing and pushing changes, do not add your solar-car-dashboard.pro.user file to the version control, as this is specific to your computer.
 8. Once you are happy with the state of your code, open a pull request and request someone to conduct a code review. It may be kicked back with some suggestions or edits, but when it is accepted, it will be merged with `main`. Congrats! Now it's just time to rinse and repeat.
 
-### Compiling and Running the Project on a Rapberry Pi
+### Running on Raspberry Pi (Updated Architecture) -> WORK IN PROGRESS
+
+**Modern Hybrid Approach:**
+
+The project now uses a hybrid C++/Python architecture optimized for the Pi:
+
+1. **C++ Backend** (`./build/sc2-driver-io`): Headless telemetry processor
+   - Runs as root for GPS/hardware access  
+   - Real-time CAN processing and data validation
+   - Low-latency, high-performance core
+
+2. **Python Coordinator** (`./main.py`): System orchestrator
+   - Multi-threaded coordination (CAN, GPS, CSV logging)
+   - External module integration
+   - Runs as sunpi user
+
+3. **Textual Terminal GUI** (`./textual_frontend/`): Optional lightweight dashboard
+   - 70-90% less resource usage than Qt
+   - Terminal-based interface
+   - Integrates with existing Weston setup
+
+**Integration with Existing Pi Setup:**
+
+Your Pi runs Raspberry Pi OS Lite with Weston compositor. The new architecture provides three deployment options:
+
+1. **Headless Mode** (Recommended): Disables Weston, runs terminal dashboard on tty2
+   - Maximum performance and resource savings
+   - Access dashboard: Alt+F2, console: Alt+F1
+
+2. **Hybrid Mode**: Keeps Weston running + adds terminal dashboard on tty2  
+   - Maintains existing functionality
+   - Switch between Weston (Alt+F1) and dashboard (Alt+F2)
+
+3. **Weston Integration**: Launches SC2 components from within Weston autolaunch
+   - Integrates with existing `/home/sunpi/.config/weston.ini` setup
+   - Maintains current boot flow
+
+**Setup:**
+```bash
+# Run the integrated setup script
+cd textual_frontend
+chmod +x setup_autolaunch.sh
+sudo ./setup_autolaunch.sh
+```
+
+The script will prompt you to choose your preferred integration mode.
+
+### Compiling and Running the Project on a Raspberry Pi (Legacy Qt Method)
 
 0. If running the project on the driver IO board, skip this step, as the necessary dependencies have already been installed on it. Otherwise, if you have not already, install the dependencies on the Raspberry Pi:
    ```
@@ -53,3 +115,56 @@ CMake is a more popular project make system, it allows you to edit the project w
    make
    ./solar-car-dashboard
    ```
+
+## Project Structure
+
+This section provides an overview of the key folders and their purposes in the Solar Car 1 Driver IO project.
+
+### Root Directory
+- **CMakeLists.txt**: Build configuration file for CMake, used to compile the C++ backend.
+- **main.cpp**: C++ entry point for headless telemetry processor (modernized, no Qt dependencies).
+- **main.py**: Python entry point for system coordinator (multi-threaded orchestration).
+- **Config.cpp/h**: Configuration management (converted from Qt to standard C++).
+- **config.json**: JSON file containing application configuration settings.
+
+### textual_frontend/
+**NEW**: Lightweight terminal-based GUI replacement for Qt dashboard.
+- **textual_dashboard.py**: Main terminal dashboard application using Textual library.
+- **dashboard_launcher.py**: Bridge between C++ backend and dashboard interface.
+- **setup_autolaunch.sh**: Raspberry Pi integration script (works with existing Weston setup).
+- **README.md**: Complete documentation for terminal GUI setup and usage.
+
+### 3rdparty/
+Contains third-party libraries used in the project.
+- **rapidjson/**: Header-only JSON parsing library for C++.
+- **serial/**: Library for serial communication (serialib), used for interfacing with serial devices like GPS.
+
+### backend/
+Handles backend data processing and communication.
+- **backendProcesses.cpp/h**: Manages backend processes, including telemetry data handling via TCP, UDP, and SQL connections. Runs in a separate thread to process incoming data.
+- **dataFetcher.cpp/h**: Fetches data from network sources (TCP server), integrates GPS data, and manages data buffers.
+- **file_sync/**: Contains scripts for synchronizing files, likely for uploading telemetry data.
+- **telemetrylib/**: Library for telemetry operations, including TCP, UDP, SQL, and DTI (Data Transmission Interface) handling.
+
+### DataProcessor/
+Responsible for processing and unpacking telemetry data.
+- **dataUnpacker.cpp/h**: Core class that unpacks binary data into readable properties exposed to the QML UI, such as fan speed, timestamps, LED statuses, and shutdown circuit states.
+- **CMakeLists.txt**: Build configuration for the DataProcessor module.
+
+### ethernet_sim/
+Simulation tools for testing ethernet communication.
+- **main.py**: Python script that simulates telemetry data transmission over ethernet, using the data format from `sc1-data-format` and GPS datasets.
+- **gps_dataset/**: Sample GPS data files (CSV, GPX, JSON) used in simulations.
+
+### gps/
+GPS functionality module.
+- **gps.cpp/h**: Class for interfacing with GPS devices via serial communication, parsing NMEA data to extract latitude, longitude, and altitude.
+
+### sc1-data-format/
+Git submodule containing the data format definitions for telemetry packets. This folder is empty until the submodule is initialized (see cloning instructions above).
+
+### UI/
+User interface components built with Qt QML.
+- **Items/**: QML files defining UI components like Dashboard, Speed, Batteries, Blinkers, etc.
+- **Images/**: Image assets (PNG, SVG) for the dashboard, such as needles, icons, and backgrounds.
+- **fonts/**: Font files (Work Sans) used in the UI, with licensing information.
