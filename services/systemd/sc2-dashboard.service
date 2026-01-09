@@ -1,0 +1,23 @@
+[Unit]
+Description=SC2 Textual Dashboard
+After=sc2-coordinator.service
+BindsTo=sc2-coordinator.service
+# If coordinator dies, dashboard stops
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /home/sunpi/sc2-driver-io/textual_frontend/dashboard.py
+Restart=on-failure
+RestartSec=3
+StartLimitBurst=5
+# Max 5 restarts
+StartLimitIntervalSec=60
+# Within 60 seconds
+Nice=5
+# Low priority
+User=sunpi
+Environment=PYTHONUNBUFFERED=1
+WorkingDirectory=/home/sunpi/sc2-driver-io
+
+[Install]
+WantedBy=multi-user.target
