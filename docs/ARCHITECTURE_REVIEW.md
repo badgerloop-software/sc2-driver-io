@@ -16,7 +16,7 @@ After reviewing your codebase, I have both **good news and critical concerns**. 
 2. ✅ **Lap counter algorithm** - Robust implementation, keep in Python
 3. ✅ **CAN utilities** - Clean signal parsing with `sc1-data-format` integration
 4. ⚠️ **Qt dependencies still present** - `Serial.cpp`, `DataUnpacker.cpp`, `dataFetcher.cpp` still use Qt
-5. ⚠️ **Two main entry points** - `main.cpp` and `main.py` with unclear coordination
+5. ⚠️ **Two main entry points (resolved)** - `main.cpp` and `services/coordinator.py` (coordinator replaces `main.py`)
 6. ❌ **Ethernet-based data fetcher** - `dataFetcher.cpp` uses TCP server, needs CAN replacement
 7. ❌ **IPC strategy unclear** - JSON files for UI, but no defined strategy for CAN→C++ bridge
 
@@ -1114,11 +1114,11 @@ Add to `sc1-data-format/format.json`:
 6. ✅ Verify CAN communication end-to-end
 
 ### Week 3-4: Data Flow
-1. Implement Unix socket bridge (Python → C++)
+1. ✅ Implement Unix socket bridge (Python → C++)
 2. Implement shared memory (Python → UI)
 3. Integrate `lap_counter/` with coordinator
-4. Implement CSV buffered logging
-5. Test complete pipeline: CAN → CSV/Lap/Telemetry/UI
+4. ✅ Implement CSV buffered logging
+5. Test complete pipeline: CAN → CSV/Lap/Telemetry/UI (partial - CSV & Telemetry validated, UI/shared memory pending)
 
 ### Week 5-6: Integration
 1. Systemd service files and startup sequence
