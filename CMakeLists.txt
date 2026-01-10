@@ -11,6 +11,7 @@ set(SOURCES
         main.cpp
         data_processor/dataUnpacker.cpp
         telemetry/telemetry.cpp
+        telemetry/can_bridge.cpp
         gps/gps.cpp
         3rdparty/serial/serialib.cpp
         Config.cpp
@@ -23,6 +24,7 @@ set(HEADERS
         backendprocesses.h
         telemetry/telemetry.h
         telemetry/DTI.h
+        telemetry/can_bridge.h
         gps/gps.h
         3rdparty/serial/serialib.h
         Config.h
