@@ -64,7 +64,7 @@ User=sunpi
 Group=sunpi
 WorkingDirectory=$PROJECT_ROOT
 Environment=PYTHONPATH=$PROJECT_ROOT
-ExecStart=/usr/bin/python3 $PROJECT_ROOT/main.py
+ExecStart=/usr/bin/python3 $PROJECT_ROOT/services/coordinator.py
 Restart=always
 RestartSec=5
 StandardOutput=journal

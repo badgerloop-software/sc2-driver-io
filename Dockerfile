@@ -37,5 +37,5 @@ RUN mkdir build && cd build && cmake .. && make
 # Expose ports if your app uses them (e.g., for telemetry)
 EXPOSE 8080
 
-# Default command (adjust for your entry point, e.g., main.py)
-CMD ["python3", "main.py"]
+# Default command (adjust for your entry point, e.g., services/coordinator.py)
+CMD ["python3", "services/coordinator.py"]

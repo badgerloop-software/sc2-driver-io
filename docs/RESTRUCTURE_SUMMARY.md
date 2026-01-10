@@ -100,7 +100,7 @@ The restructure preserved all original files:
 - `can_utils/` - Original CAN utilities (still present)
 - `backend/telemetrylib/` - Original telemetry code
 - `DataProcessor/` - Original data unpacker
-- `main.py` - Original entry point
+- `main.py` - **Removed** (replaced by `services/coordinator.py`)
 
 This allows for gradual migration and testing of the new structure.
 
