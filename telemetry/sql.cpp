@@ -1,130 +1,53 @@
 //
 // Created by Mingcan Li on 2/3/23.
+// STUB: Temporarily disabled - needs libcurl implementation for HTTP POST
 //
 
 #include "DTI.h"
-#include <thread>
 #include "Config.h"
+#include <iostream>
+#include <string>
+#include <thread>
+#include <atomic>
+#include <chrono>
+
+// TODO: Implement with libcurl for HTTP POST to LTE server
+// For now, this is a stub that compiles but doesn't send data
 
 class SQL : public DTI {
 public:
-    
-    SQL(QString tableToCreate) {
-        this->tableToCreate = tableToCreate;
-
-        restclient = new QNetworkAccessManager();
-        // Send request to create a new table when connection to server is first established
-        if(tableName.isNull()) {
-            qDebug() << "Requested a new table: " << tableToCreate;
-
-            QUrl myurl;
-            myurl.setScheme("http");
-            myurl.setHost(serverUrl); 
-            myurl.setPath("/add-table/" + tableToCreate);
-
-            request.setUrl(myurl);
-            
-            int transferTimeout = Config::getInstance().getConfig()["sql_transfer_timeout"].toInt();
-            request.setTransferTimeout(transferTimeout);
-
-            
-            
-            reply = restclient->get(request);
-
-            connect(reply, &QNetworkReply::readyRead, this, &SQL::readReply);
-            request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("arraybuffer"));
-            request.setAttribute(QNetworkRequest::HttpPipeliningAllowedAttribute, true);
-            lastRetry = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-        }
+    SQL(const std::string& tableToCreate) 
+        : tableToCreate_(tableToCreate), finish_(false) {
+        
+        std::cout << "SQL/LTE transmission initialized (STUB - not functional)" << std::endl;
+        std::cout << "  Requested table: " << tableToCreate << std::endl;
+        std::cout << "  TODO: Implement libcurl HTTP POST" << std::endl;
+        
+        lastRetry_ = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()).count();
     }
 
     ~SQL() {
-        finish = true;
-        t->join();
+        finish_ = true;
     }
 
-    void sendData(QByteArray bytes, long long timestamp) override {
-        int transferTimeout = Config::getInstance().getConfig()["sql_transfer_timeout"].toInt();
-        int retryInterval = Config::getInstance().getConfig()["sql_retry_interval"].toInt();
-        qDebug()<<"sending Via SQL: "<<timestamp;
-        long long now = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-        if(tableName.isNull() && now - lastRetry > retryInterval) {
-            qDebug() << "Retrying to add a new table: " << tableToCreate;
-
-            QUrl myurl;
-            myurl.setScheme("http");
-            myurl.setHost(serverUrl); 
-            myurl.setPath("/add-table/" + tableToCreate);
-
-            request.setUrl(myurl);
-            request.setTransferTimeout(transferTimeout);
-            reply = restclient->get(request);
-
-            connect(reply, &QNetworkReply::readyRead, this, &SQL::readReply);
-            request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("arraybuffer"));
-            request.setAttribute(QNetworkRequest::HttpPipeliningAllowedAttribute, true);
-            lastRetry = now;
-        } else {
-            QUrl myurl;
-            myurl.setScheme("http");
-            myurl.setHost(serverUrl);
-            myurl.setPath("/add-data");
-            myurl.setQuery("table-name=" + tableName + "&dataset-time=" + QString::fromStdString(std::to_string(timestamp)));
-            //QNetworkRequest request;
-            request.setUrl(myurl);
-            request.setHeader(QNetworkRequest::ContentTypeHeader, QVariant("arraybuffer"));
-            request.setAttribute(QNetworkRequest::HttpPipeliningAllowedAttribute, true);
-            request.setTransferTimeout(transferTimeout);
-            bytes.push_front("<bsr>");
-            bytes.push_back("</bsr>");
-            this->restclient->post(request, bytes);
-        }
+    void sendData(const std::vector<uint8_t>& bytes, long long timestamp) override {
+        // STUB: Just log that we would send data
+        std::cout << "SQL: Would send " << bytes.size() << " bytes at timestamp " 
+                  << timestamp << " (not implemented)" << std::endl;
+        
+        // TODO: Implement HTTP POST with libcurl
+        // 1. Check if table exists (tableName_ not empty)
+        // 2. If not, retry table creation
+        // 3. POST data to server with framing tags
     }
 
-    /*
-     std::string receiveData() override{
-        QJsonObject json = QJsonDocument::fromJson(reply->readAll()).object();
-        if (json.isEmpty()) {
-            qDebug() << "EMPTY JSON";
-            return "nada";
-        } else {
-            tableName = json.take("response").toString();
-            qDebug() << "HTTP response (table name): " << tableName;
-            return tableName.toStdString();
-            // TODO Automatically delete server responses since they aren't used after reading the table name
-            this->restclient->setAutoDeleteReplies(true);
-        }
-    }
-    */
-
-public slots:
-    /**
-     * Read response from the server. Specifically, reads the response to the request to
-     * add a new table on the server and sets tableName to the response.
-     */
-    void readReply() override {
-        qDebug()<<"read reply invoked";
-        QJsonObject json = QJsonDocument::fromJson(reply->readAll()).object();
-
-        if(json.isEmpty()) {
-            qDebug() << "EMPTY JSON";
-        } else {
-            tableName = json.take("response").toString();
-            qDebug() << "HTTP response (table name): " << tableName;
-
-            // TODO Automatically delete server responses since they aren't used after reading the table name
-            this->restclient->setAutoDeleteReplies(true);
-        }
-    }
 private:
-    QString serverUrl = Config::getInstance().getConfig()["sql_server_url"].toString();
-
-    long long lastRetry = 0;
-    QNetworkRequest request;
-    QNetworkAccessManager *restclient = NULL;
-    QNetworkReply *reply;
-    QString tableName; // James added this
-    QString tableToCreate; 
-    std::thread *t; // thread to check connection by pinging a website in the background
-    std::atomic<bool> finish=false; //for soft quiting the thread
+    std::string serverUrl_;
+    long long lastRetry_;
+    std::string tableName_;
+    std::string tableToCreate_;
+    std::atomic<bool> finish_;
+    
+    // TODO: Add libcurl handle and request implementation
 };

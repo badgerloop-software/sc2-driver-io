@@ -4,18 +4,20 @@
 #undef unix
 #endif
 
-#include <QGuiApplication>
-#include <QObject>
 #include <vector>
-#include <QMutex>
+#include <string>
+#include <mutex>
 #include <fstream>
+#include <atomic>
+#include <functional>
+#include <cstdint>
 
-#include "telemetrylib/Telemetry.h"
-#include "telemetrylib/DTI.h"
-#include "telemetrylib/TCP.cpp"
-#include "telemetrylib/SQL.cpp"
-#include "telemetrylib/UDP.cpp"
-#include "telemetrylib/Serial.cpp"
+#include "telemetry/telemetry.h"
+#include "telemetry/DTI.h"
+#include "telemetry/tcp.cpp"
+#include "telemetry/sql.cpp"
+#include "telemetry/udp.cpp"
+#include "telemetry/Serial.cpp"
 
 struct timestampOffsets {
     int hr;
@@ -25,45 +27,78 @@ struct timestampOffsets {
     int unix;
 };
 
-class BackendProcesses : public QObject
+class BackendProcesses
 {
-    Q_OBJECT
-
 public:
-    explicit BackendProcesses(QByteArray &bytes, std::vector<std::string> &names, std::vector<std::string> &types, timestampOffsets timeDataOffsets, QMutex &mutex, int byteSize, QObject *parent = nullptr);
+    // Callback types for event notifications
+    using ConnectionCallback = std::function<void(bool state)>;
+    using DataReadyCallback = std::function<void()>;
+    
+    explicit BackendProcesses(
+        std::vector<uint8_t> &bytes, 
+        std::vector<std::string> &names, 
+        std::vector<std::string> &types, 
+        timestampOffsets timeDataOffsets, 
+        std::mutex &mutex, 
+        int byteSize);
+    
     ~BackendProcesses();
-    //~BackendProcesses();
-public slots:
+    
+    // Public methods (formerly slots)
     void threadProcedure();
     void startThread();
     void comm_status(bool s);
-signals:
-    void eng_dash_connection(bool state);
-    void dataReady();
-private:
+    
+    // Set callbacks for events (replacement for signals)
+    void setEngDashConnectionCallback(ConnectionCallback callback) {
+        engDashConnectionCallback_ = callback;
+    }
+    
+    void setDataReadyCallback(DataReadyCallback callback) {
+        dataReadyCallback_ = callback;
+    }
 
+private:
     timestampOffsets tstampOffsets;
 
-    QByteArray &bytes;
+    std::vector<uint8_t> &bytes;
 
     std::atomic<bool> stop = false;
     std::vector<std::string> &names;
     std::vector<std::string> &types;
 
-    QMutex &mutex;
+    std::mutex &mutex;
 
     int byteSize;
 
     Telemetry* tel;
 
     // path of output directory used for file sync
-    QString basePath;
+    std::string basePath;
 
     // timestamp when the last file sync output was written to disk
     uint8_t last_minute = 0;
 
     // queued data for file sync
-    QByteArray all_bytes_in_minute;
+    std::vector<uint8_t> all_bytes_in_minute;
+    
+    // Callbacks (replacement for Qt signals)
+    ConnectionCallback engDashConnectionCallback_;
+    DataReadyCallback dataReadyCallback_;
+    
+protected:
+    // Helper to emit callbacks
+    void emitEngDashConnection(bool state) {
+        if (engDashConnectionCallback_) {
+            engDashConnectionCallback_(state);
+        }
+    }
+    
+    void emitDataReady() {
+        if (dataReadyCallback_) {
+            dataReadyCallback_();
+        }
+    }
 };
 
 #endif // BACKENDPROCESSES_H

@@ -1,8 +1,9 @@
 //
 // Created by Mingcan Li on 2/3/23.
-// Commented by ChatGPT
+// Modernized to remove Qt dependencies
 //
 #include "telemetry.h"
+#include <iostream>
 
 // Default constructor
 Telemetry::Telemetry() {}
@@ -11,13 +12,13 @@ Telemetry::Telemetry() {}
 Telemetry::Telemetry(std::vector<DTI *> commChannels) {
     comm = commChannels;
     // Output the number of initialized communication channels to console
-    qDebug() << "comm channels initialized: " << comm.size();
+    std::cout << "Comm channels initialized: " << comm.size() << std::endl;
 }
 
 // Broadcast data to all communication channels 
-void Telemetry::sendData(QByteArray bytes, long long timestamp) {
+void Telemetry::sendData(const std::vector<uint8_t>& bytes, long long timestamp) {
     // Loop through all communication channels
-    for (int i = 0; i < comm.size(); i++) {
+    for (size_t i = 0; i < comm.size(); i++) {
         // Send data to the current communication channel
         comm[i]->sendData(bytes, timestamp);
     }

@@ -1,93 +1,94 @@
 #include "DTI.h"
+#include "../3rdparty/serial/serialib.h"
 #include <thread>
-#include <QSerialPort>
-#include <QTimer>
-#include <QSocketNotifier>
+#include <atomic>
+#include <chrono>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <cstring>
 
 class Serial : public DTI {
 public:
-    Serial(QString SerialDevice) {
-        // Initialize serial port with the provided device name
-        device = SerialDevice;
-        serial.setPortName(SerialDevice);
-
-        // Set Baud rate, Data bits, Parity, Stop bits, and Flow control
-        serial.setBaudRate(QSerialPort::Baud115200);
-        serial.setDataBits(QSerialPort::Data8);
-        serial.setParity(QSerialPort::NoParity);
-        serial.setStopBits(QSerialPort::OneStop);
-        serial.setFlowControl(QSerialPort::NoFlowControl);
-
-        // Connect readyRead signal to a slot for reading incoming data
-        connect(&serial, &QSerialPort::readyRead, this, &Serial::readData);
-
-        // Connect errorOccurred signal to handle errors, such as device unplugged
-        connect(&serial, QOverload<QSerialPort::SerialPortError>::of(&QSerialPort::errorOccurred),
-                this, &Serial::handleError);
-
-        // Setup timer for checking serial port status and reconnecting if necessary
-        connect(&reconnectTimer, &QTimer::timeout, this, &Serial::checkConnection);
-        reconnectTimer.start(5000); // Check every 5 seconds
+    Serial(const std::string& SerialDevice) 
+        : device_(SerialDevice), running_(false), needs_reconnect_(false) {
+        
+        // Open serial port using serialib (115200 baud, 8N1)
+        char result = serial_.openDevice(device_.c_str(), 115200);
+        if (result != 1) {
+            std::cerr << "Failed to open serial port: " << device_ << std::endl;
+            needs_reconnect_ = true;
+        } else {
+            std::cout << "Serial port opened successfully: " << device_ << std::endl;
+        }
+        
+        // Start reconnection monitor thread
+        running_ = true;
+        monitor_thread_ = std::thread(&Serial::monitorConnection, this);
     }
 
     ~Serial() {
-        // Close the serial port upon destruction
-        serial.close();
-    }
-
-    void sendData(QByteArray bytes, long long timestamp) override {
-        qDebug()<<"sending via Serial";
-        bytes.push_front("<bsr>");
-        bytes.push_back("</bsr>");
-        // Write data to the serial port
-        int returnCode = serial.write(bytes);
-        if (returnCode == -1) {
-            qDebug()<<"Error occurred send data";
-            serial.close();
+        running_ = false;
+        if (monitor_thread_.joinable()) {
+            monitor_thread_.join();
         }
-        serial.flush();
+        serial_.closeDevice();
     }
 
-private slots:
-    void readData() {
-        // Read data from the serial port when data is available
-        QByteArray data = serial.readAll();
-        // Process the received data as needed
-        processReceivedData(data);
-    }
-
-    void checkConnection() {
-        if (!serial.isOpen()) {
-            qDebug() << "Serial port disconnected. Reconnecting...";
-            serial.close();
-            serial.open(QIODevice::ReadWrite);
-            if (!serial.isOpen()) {
-                qDebug() << "Failed to reconnect to serial port";
-            }
-        } else {
-            qDebug() << "Still open";
-        }
-    }
-
-    void handleError(QSerialPort::SerialPortError error) {
-        if (error == QSerialPort::ResourceError) {
-            qDebug() << "Serial port error occurred. Reconnecting...";
-            // Attempt to reconnect
-            serial.close();
-            serial.open(QIODevice::ReadWrite);
-            if (!serial.isOpen()) {
-                qDebug() << "Failed to reconnect to serial port";
-            }
+    void sendData(const std::vector<uint8_t>& bytes, long long timestamp) override {
+        std::cout << "Sending via Serial" << std::endl;
+        
+        // Add framing tags
+        std::vector<uint8_t> framed;
+        framed.reserve(bytes.size() + 11);
+        
+        const char* start = "<bsr>";
+        const char* end = "</bsr>";
+        framed.insert(framed.end(), start, start + 5);
+        framed.insert(framed.end(), bytes.begin(), bytes.end());
+        framed.insert(framed.end(), end, end + 6);
+        
+        // Write to serial port
+        int result = serial_.writeBytes(framed.data(), framed.size());
+        if (result < 0) {
+            std::cerr << "Error occurred sending data via serial" << std::endl;
+            needs_reconnect_ = true;
         }
     }
 
 private:
-    QSerialPort serial;
-    QString device;
-    QTimer reconnectTimer;
-
-    void processReceivedData(const QByteArray &data) {
-        // Implement your data processing logic here
-        qDebug() << "Received data:" << data;
+    void monitorConnection() {
+        while (running_) {
+            if (needs_reconnect_) {
+                std::cout << "Serial port disconnected. Reconnecting..." << std::endl;
+                serial_.closeDevice();
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+                
+                char result = serial_.openDevice(device_.c_str(), 115200);
+                if (result == 1) {
+                    std::cout << "Successfully reconnected to serial port" << std::endl;
+                    needs_reconnect_ = false;
+                } else {
+                    std::cerr << "Failed to reconnect to serial port" << std::endl;
+                }
+            }
+            
+            // Check connection every 5 seconds
+            std::this_thread::sleep_for(std::chrono::seconds(5));
+            
+            // Check if device is still responding
+            if (serial_.isDeviceOpen() && !needs_reconnect_) {
+                // Device appears to be open and working
+            } else if (!needs_reconnect_) {
+                std::cerr << "Serial device closed unexpectedly" << std::endl;
+                needs_reconnect_ = true;
+            }
+        }
     }
+
+    serialib serial_;
+    std::string device_;
+    std::atomic<bool> running_;
+    std::atomic<bool> needs_reconnect_;
+    std::thread monitor_thread_;
 };

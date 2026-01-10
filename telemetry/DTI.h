@@ -50,15 +50,15 @@ public:
     virtual void readReply() {}
     
 protected:
+    // Callback for connection status (accessible to derived classes)
+    ConnectionStatusCallback connectionStatusCallback;
+    
     // Helper method to notify connection status changes
     void notifyConnectionStatusChanged() {
         if (connectionStatusCallback) {
             connectionStatusCallback();
         }
     }
-    
-private:
-    ConnectionStatusCallback connectionStatusCallback;
 };
 
 #endif //TELEMETRY

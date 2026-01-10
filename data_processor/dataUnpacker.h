@@ -12,15 +12,18 @@
 #include <vector>
 #include <string>
 #include <atomic>
-#include "backend/backendProcesses.h"
-#include "backend/dataFetcher.h"
+#include "../backendprocesses.h"
 #include "3rdparty/rapidjson/document.h"
 #include "3rdparty/rapidjson/filereadstream.h"
 
 using namespace rapidjson;
 
-// Forward declaration for GPS data structure
-struct GPSData;
+// GPS data structure
+struct GPSData {
+    int lat = 0;
+    int lon = 0;
+    int alt = 0;
+};
 
 class DataUnpacker
 {
@@ -165,7 +168,8 @@ private:
     std::vector<int> byteNums;
     std::vector<std::string> types;
     std::mutex mutex;
-    DataFetcher * fetcher;
+    
+    // NOTE: DataFetcher removed - will be replaced with CAN bridge in future refactor
     
     // Helper method to trigger data change callbacks
     void notifyDataChanged();

@@ -87,33 +87,24 @@ DataUnpacker::DataUnpacker()
         } else if (name == "elev") {
             gpsOffset.alt = arrayOffset;
         }
-        qDebug() << cell_group_voltages_begin;
+        std::cout << "Cell group voltages begin: " << cell_group_voltages_begin << std::endl;
         arrayOffset += arr[0].GetInt();
         dataCount++;
     }
 
     fclose(fp);
 
-
-    BackendProcesses* retriever = new BackendProcesses(bytes, names, types, tstampOff, mutex, arrayOffset);
-    fetcher = new DataFetcher(bytes, arrayOffset, mutex, gpsOffset);
-    retriever->moveToThread(&backendThread);
-    fetcher->moveToThread(&dataFetchThread);
-
-    connect(&dataFetchThread, &QThread::started, fetcher, &DataFetcher::startThread);
-    connect(this, &DataUnpacker::sendSignal, fetcher, &DataFetcher::sendData);
-    connect(&backendThread, &QThread::started, retriever, &BackendProcesses::startThread);
-    connect(retriever, &BackendProcesses::dataReady, this, &DataUnpacker::unpack);
-    connect(retriever, &BackendProcesses::eng_dash_connection, this, &DataUnpacker::eng_dash_connection);
-    connect(&backendThread, &QThread::finished, retriever, &QObject::deleteLater);
-    connect(&backendThread, &QThread::finished, &backendThread, &QThread::deleteLater);
-    connect(&dataFetchThread, &QThread::finished, fetcher, &DataFetcher::deleteLater);
-    connect(&dataFetchThread, &QThread::finished, &dataFetchThread, &QThread::deleteLater);
-
-    connect(fetcher, &DataFetcher::dataFetched, retriever, &BackendProcesses::threadProcedure);
-
-    backendThread.start();
-    dataFetchThread.start();
+    // NOTE: Per architecture review, DataFetcher is removed.
+    // Future implementation will use CAN bridge from Python coordinator.
+    // For now, BackendProcesses can be initialized but won't receive data until
+    // the CAN bridge is implemented.
+    
+    std::cout << "DataUnpacker initialized with " << names.size() << " data fields" << std::endl;
+    std::cout << "Waiting for CAN bridge implementation..." << std::endl;
+    
+    // TODO: Initialize CAN bridge here when implemented
+    // The CAN bridge will receive data from Python's CAN reader via Unix socket
+    // and trigger the unpack() method via callback
 }
 
 DataUnpacker::~DataUnpacker()
@@ -127,35 +118,74 @@ void DataUnpacker::unpack()
 
     mutex.lock();
 
+    // TODO: Replace Qt property system with direct member variable mapping
+    // For now, this is a stub that processes the byte buffer but doesn't
+    // populate all member variables. This should be replaced with a proper
+    // mapping based on the signal names from format.json to the member variables
+    // defined in the header file.
+    
     for(uint i=0; i < names.size(); i++) {
         if(types[i] == "float") {
-            // Make sure the property exists
-            if(this->property(names[i].c_str()).isValid()) {
-                this->setProperty(names[i].c_str(), bytesToFloat(bytes, currByte));
-            } else if((i >= cell_group_voltages_begin) && (i <= cell_group_voltages_end)) {
-                cell_group_voltages[i - cell_group_voltages_begin] = bytesToFloat(bytes, currByte);
+            float value = bytesToFloat(bytes, currByte);
+            
+            // Map known float values to member variables
+            if(names[i] == "speed") speed = value;
+            else if(names[i] == "accelerator_pedal") accelerator_pedal = value;
+            else if(names[i] == "soc") soc = value;
+            else if(names[i] == "mppt_current_out") mppt_current_out = value;
+            else if(names[i] == "pack_voltage") pack_voltage = value;
+            else if(names[i] == "pack_current") pack_current = value;
+            else if(names[i] == "pack_temp") pack_temp = value;
+            else if(names[i] == "motor_temp") motor_temp = value;
+            else if(names[i] == "motor_power") motor_power = value;
+            else if(names[i] == "lat") lat = value;
+            else if(names[i] == "lon") lon = value;
+            else if(names[i] == "elev") elev = value;
+            else if((i >= cell_group_voltages_begin) && (i <= cell_group_voltages_end)) {
+                cell_group_voltages[i - cell_group_voltages_begin] = value;
             }
+            // Add more mappings as needed
+            
         } else if(types[i] == "uint8") {
-            // Make sure the property exists
-            if(this->property(names[i].c_str()).isValid()) {
-                this->setProperty(names[i].c_str(), bytesToGeneralData(bytes, currByte, currByte + byteNums[i] - 1, (uint8_t)0));
-            }
+            uint8_t value = bytesToGeneralData(bytes, currByte, currByte + byteNums[i] - 1, (uint8_t)0);
+            
+            // Map known uint8 values
+            if(names[i] == "fan_speed") fan_speed = value;
+            else if(names[i] == "tstamp_hr") tstamp_hr = value;
+            else if(names[i] == "tstamp_mn") tstamp_mn = value;
+            else if(names[i] == "tstamp_sc") tstamp_sc = value;
+            // Add more mappings as needed
+            
         } else if(types[i] == "uint16") {
-            // Make sure the property exists
-            if(this->property(names[i].c_str()).isValid()) {
-                this->setProperty(names[i].c_str(), bytesToGeneralData(bytes, currByte, currByte + byteNums[i] - 1, (uint16_t)0));
-            }
+            uint16_t value = bytesToGeneralData(bytes, currByte, currByte + byteNums[i] - 1, (uint16_t)0);
+            
+            // Map known uint16 values
+            if(names[i] == "tstamp_ms") tstamp_ms = value;
+            // Add more mappings as needed
+            
         } else if(types[i] == "bool") {
-            // Make sure the property exists
-            if(this->property(names[i].c_str()).isValid()) {
-                this->setProperty(names[i].c_str(), bytesToGeneralData(bytes, currByte, currByte + byteNums[i] - 1, false));
-            }
+            bool value = bytesToGeneralData(bytes, currByte, currByte + byteNums[i] - 1, false);
+            
+            // Map known bool values
+            if(names[i] == "headlights") headlights = value;
+            else if(names[i] == "l_turn_led_en") l_turn_led_en = value;
+            else if(names[i] == "r_turn_led_en") r_turn_led_en = value;
+            else if(names[i] == "hazards") hazards = value;
+            else if(names[i] == "parking_brake") parking_brake = value;
+            else if(names[i] == "driver_eStop") driver_eStop = value;
+            else if(names[i] == "external_eStop") external_eStop = value;
+            else if(names[i] == "crash") crash = value;
+            else if(names[i] == "door") door = value;
+            else if(names[i] == "mcu_check") mcu_check = value;
+            else if(names[i] == "isolation") isolation = value;
+            else if(names[i] == "discharge_enable") discharge_enable = value;
+            else if(names[i] == "mcu_hv_en") mcu_hv_en = value;
+            // Add more mappings as needed
+            
         } else if(types[i] == "char") {
-            // Make sure the property exists
-            if(this->property(names[i].c_str()).isValid()) {
-                // NOTE: char data is displayed as its ASCII decimal value, not the character, so QString is used instead
-                this->setProperty(names[i].c_str(), QString::fromStdString(std::string(1, bytesToGeneralData(bytes, currByte, currByte + byteNums[i] - 1, (char)0))));
-            }
+            // char c = bytesToGeneralData(bytes, currByte, currByte + byteNums[i] - 1, (char)0);
+            // TODO: Map char values if needed
+            
         } else if(types[i] == "double") {
             // TODO: No double data yet; Implement when there is double data
         }
@@ -167,8 +197,8 @@ void DataUnpacker::unpack()
 
     this->restart_enable = checkRestartEnable();
 
-    // Refresh frontend
-    QGuiApplication::processEvents();
+    // Notify any registered callbacks that data has changed
+    notifyDataChanged();
 }
 
 void DataUnpacker::eng_dash_connection(bool state) {

@@ -6,7 +6,7 @@
 #include <string>
 #include <atomic>
 #include <vector>
-#include <QObject>
+#include <functional>
 
 using namespace std;
 
@@ -16,8 +16,7 @@ struct GPSData {
     float alt;
 };
 
-class GPS : public QObject{
-    Q_OBJECT
+class GPS {
 public:
     GPS();
     ~GPS();
@@ -25,8 +24,10 @@ public:
     bool initialized();
     void start_loop(string nmeaDevice);
     GPSData getLoc();
-public slots:
+    
+    // Public method to trigger auto-init (replaces Qt slot)
     void autoInit(); // automatically find and init gps device
+    
 private:
     string usbnmeaprobe(vector<string> devices);
     serialib serial;

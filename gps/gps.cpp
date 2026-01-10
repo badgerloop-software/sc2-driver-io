@@ -4,7 +4,6 @@
 #include <filesystem>
 #include <sstream>
 #include <iostream>
-#include <qdebug.h>
 
 using namespace std;
 
