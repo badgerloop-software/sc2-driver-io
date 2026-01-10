@@ -1,0 +1,14 @@
+# SC2 Driver IO - Python Dependencies
+
+# CAN Bus Communication
+python-can>=4.0.0
+
+# Optional: CAN interfaces
+# python-can[serial]  # For serial CAN adapters
+# python-can[pcan]    # For PEAK CAN adapters
+
+# GPS (if using GPS lap counter)
+# gpsd-py3>=0.3.0
+
+# System monitoring (optional)
+# psutil>=5.9.0
