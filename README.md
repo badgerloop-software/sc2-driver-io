@@ -1,170 +1,337 @@
-# Solar Car 2 Driver IO Program
+# SC2 Driver IO Program
 
-## Solar Car Dashboard
+**Solar Car 2 Real-Time Telemetry and Control System**
 
-### Frontend Options
+A headless driver IO system for Solar Car 2, featuring CAN bus communication, real-time telemetry transmission, GPS-based lap counting, and an optional lightweight terminal dashboard.
 
-**Qt GUI** (Legacy - for desktop development)
-- Full graphical interface with QML components
-- Higher resource usage (~50-100MB RAM, 5-15% CPU)
-- Requires desktop environment
+---
 
-**Textual Terminal GUI** (New - for Raspberry Pi deployment) ⭐
-- Lightweight terminal-based interface
-- Minimal resource usage (~5-15MB RAM, 0.5-2% CPU)
-- 70-90% performance improvement over Qt
-- Located in `textual_frontend/` directory
-- See `textual_frontend/README.md` for details
+## Work in Progress
 
-### Libraries/Frameworks
+This project is currently a work in progress. The architecture has been restructured to remove Qt dependencies and implement a clean multi-process design with Python/C++ hybrid architecture.
 
-- [Qt](https://www.qt.io/) - Development framework (legacy GUI)
-- [Textual](https://github.com/Textualize/textual) - Terminal GUI framework (new lightweight option)
-- [RapidJSON](https://rapidjson.org/) - JSON parsing library
+**Current Status:**
+- 🔄 Qt removal in progress
+- 🔄 CAN bus integration ongoing
 
-### Cloning the Data Format Repository and Initializing the Submodule
+See [`docs/ARCHITECTURE_REVIEW.md`](docs/ARCHITECTURE_REVIEW.md) for detailed architecture information.
 
-0. If you don't already have an SSH key, [generate a new SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) (only the steps under "Generating a new SSH key" are required) and [add it to your GitHub account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
-1. Once you have an SSH key, clone this repository to your computer. Make sure to clone it using SSH (when you go to copy the clone link, there will be an SSH option above the link).
-2. Next, `cd` into the `sc1-driver-io` repository and run `git submodule update --init`.
+---
 
-### Running with CMake
+## System Overview
 
-CMake is a more popular project make system, it allows you to edit the project with your ide of choice and enables features like autocomplete while not bounded to using qtcreator.
+### Architecture
 
-0. If you are using windows, install Ubuntu via WSL, you can use any other distribution if you're experienced with linux.
-1. Ensure you have cmake and build-essentials installed you can do so by `sudo apt install build-essential cmake`
-2. Install qt packages with `sudo apt install qt5-doc qtbase5-examples qtbase5-doc-html qtdeclarative5-dev qml-module-qtquick-controls2`
-3. `cd`into your project directory and `mkdir build` to create a new build folder then `cd build`
-4. Run `cmake ..` to generate make file for the project, then run `make` to compile the project.
-5. To execute the program run `./solar-car-dashboard`.
-
-### Contributing to the Dashboard
-
-0. Again, make sure you have [Qt](https://www.qt.io/download-open-source?hsCtaTracking=9f6a2170-a938-42df-a8e2-a9f0b1d6cdce%7C6cb0de4f-9bb5-4778-ab02-bfb62735f3e5) installed on your computer.
-1. Clone the repository to your computer (see steps 0-1 of "Cloning the Data Format Repository and Initializing the Submodule" for instructions on cloning a repo using SSH).
-2. If you have not already, clone the `sc1-data-format` repository and initialize the submodule (see instructions above).
-3. Open the repository in Qt Creator and, if necessary, configure the project using the appropriate kit for your environment.
-4. Run `git submodule update --remote` to update necessary submodules. You should also do this any time the submodule might have changed (i.e. whenever the [data format](https://github.com/badgerloop-software/sc1-data-format/blob/main/format.json) has been modified).
-   1. To avoid pushing changes that use obsolete data, update the submodule before you `git push` your changes. If there are changes to the data format, run the dashboard to make sure your code still works.
-5. To run the dashboard on your computer, simply press the green arrow in the bottom-left corner of the Qt Creator window. To run the project on a Raspberry Pi, see "Compiling and Running the Project on a Rapberry Pi" below.
-6. Once you have finished making your necessary changes to your code, switch to a new branch that has a good name for the feature or names the Jira issue (e.g. `SW-23/skeleton`).
-7. Commit related changes to that branch and push to this repository. (Do this often so that it is easy to finely revert to a previous state!)
-   1. When committing and pushing changes, do not add your solar-car-dashboard.pro.user file to the version control, as this is specific to your computer.
-8. Once you are happy with the state of your code, open a pull request and request someone to conduct a code review. It may be kicked back with some suggestions or edits, but when it is accepted, it will be merged with `main`. Congrats! Now it's just time to rinse and repeat.
-
-### Running on Raspberry Pi (Updated Architecture) -> WORK IN PROGRESS
-
-**Modern Hybrid Approach:**
-
-The project now uses a hybrid C++/Python architecture optimized for the Pi:
-
-1. **C++ Backend** (`./build/sc2-driver-io`): Headless telemetry processor
-   - Runs as root for GPS/hardware access  
-   - Real-time CAN processing and data validation
-   - Low-latency, high-performance core
-
-2. **Python Coordinator** (`./main.py`): System orchestrator
-   - Multi-threaded coordination (CAN, GPS, CSV logging)
-   - External module integration
-   - Runs as sunpi user
-
-3. **Textual Terminal GUI** (`./textual_frontend/`): Optional lightweight dashboard
-   - 70-90% less resource usage than Qt
-   - Terminal-based interface
-   - Integrates with existing Weston setup
-
-**Integration with Existing Pi Setup:**
-
-Your Pi runs Raspberry Pi OS Lite with Weston compositor. The new architecture provides three deployment options:
-
-1. **Headless Mode** (Recommended): Disables Weston, runs terminal dashboard on tty2
-   - Maximum performance and resource savings
-   - Access dashboard: Alt+F2, console: Alt+F1
-
-2. **Hybrid Mode**: Keeps Weston running + adds terminal dashboard on tty2  
-   - Maintains existing functionality
-   - Switch between Weston (Alt+F1) and dashboard (Alt+F2)
-
-3. **Weston Integration**: Launches SC2 components from within Weston autolaunch
-   - Integrates with existing `/home/sunpi/.config/weston.ini` setup
-   - Maintains current boot flow
-
-**Setup:**
-```bash
-# Run the integrated setup script
-cd textual_frontend
-chmod +x setup_autolaunch.sh
-sudo ./setup_autolaunch.sh
+```
+CAN Bus → Python Coordinator → ┬→ CSV Logger (USB)
+                                ├→ Lap Counter (GPS)
+                                ├→ C++ Telemetry (Radio/LTE)
+                                └→ Textual Dashboard (Terminal UI)
 ```
 
-The script will prompt you to choose your preferred integration mode.
+### Key Components
 
-### Compiling and Running the Project on a Raspberry Pi (Legacy Qt Method)
+- **CAN Bus Reader** (`can_bus/`) - Single-reader architecture distributing to multiple consumers
+- **Telemetry System** (`telemetry/`) - C++ transmission over RFD900A radio and EG25-G LTE
+- **Lap Counter** (`lap_counter/`) - GPS-based section and lap timing
+- **Terminal Dashboard** (`textual_frontend/`) - Lightweight Terminal-based UI
+- **Data Logger** (`can_bus/csv_logger.py`) - Buffered CSV writing to USB drive
 
-0. If running the project on the driver IO board, skip this step, as the necessary dependencies have already been installed on it. Otherwise, if you have not already, install the dependencies on the Raspberry Pi:
+---
+
+## Hardware Requirements
+
+- **Raspberry Pi 4** (or newer)
+- **Waveshare RS485 CAN HAT** for CAN bus communication
+- **EG25-G Mini PCIe LTE Module** for cloud telemetry and GNSS
+- **RFD900A Radio Module** for chase car communication
+- **USB Flash Drive** for data logging
+
+---
+
+## Quick Start
+
+### 1. Clone Repository
+
+```bash
+# Clone with SSH (recommended)
+git clone git@github.com:badgerloop-software/sc2-driver-io.git
+cd sc2-driver-io
+
+# Initialize submodules
+git submodule update --init --recursive
+```
+
+### 2. Install Dependencies
+
+#### On Raspberry Pi / Linux:
+
+```bash
+# System packages
+sudo apt update
+sudo apt install -y build-essential cmake python3 python3-pip git
+
+# Python packages
+pip3 install -r textual_frontend/textual_requirements.txt
+pip3 install python-can
+
+# CAN bus tools
+sudo apt install -y can-utils
+```
+
+#### On macOS (development):
+
+```bash
+# Install Homebrew if needed
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Install dependencies
+brew install cmake python3
+
+# Python packages
+pip3 install -r textual_frontend/textual_requirements.txt
+pip3 install python-can
+```
+
+### 3. Build C++ Components
+
+```bash
+mkdir -p build
+cd build
+cmake ..
+make
+cd ..
+```
+
+### 4. Configure CAN Interface (Linux only)
+
+```bash
+# Set up CAN interface
+sudo ip link set can0 type can bitrate 500000
+sudo ip link set can0 up
+
+# Verify CAN interface
+ip link show can0
+```
+
+### 5. Run the System
+
+#### Option A: Full System (Production)
+
+```bash
+# Terminal 1: C++ Telemetry
+sudo ./build/sc2-driver-io
+
+# Terminal 2: Python Coordinator
+python3 services/coordinator.py
+
+# Terminal 3: Dashboard (optional)
+python3 textual_frontend/textual_dashboard.py
+```
+
+#### Option B: Dashboard Only (Development)
+
+```bash
+# Run standalone dashboard with simulated data
+python3 textual_frontend/dashboard_launcher.py
+```
+
+#### Option C: Systemd Services (Raspberry Pi)
+
+```bash
+# Install services
+sudo cp services/systemd/*.service /etc/systemd/system/
+sudo systemctl daemon-reload
+
+# Enable and start
+sudo systemctl enable sc2-telemetry sc2-coordinator sc2-dashboard
+sudo systemctl start sc2-telemetry sc2-coordinator sc2-dashboard
+
+# Check status
+sudo systemctl status sc2-*
+```
+
+---
+
+## Development
+
+### Project Structure
+
+```
+sc2-driver-io/
+├── can_bus/              # CAN communication (Python)
+├── telemetry/            # Radio/LTE transmission (C++)
+├── data_processor/       # Data validation (C++)
+├── lap_counter/          # GPS-based lap counting (Python)
+├── core/ipc/             # Inter-process communication
+├── services/             # System coordination
+├── textual_frontend/     # Terminal dashboard UI
+├── neural_network/       # AI integration (next sprint)
+└── docs/                 # Architecture documentation
+```
+
+### Key Files
+
+- **`services/coordinator.py`** - Main Python orchestrator
+- **`main.cpp`** - C++ telemetry entry point
+- **`can_bus/can_reader.py`** - Single CAN reader with fan-out
+- **`core/ipc/shared_data.py`** - Shared memory for dashboard
+- **`core/ipc/telemetry_bridge.py`** - Unix socket to C++
+
+### Testing
+
+```bash
+# Test CAN reader (requires CAN interface)
+python3 can_bus/can_reader.py
+
+# Test shared memory IPC
+python3 core/ipc/shared_data.py
+
+# Test telemetry bridge
+python3 core/ipc/telemetry_bridge.py
+
+# Test neural network interface
+python3 neural_network/interface.py
+```
+
+### Contributing
+
+1. Create a feature branch: `git checkout -b feature/your-feature`
+2. Make your changes
+3. Update submodules if needed: `git submodule update --remote`
+4. Test your changes
+5. Commit with descriptive messages
+6. Push and open a pull request
+
+---
+
+## Raspberry Pi Deployment
+
+### Hardware Setup
+
+1. **Install Raspberry Pi OS Lite** (no desktop environment)
+2. **Configure CAN interface** in `/etc/network/interfaces`:
    ```
-   sudo apt install build-essential cmake
-   sudo apt install qt5-doc qtbase5-examples qtbase5-doc-html qtdeclarative5-dev qml-module-qtquick-controls2
+   auto can0
+   iface can0 inet manual
+       pre-up /sbin/ip link set can0 type can bitrate 500000
+       up /sbin/ip link set can0 up
    ```
-1. Copy the project to the Raspberry Pi.
-2. make a build directory with in the project, make sure you are in the directory
-3. Make and run the project on the Raspberry Pi by running the following commands:
-   ```
-   cmake ..
-   make
-   ./solar-car-dashboard
-   ```
+3. **Mount USB drive** for data logging (e.g., `/mnt/usb`)
+4. **Configure serial ports** for RFD900A and EG25-G
 
-## Project Structure
+### Production Deployment
 
-This section provides an overview of the key folders and their purposes in the Solar Car 1 Driver IO project.
+```bash
+# Build on Pi
+mkdir build && cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+make -j4
+cd ..
 
-### Root Directory
-- **CMakeLists.txt**: Build configuration file for CMake, used to compile the C++ backend.
-- **main.cpp**: C++ entry point for headless telemetry processor (modernized, no Qt dependencies).
-- **main.py**: Python entry point for system coordinator (multi-threaded orchestration).
-- **Config.cpp/h**: Configuration management (converted from Qt to standard C++).
-- **config.json**: JSON file containing application configuration settings.
+# Install systemd services
+sudo cp services/systemd/*.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable sc2-telemetry sc2-coordinator
 
-### textual_frontend/
-**NEW**: Lightweight terminal-based GUI replacement for Qt dashboard.
-- **textual_dashboard.py**: Main terminal dashboard application using Textual library.
-- **dashboard_launcher.py**: Bridge between C++ backend and dashboard interface.
-- **setup_autolaunch.sh**: Raspberry Pi integration script (works with existing Weston setup).
-- **README.md**: Complete documentation for terminal GUI setup and usage.
+# Optional: Enable dashboard
+sudo systemctl enable sc2-dashboard
 
-### 3rdparty/
-Contains third-party libraries used in the project.
-- **rapidjson/**: Header-only JSON parsing library for C++.
-- **serial/**: Library for serial communication (serialib), used for interfacing with serial devices like GPS.
+# Start services
+sudo systemctl start sc2-telemetry
+sudo systemctl start sc2-coordinator
+sudo systemctl start sc2-dashboard
+```
 
-### backend/
-Handles backend data processing and communication.
-- **backendProcesses.cpp/h**: Manages backend processes, including telemetry data handling via TCP, UDP, and SQL connections. Runs in a separate thread to process incoming data.
-- **dataFetcher.cpp/h**: Fetches data from network sources (TCP server), integrates GPS data, and manages data buffers.
-- **file_sync/**: Contains scripts for synchronizing files, likely for uploading telemetry data.
-- **telemetrylib/**: Library for telemetry operations, including TCP, UDP, SQL, and DTI (Data Transmission Interface) handling.
+### Monitoring
 
-### DataProcessor/
-Responsible for processing and unpacking telemetry data.
-- **dataUnpacker.cpp/h**: Core class that unpacks binary data into readable properties exposed to the QML UI, such as fan speed, timestamps, LED statuses, and shutdown circuit states.
-- **CMakeLists.txt**: Build configuration for the DataProcessor module.
+```bash
+# Check service status
+sudo systemctl status sc2-*
 
-### ethernet_sim/
-Simulation tools for testing ethernet communication.
-- **main.py**: Python script that simulates telemetry data transmission over ethernet, using the data format from `sc1-data-format` and GPS datasets.
-- **gps_dataset/**: Sample GPS data files (CSV, GPX, JSON) used in simulations.
+# View logs
+sudo journalctl -u sc2-coordinator -f
+sudo journalctl -u sc2-telemetry -f
 
-### gps/
-GPS functionality module.
-- **gps.cpp/h**: Class for interfacing with GPS devices via serial communication, parsing NMEA data to extract latitude, longitude, and altitude.
+# Check CAN bus
+candump can0
+```
 
-### sc1-data-format/
-Git submodule containing the data format definitions for telemetry packets. This folder is empty until the submodule is initialized (see cloning instructions above).
+---
 
-### UI/
-User interface components built with Qt QML.
-- **Items/**: QML files defining UI components like Dashboard, Speed, Batteries, Blinkers, etc.
-- **Images/**: Image assets (PNG, SVG) for the dashboard, such as needles, icons, and backgrounds.
-- **fonts/**: Font files (Work Sans) used in the UI, with licensing information.
+## Configuration
+
+Edit `config.json` for system settings:
+
+```json
+{
+  "udp_chasecar_ip": "192.168.1.100",
+  "udp_chasecar_port": 8888,
+  "EthernetPort": 9999,
+  "csv_log_path": "/mnt/usb/logs"
+}
+```
+
+---
+
+## Troubleshooting
+
+### CAN Bus Not Working
+
+```bash
+# Check interface status
+ip link show can0
+
+# Restart interface
+sudo ip link set can0 down
+sudo ip link set can0 up type can bitrate 500000
+
+# Monitor for errors
+dmesg | grep -i can
+```
+
+### Telemetry Not Transmitting
+
+```bash
+# Check serial ports
+ls -la /dev/ttyUSB* /dev/ttyS*
+
+# Test RFD900A
+sudo screen /dev/ttyS0 115200
+
+# Monitor LTE module
+sudo minicom -D /dev/ttyUSB2
+```
+
+### Dashboard Not Updating
+
+```bash
+# Check shared memory
+ls -la /tmp/sc2_telemetry_shm
+
+# Test shared memory
+python3 core/ipc/shared_data.py
+
+# Restart dashboard
+sudo systemctl restart sc2-dashboard
+```
+
+---
+
+## Documentation
+
+- **[Architecture Review](docs/ARCHITECTURE_REVIEW.md)** - Comprehensive system design
+- **[Evolution Plan](docs/EVOLUTION_PLAN.md)** - Migration strategy and roadmap
+- **[Restructure Summary](docs/RESTRUCTURE_SUMMARY.md)** - Recent changes and status
+- **[Neural Network Interface](neural_network/README.md)** - AI integration spec
+
+---
+
+## Libraries and Frameworks
+
+- **[python-can](https://python-can.readthedocs.io/)** - CAN bus communication
+- **[Textual](https://github.com/Textualize/textual)** - Terminal UI framework
+- **[RapidJSON](https://rapidjson.org/)** - Fast JSON parsing (C++)
+- **[serialib](3rdparty/serial/)** - Cross-platform serial communication
+
+---
