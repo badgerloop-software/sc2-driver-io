@@ -7,7 +7,9 @@ set(CMAKE_CXX_STANDARD 20)
 
 find_package(Qt6 REQUIRED COMPONENTS Network)
 find_package(ZLIB REQUIRED)
+find_package(CURL REQUIRED)
+
 add_library(telemetrylib SHARED Telemetry.cpp DTI.h TCP.cpp SQL.cpp DataResend.cpp DataResend.h)
 
-target_link_libraries(telemetrylib PRIVATE Qt6::Network)
+target_link_libraries(telemetrylib PRIVATE Qt6::Network CURL::libcurl)
 

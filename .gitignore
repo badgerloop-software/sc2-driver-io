@@ -81,3 +81,14 @@ build/
 
 # Logs and databases
 dashboard_logs.json
+telemetry_data.json
+*.log
+*.csv
+
+# SECRET CONFIGURATION - DO NOT COMMIT TO PUBLIC REPOS!
+# Contains API keys, deployment URLs, and private server addresses
+config.json
+
+# Python cache
+__pycache__/
+*.pyc

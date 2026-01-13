@@ -4,15 +4,22 @@
 
 A headless driver IO system for Solar Car 2, featuring CAN bus communication, real-time telemetry transmission, GPS-based lap counting, and an optional lightweight terminal dashboard.
 
+> **🔐 Security Note**: Before pushing to a public repository, see [docs/SECURITY.md](docs/SECURITY.md) for critical information about protecting your Convex deployment URLs and other sensitive configuration.
+
 ---
 
 ## Work in Progress
 
-This project is currently a work in progress. The architecture has been restructured to remove Qt dependencies and implement a clean multi-process design with Python/C++ hybrid architecture.
+This project is actively being developed. The architecture has been restructured with a clean Python/C++ hybrid design.
 
 **Current Status:**
-- 🔄 Qt removal in progress
-- 🔄 CAN bus integration ongoing
+- ✅ Qt removal complete
+- ✅ CAN bus integration complete
+- ✅ Python coordinator with fan-out architecture
+- ✅ Convex cloud database integration (LTE)
+- ✅ GPS lap counter integrated
+- 🔄 SystemD service setup (Week 5-6)
+- 🔄 End-to-end testing
 
 See [`docs/ARCHITECTURE_REVIEW.md`](docs/ARCHITECTURE_REVIEW.md) for detailed architecture information.
 
@@ -69,7 +76,7 @@ git submodule update --init --recursive
 ```bash
 # System packages
 sudo apt update
-sudo apt install -y build-essential cmake python3 python3-pip git
+sudo apt install -y build-essential cmake python3 python3-pip git libcurl4-openssl-dev
 
 # Python packages
 pip3 install -r textual_frontend/textual_requirements.txt
@@ -86,14 +93,28 @@ sudo apt install -y can-utils
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 # Install dependencies
-brew install cmake python3
+brew install cmake python3 curl
 
 # Python packages
 pip3 install -r textual_frontend/textual_requirements.txt
 pip3 install python-can
 ```
 
-### 3. Build C++ Components
+### 3. Configure Convex Cloud Database (Optional)
+
+For LTE telemetry transmission to the cloud:
+
+```bash
+cd docs/convex-example
+npm install
+npx convex dev  # Follow prompts to create deployment
+```
+
+Then update `config.json` with your Convex deployment URL.
+
+See **[docs/CONVEX_QUICKSTART.md](docs/CONVEX_QUICKSTART.md)** for details.
+
+### 4. Build C++ Components
 
 ```bash
 mkdir -p build
@@ -103,7 +124,7 @@ make
 cd ..
 ```
 
-### 4. Configure CAN Interface (Linux only)
+### 5. Configure CAN Interface (Linux only)
 
 ```bash
 # Set up CAN interface
