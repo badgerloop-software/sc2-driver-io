@@ -1115,10 +1115,10 @@ Add to `sc1-data-format/format.json`:
 
 ### Week 3-4: Data Flow
 1. ✅ Implement Unix socket bridge (Python → C++)
-2. Implement shared memory (Python → UI)
-3. Integrate `lap_counter/` with coordinator
+2. ✅ Implement shared memory (Python → UI)
+3. ✅ Integrate `lap_counter/` with coordinator
 4. ✅ Implement CSV buffered logging
-5. Test complete pipeline: CAN → CSV/Lap/Telemetry/UI (partial - CSV & Telemetry validated, UI/shared memory pending)
+5. Test complete pipeline: CAN → CSV/Lap/Telemetry/UI (ready for testing - all components integrated)
 
 ### Week 5-6: Integration
 1. Systemd service files and startup sequence

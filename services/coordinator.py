@@ -27,18 +27,28 @@ try:
     from can_bus.can_reader import CANReader
     from can_bus.telemetry_consumer import TelemetryConsumer
     from can_bus.csv_consumer import CSVConsumer
+    from can_bus.ui_consumer import UIConsumer
+    from can_bus.lap_counter_consumer import LapCounterConsumer
     CAN_AVAILABLE = True
 except ImportError as e:
     print(f"WARNING: CAN modules not available: {e}")
     CAN_AVAILABLE = False
 
-# Lap counter import
+# Lap counter import (legacy - now using lap_counter_consumer)
 try:
     from lap_counter.lap_counter import LapCounter
     LAP_COUNTER_AVAILABLE = True
 except ImportError:
     print("WARNING: Lap counter not available")
     LAP_COUNTER_AVAILABLE = False
+
+# Shared memory import for UI
+try:
+    from core.ipc.shared_data import SharedTelemetryWriter, TelemetrySnapshot
+    SHARED_MEMORY_AVAILABLE = True
+except ImportError:
+    print("WARNING: Shared memory module not available")
+    SHARED_MEMORY_AVAILABLE = False
 
 # Custom log handler for dashboard integration
 class DashboardLogHandler(logging.Handler):
@@ -94,7 +104,13 @@ class DriverIOSystem:
         self.can_reader = None
         self.telemetry_consumer = None
         self.csv_consumer = None
-        self.lap_counter = None
+        self.ui_consumer = None
+        self.lap_counter_consumer = None
+        self.lap_counter = None  # Legacy, if needed
+        self.shared_memory = None
+        
+        # Track latest telemetry values for shared memory
+        self.current_telemetry = TelemetrySnapshot() if SHARED_MEMORY_AVAILABLE else None
         
         if CAN_AVAILABLE:
             try:
@@ -104,6 +120,26 @@ class DriverIOSystem:
                 # Create consumers
                 self.telemetry_consumer = TelemetryConsumer()
                 self.csv_consumer = CSVConsumer(output_dir=csv_output_dir)
+                
+                # Create UI consumer if shared memory is available
+                if SHARED_MEMORY_AVAILABLE:
+                    try:
+                        self.ui_consumer = UIConsumer(update_rate_hz=10.0)
+                        logger.info("UI consumer initialized")
+                    except Exception as e:
+                        logger.warning(f"Failed to create UI consumer: {e}")
+                
+                # Create lap counter consumer
+                if LAP_COUNTER_AVAILABLE:
+                    try:
+                        self.lap_counter_consumer = LapCounterConsumer(
+                            line_start=(40.1106, -88.2073),  # TODO: Load from config
+                            line_end=(40.1108, -88.2073),
+                            channel=can_channel
+                        )
+                        logger.info("Lap counter consumer initialized")
+                    except Exception as e:
+                        logger.warning(f"Failed to create lap counter consumer: {e}")
                 
                 # Register consumers with CAN reader
                 self.can_reader.register_consumer(
@@ -118,7 +154,24 @@ class DriverIOSystem:
                     queue_size=5000  # Lower priority, larger buffer
                 )
                 
-                logger.info("CAN reader initialized with telemetry and CSV consumers")
+                # Register UI consumer if available
+                if self.ui_consumer:
+                    self.can_reader.register_consumer(
+                        "ui_display",
+                        self.ui_consumer.consume,
+                        queue_size=1000  # UI doesn't need huge buffer
+                    )
+                
+                # Register lap counter consumer if available
+                if self.lap_counter_consumer:
+                    self.can_reader.register_consumer(
+                        "lap_counter",
+                        self.lap_counter_consumer.consume,
+                        queue_size=500,  # GPS updates are infrequent
+                        filter_ids=[0x210, 0x211]  # Only GPS CAN IDs (adjust based on format.json)
+                    )
+                
+                logger.info("CAN reader initialized with all consumers")
                 
             except Exception as e:
                 logger.error(f"Failed to initialize CAN system: {e}")
@@ -131,6 +184,14 @@ class DriverIOSystem:
                 logger.info("Lap counter initialized")
             except Exception as e:
                 logger.error(f"Failed to initialize lap counter: {e}")
+        
+        # Initialize shared memory for UI if available
+        if SHARED_MEMORY_AVAILABLE:
+            try:
+                self.shared_memory = SharedTelemetryWriter()
+                logger.info("Shared memory initialized for UI communication")
+            except Exception as e:
+                logger.error(f"Failed to initialize shared memory: {e}")
         
         # Setup signal handlers for clean shutdown
         signal.signal(signal.SIGINT, self._signal_handler)
@@ -166,6 +227,14 @@ class DriverIOSystem:
                     if self.csv_consumer:
                         csv_stats = self.csv_consumer.get_stats()
                         logger.info(f"CSV Consumer: {csv_stats}")
+                    
+                    if self.ui_consumer:
+                        ui_stats = self.ui_consumer.get_stats()
+                        logger.info(f"UI Consumer: {ui_stats}")
+                    
+                    if self.lap_counter_consumer:
+                        lap_stats = self.lap_counter_consumer.get_stats()
+                        logger.info(f"Lap Counter: {lap_stats}")
                     
                     last_stats_time = current_time
                 
@@ -299,6 +368,10 @@ class DriverIOSystem:
             self.telemetry_consumer.close()
         if self.csv_consumer:
             self.csv_consumer.close()
+        if self.ui_consumer:
+            self.ui_consumer.close()
+        if self.lap_counter_consumer:
+            self.lap_counter_consumer.close()
         
         # Terminate dashboard process
         if self.dashboard_process:
