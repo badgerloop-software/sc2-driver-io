@@ -11,11 +11,11 @@
     "udp_chasecar_port": 4003,
     "EthernetPort": 4005,
     
-    "_comment_convex": "Convex cloud database - GET YOUR URL FROM: https://dashboard.convex.dev",
-    "_comment_convex_security": "IMPORTANT: Your Convex URL is SECRET - do not commit to public repos!",
-    "convex_deployment_url": "https://your-deployment-name.convex.cloud",
-    "convex_mutation_endpoint": "/api/mutation",
-    "convex_mutation_name": "telemetry:storeTelemetry",
-    "convex_timeout_ms": 5000,
-    "convex_retry_interval_ms": 3000
+    "_comment_supabase": "Supabase cloud database - GET YOUR URL FROM: https://supabase.com/dashboard",
+    "_comment_supabase_security": "IMPORTANT: Your Supabase keys are SECRET - do not commit to public repos!",
+    "supabase_url": "https://your-project-id.supabase.co",
+    "supabase_anon_key": "your-anon-key-here",
+    "supabase_table_name": "telemetry",
+    "supabase_timeout_ms": 5000,
+    "supabase_retry_interval_ms": 3000
 }

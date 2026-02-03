@@ -92,3 +92,5 @@ config.json
 # Python cache
 __pycache__/
 *.pyc
+
+network-priority.sh

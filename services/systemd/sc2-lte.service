@@ -1,0 +1,16 @@
+[Unit]
+Description=Enable LTE connection on usb0
+After=ModemManager.service
+Wants=ModemManager.service
+Before=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/sunpi/sc2-driver-io/enable_lte.sh
+RemainAfterExit=yes
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

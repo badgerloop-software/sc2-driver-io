@@ -1,6 +1,6 @@
 //
 // Created by Mingcan Li on 2/3/23.
-// Convex Cloud Database Integration via HTTP API
+// Supabase Cloud Database Integration via REST API
 // Sends parsed telemetry data as JSON key-value pairs
 //
 
@@ -62,17 +62,17 @@ public:
     SQL(const std::string& identifier = "telemetry") 
         : identifier_(identifier), running_(true), requestsPending_(0) {
         
-        // Load Convex configuration
+        // Load Supabase configuration
         Config& config = Config::getInstance();
-        convexUrl_ = config.getString("convex_deployment_url", "");
-        mutationEndpoint_ = config.getString("convex_mutation_endpoint", "/api/mutation");
-        mutationName_ = config.getString("convex_mutation_name", "telemetry:storeTelemetry");
-        timeout_ = config.getInt("convex_timeout_ms", 5000);
-        retryInterval_ = config.getInt("convex_retry_interval_ms", 3000);
+        supabaseUrl_ = config.getString("supabase_url", "");
+        supabaseKey_ = config.getString("supabase_anon_key", "");
+        tableName_ = config.getString("supabase_table_name", "telemetry");
+        timeout_ = config.getInt("supabase_timeout_ms", 5000);
+        retryInterval_ = config.getInt("supabase_retry_interval_ms", 3000);
         
-        if (convexUrl_.empty()) {
-            std::cerr << "ERROR: Convex URL not configured in config.json" << std::endl;
-            std::cerr << "Please set 'convex_deployment_url' to your Convex deployment URL" << std::endl;
+        if (supabaseUrl_.empty() || supabaseKey_.empty()) {
+            std::cerr << "ERROR: Supabase not configured in config.json" << std::endl;
+            std::cerr << "Please set 'supabase_url' and 'supabase_anon_key'" << std::endl;
             return;
         }
         
@@ -85,9 +85,9 @@ public:
         // Initialize libcurl
         curl_global_init(CURL_GLOBAL_DEFAULT);
         
-        std::cout << "Convex LTE transmission initialized" << std::endl;
-        std::cout << "  Convex URL: " << convexUrl_ << std::endl;
-        std::cout << "  Mutation: " << mutationName_ << std::endl;
+        std::cout << "Supabase LTE transmission initialized" << std::endl;
+        std::cout << "  Supabase URL: " << supabaseUrl_ << std::endl;
+        std::cout << "  Table: " << tableName_ << std::endl;
         std::cout << "  Format fields: " << formatFields_.size() << std::endl;
         
         // Start background worker thread for async sending
@@ -103,7 +103,7 @@ public:
     }
 
     void sendData(const std::vector<uint8_t>& bytes, long long timestamp) override {
-        if (convexUrl_.empty() || formatFields_.empty()) {
+        if (supabaseUrl_.empty() || supabaseKey_.empty() || formatFields_.empty()) {
             return;  // Not configured
         }
         
@@ -128,9 +128,9 @@ private:
         int offset;
     };
     
-    std::string convexUrl_;
-    std::string mutationEndpoint_;
-    std::string mutationName_;
+    std::string supabaseUrl_;
+    std::string supabaseKey_;
+    std::string tableName_;
     std::string identifier_;
     int timeout_;
     int retryInterval_;
@@ -196,7 +196,7 @@ private:
             }
             
             if (hasData) {
-                sendToConvex(data.bytes, data.timestamp);
+                sendToSupabase(data.bytes, data.timestamp);
                 requestsPending_--;
             } else {
                 // Sleep briefly if queue is empty
@@ -205,7 +205,7 @@ private:
         }
     }
     
-    bool sendToConvex(const std::vector<uint8_t>& bytes, long long timestamp) {
+    bool sendToSupabase(const std::vector<uint8_t>& bytes, long long timestamp) {
         CURL* curl = curl_easy_init();
         if (!curl) {
             std::cerr << "Failed to initialize CURL" << std::endl;
@@ -220,7 +220,7 @@ private:
         // Add metadata
         parsedData.AddMember("timestamp", timestamp, allocator);
         parsedData.AddMember("source", Value(identifier_.c_str(), allocator), allocator);
-        parsedData.AddMember("receivedAt", 
+        parsedData.AddMember("received_at", 
             std::chrono::duration_cast<std::chrono::milliseconds>(
                 std::chrono::system_clock::now().time_since_epoch()).count(), 
             allocator);
@@ -248,23 +248,16 @@ private:
             }
         }
         
-        // Convert to JSON string
+        // Convert to JSON string for Supabase REST API
         StringBuffer buffer;
         Writer<StringBuffer> writer(buffer);
         parsedData.Accept(writer);
         
-        // Build Convex mutation payload
-        std::stringstream jsonPayload;
-        jsonPayload << "{"
-                    << "\"path\":\"" << mutationName_ << "\","
-                    << "\"args\":[" << buffer.GetString() << "]"
-                    << "}";
-        
-        std::string payload = jsonPayload.str();
+        std::string payload = buffer.GetString();
         std::string response;
         
-        // Build full URL
-        std::string fullUrl = convexUrl_ + mutationEndpoint_;
+        // Build Supabase REST API URL
+        std::string fullUrl = supabaseUrl_ + "/rest/v1/" + tableName_;
         
         // Set CURL options
         curl_easy_setopt(curl, CURLOPT_URL, fullUrl.c_str());
@@ -273,9 +266,14 @@ private:
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
         
-        // Set headers
+        // Set headers for Supabase REST API
         struct curl_slist* headers = nullptr;
         headers = curl_slist_append(headers, "Content-Type: application/json");
+        headers = curl_slist_append(headers, "Prefer: return=minimal");
+        std::string apiKeyHeader = "apikey: " + supabaseKey_;
+        std::string authHeader = "Authorization: Bearer " + supabaseKey_;
+        headers = curl_slist_append(headers, apiKeyHeader.c_str());
+        headers = curl_slist_append(headers, authHeader.c_str());
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
         
         // Perform request
@@ -286,10 +284,10 @@ private:
         bool success = (res == CURLE_OK && httpCode >= 200 && httpCode < 300);
         
         if (success) {
-            std::cout << "Convex: Sent telemetry data (timestamp: " 
+            std::cout << "Supabase: Sent telemetry data (timestamp: " 
                       << timestamp << ") - HTTP " << httpCode << std::endl;
         } else {
-            std::cerr << "Convex: Failed to send data - ";
+            std::cerr << "Supabase: Failed to send data - ";
             if (res != CURLE_OK) {
                 std::cerr << "CURL error: " << curl_easy_strerror(res) << std::endl;
             } else {
