@@ -1,7 +1,6 @@
-[submodule "sc1-data-format"]
-	path = sc1-data-format
-	url = git@github.com:badgerloop-software/sc1-data-format.git
-	branch = main
 [submodule "file_sync"]
 	path = backend/file_sync
 	url = git@github.com:badgerloop-software/file_sync.git
+[submodule "sc-data-format"]
+	path = sc-data-format
+	url = https://github.com/badgerloop-software/sc-data-format.git

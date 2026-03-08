@@ -1,96 +1,86 @@
-# This file is used to ignore files which are generated
+
+# --------
 # ----------------------------------------------------------------------------
-
-*~
-*.autosave
-*.a
-*.core
-*.moc
-*.o
-*.obj
-*.orig
-*.rej
-*.so
-*.so.*
-*_pch.h.cpp
-*_resource.rc
-*.qm
-.#*
 *.*#
-core
-!core/
-tags
-.DS_Store
-.directory
-*.debug
-Makefile*
-*.prl
+*~
+.#*
+*.a
 *.app
-moc_*.cpp
-moc_*.h
-ui_*.h
-qrc_*.cpp
-Thumbs.db
-*.res
-*.rc
-*.venv
-
-# xemacs temporary files
+*.autosave
+# Binaries
+build/
+can_logs/*
+!can_logs/.gitkeep
+*.cmake
+CMakeCache.txt
+CMakeFiles
+config.json
+# Contains API keys, deployment URLs, and private server addresses
+!core/
+*.core
+core
+*.csv
+dashboard_logs.json
+*.debug
+*.Debug
+*.depends
+.directory
+*.dll
+.DS_Store
+*.exe
+file_sync_output/*
 *.flc
-
-# Vim temporary files
-.*.swp
-
-# Visual Studio generated files
 *.ib_pdb_index
 *.idb
 *.ilk
+*.log
+# Logs and databases
+Makefile*
+# MinGW generated files
+*.moc
+moc_*.cpp
+moc_*.h
+*.ncb
+network-priority.sh
+*.o
+*.obj
+*.opensdf
+*.orig
+# output files for sync
+*_pch.h.cpp
 *.pdb
+*.prl
+*.pyc
+__pycache__/
+# Python byte code
+# Python cache
+*.qm
+qrc_*.cpp
+.qt
+*.rc
+*.rej
+*.Release
+*.res
+*_resource.rc
+*.sdf
+# SECRET CONFIGURATION - DO NOT COMMIT TO PUBLIC REPOS!
 *.sln
+*.so
+*.so.*
+solar-car-dashboard
 *.suo
+.*.swp
+tags
+telemetry_data.json
+# This file is used to ignore files which are generated
+Thumbs.db
+ui_*.h
 *.vcproj
 *vcproj.*.*.user
-*.ncb
-*.sdf
-*.opensdf
 *.vcxproj
 *vcxproj.*
+*.venv
+# Vim temporary files
+# Visual Studio generated files
 .vscode/
-# MinGW generated files
-*.Debug
-*.Release
-
-# Python byte code
-*.pyc
-
-# Binaries
-# --------
-*.dll
-*.exe
-solar-car-dashboard
-
-# output files for sync
-file_sync_output/*
-
-*.cmake
-CMakeCache.txt
-*.depends
-CMakeFiles
-.qt
-build/
-
-# Logs and databases
-dashboard_logs.json
-telemetry_data.json
-*.log
-*.csv
-
-# SECRET CONFIGURATION - DO NOT COMMIT TO PUBLIC REPOS!
-# Contains API keys, deployment URLs, and private server addresses
-config.json
-
-# Python cache
-__pycache__/
-*.pyc
-
-network-priority.sh
+# xemacs temporary files
