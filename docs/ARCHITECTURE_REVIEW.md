@@ -1118,7 +1118,6 @@ Add to `sc1-data-format/format.json`:
 2. ✅ Implement shared memory (Python → UI)
 3. ✅ Integrate `lap_counter/` with coordinator
 4. ✅ Implement CSV buffered logging
-5. ✅ Implement Convex cloud database integration for LTE transmission
 6. Test complete pipeline: CAN → CSV/Lap/Telemetry/UI (ready for testing - all components integrated)
 
 ### Week 5-6: Integration

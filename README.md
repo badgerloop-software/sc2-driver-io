@@ -16,7 +16,6 @@ This project is actively being developed. The architecture has been restructured
 - ✅ Qt removal complete
 - ✅ CAN bus integration complete
 - ✅ Python coordinator with fan-out architecture
-- ✅ Convex cloud database integration (LTE)
 - ✅ GPS lap counter integrated
 - 🔄 SystemD service setup (Week 5-6)
 - 🔄 End-to-end testing
@@ -100,19 +99,6 @@ pip3 install -r textual_frontend/textual_requirements.txt
 pip3 install python-can
 ```
 
-### 3. Configure Convex Cloud Database (Optional)
-
-For LTE telemetry transmission to the cloud:
-
-```bash
-cd docs/convex-example
-npm install
-npx convex dev  # Follow prompts to create deployment
-```
-
-Then update `config.json` with your Convex deployment URL.
-
-See **[docs/CONVEX_QUICKSTART.md](docs/CONVEX_QUICKSTART.md)** for details.
 
 ### 4. Build C++ Components
 

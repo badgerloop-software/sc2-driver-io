@@ -8,8 +8,6 @@ When pushing this code to a public repository, you **MUST** protect sensitive co
 
 ### 🔴 HIGHLY SENSITIVE (Never Commit)
 
-1. **Convex Deployment URL** (`config.json`)
-   - Example: `https://happy-animal-123.convex.cloud`
    - **Risk**: Anyone with this URL can read/write to your database
    - **Action**: Keep in `config.json` (already in `.gitignore`)
 
@@ -55,8 +53,6 @@ When pushing this code to a public repository, you **MUST** protect sensitive co
    nano config.json  # or vim, code, etc.
    ```
 
-3. **Add your Convex URL:**
-   - Go to https://dashboard.convex.dev
    - Copy your deployment URL
    - Paste it into `config.json`
 
@@ -86,7 +82,6 @@ git status
 **ACT IMMEDIATELY:**
 
 1. **Rotate all secrets:**
-   - Convex: Delete and recreate your deployment
    - SQL: Change server URL or restrict access
 
 2. **Remove from Git history:**
@@ -111,7 +106,6 @@ For production deployments, consider using environment variables instead:
 
 ```bash
 # In ~/.bashrc or systemd service file
-export CONVEX_DEPLOYMENT_URL="https://your-deployment.convex.cloud"
 export SQL_SERVER_URL="your-server.example.com"
 ```
 
@@ -119,11 +113,9 @@ export SQL_SERVER_URL="your-server.example.com"
 
 ```bash
 # .env (add to .gitignore)
-CONVEX_DEPLOYMENT_URL=https://your-deployment.convex.cloud
 SQL_SERVER_URL=your-server.example.com
 
 # .env.example (commit this)
-CONVEX_DEPLOYMENT_URL=https://your-deployment-name.convex.cloud
 SQL_SERVER_URL=your-server.example.com
 ```
 
@@ -133,7 +125,6 @@ Before pushing to public repo:
 
 - [ ] `config.json` is in `.gitignore`
 - [ ] `config.json.example` exists with placeholder values
-- [ ] No real Convex URLs in committed files
 - [ ] No real SQL server URLs in committed files
 - [ ] Log files are in `.gitignore`
 - [ ] Run `git status` - no secrets listed
@@ -142,15 +133,11 @@ Before pushing to public repo:
 ## Security Best Practices
 
 ### 1. **Principle of Least Privilege**
-- Don't give Convex URLs to people who don't need them
-- Use Convex's authentication features in production
 
 ### 2. **Regular Rotation**
 - Change deployment URLs periodically
-- Monitor Convex dashboard for unauthorized access
 
 ### 3. **Monitoring**
-- Check Convex logs for suspicious activity
 - Set up alerts for unusual traffic patterns
 
 ### 4. **Access Control**
@@ -165,12 +152,10 @@ Before pushing to public repo:
 
 1. **Immediate Actions:**
    - Rotate all affected secrets
-   - Check Convex logs for unauthorized access
    - Assess what data might have been accessed
 
 2. **Short-term:**
    - Implement IP whitelisting if available
-   - Add authentication to your Convex functions
    - Monitor for suspicious activity
 
 3. **Long-term:**
@@ -189,7 +174,6 @@ Enable these on your repo:
 ## Resources
 
 - [GitHub: Removing sensitive data](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
-- [Convex Security Docs](https://docs.convex.dev/production/hosting)
 - [git-filter-repo](https://github.com/newren/git-filter-repo)
 
 ## Questions?
