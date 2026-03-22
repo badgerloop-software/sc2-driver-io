@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <signal.h>
 #include <DataProcessor/dataUnpacker.h>
+#include "InfluxWriter.h"
 
 // Global flag for clean shutdown
 volatile bool g_running = true;
@@ -53,6 +54,16 @@ int main(int argc, char *argv[]) {
     // Initialize the data unpacker (telemetry processor)
     DataUnpacker unpacker;
     
+    // Initialize InfluxDB writer (reads INFLUX_URL, INFLUX_TOKEN, INFLUX_ORG, INFLUX_BUCKET from env)
+    std::unique_ptr<InfluxWriter> influxWriter;
+    try {
+        influxWriter = std::make_unique<InfluxWriter>();
+        std::cout << "InfluxDB writer initialized successfully." << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "WARNING: InfluxDB not configured: " << e.what() << std::endl;
+        std::cerr << "         Set INFLUX_URL, INFLUX_TOKEN, INFLUX_ORG, INFLUX_BUCKET to enable." << std::endl;
+    }
+    
     // Start file sync process in background
     startFileSync();
     
@@ -62,12 +73,24 @@ int main(int argc, char *argv[]) {
     
     // Main application loop
     std::cout << "System running. Press Ctrl+C to shutdown gracefully." << std::endl;
+    auto lastInfluxWrite = std::chrono::steady_clock::now();
     while (g_running) {
         // Sleep for a short period to avoid busy waiting
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        
-        // Here we could add periodic status checks or maintenance tasks
-        // For now, just keep the application alive
+
+        // Publish telemetry to InfluxDB every 2 seconds
+        if (influxWriter) {
+            auto now = std::chrono::steady_clock::now();
+            if (std::chrono::duration_cast<std::chrono::seconds>(now - lastInfluxWrite).count() >= 2) {
+                try {
+                    TelemetryRecord rec = unpacker.buildTelemetryRecord();
+                    influxWriter->write(influxWriter->toLineProtocol(rec));
+                } catch (const std::exception& e) {
+                    std::cerr << "InfluxDB write error: " << e.what() << std::endl;
+                }
+                lastInfluxWrite = now;
+            }
+        }
     }
     
     // Graceful shutdown

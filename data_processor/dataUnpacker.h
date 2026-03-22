@@ -16,6 +16,7 @@
 #include "backend/dataFetcher.h"
 #include "3rdparty/rapidjson/document.h"
 #include "3rdparty/rapidjson/filereadstream.h"
+#include "TelemetryRecord.h"
 
 using namespace rapidjson;
 
@@ -118,6 +119,10 @@ public:
     float getElev() const { return elev; }
     
     const std::vector<float>& getCellGroupVoltages() const { return cell_group_voltages; }
+
+    // Build a TelemetryRecord from current live data for InfluxDB publishing
+    TelemetryRecord buildTelemetryRecord() const;
+
 private:
     bool checkRestartEnable();
     
