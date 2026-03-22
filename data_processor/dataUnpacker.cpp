@@ -4,6 +4,132 @@
 
 #include "dataUnpacker.h"
 
+// ─────────────────────────────────────────────────────────────────────────────
+//  buildTelemetryRecord
+//  Maps all live DataUnpacker fields into a TelemetryRecord for InfluxDB.
+// ─────────────────────────────────────────────────────────────────────────────
+
+TelemetryRecord DataUnpacker::buildTelemetryRecord() const {
+    TelemetryRecord r;
+
+    // ── MCC / Motor Control ──────────────────────────────────────────────────
+    r.accelerator_pedal         = getAcceleratorPedal();
+    r.speed                     = getSpeed();
+    r.mc_status                 = static_cast<uint8_t>(getMcStatus());
+    r.crz_pwr_mode              = getCrzPwrMode();
+    r.crz_spd_mode              = getCrzSpdMode();
+    r.crz_pwr_setpt             = getCrzPwrSetpt();
+    r.crz_spd_setpt             = getCrzSpdSetpt();
+    r.eco                       = getEco();
+    r.main_telem                = getMainTelem();
+    r.motor_power               = getMotorPower();
+
+    // ── High Voltage / Shutdown ──────────────────────────────────────────────
+    r.driver_eStop              = getDriverEStop();
+    r.external_eStop            = getExternalEStop();
+    r.crash                     = getCrash();
+    r.discharge_enable          = getDischargeEnable();
+    r.charge_enable             = getChargeEnable();
+    r.isolation                 = getIsolation();
+    r.mcu_hv_en                 = getMcuHvEn();
+    r.mcu_stat_fdbk             = getMcuStatFdbk();
+
+    // ── High Voltage / MPS ───────────────────────────────────────────────────
+    r.low_contactor             = getLowContactor();
+    r.use_dcdc                  = getUseDcdc();
+
+    // ── Battery / Supplemental ───────────────────────────────────────────────
+    r.supplemental_voltage      = getSupplementalVoltage();
+    r.est_supplemental_soc      = getEstSupplementalSoc();
+
+    // ── Main IO / Sensors ────────────────────────────────────────────────────
+    r.park_brake                = getParkingBrake();
+    r.mainIO_temp               = getMainIOTemp();
+    r.motor_controller_temp     = getMotorControllerTemp();
+    r.motor_temp                = getMotorTemp();
+
+    // ── Main IO / Lights ─────────────────────────────────────────────────────
+    r.l_turn_led_en             = getLTurnLedEn();
+    r.r_turn_led_en             = getRTurnLedEn();
+    r.headlights_led_en         = getHeadlights();
+    r.hazards                   = getHazards();
+
+    // ── Main IO / Firmware Heartbeats ────────────────────────────────────────
+    r.bms_can_heartbeat         = getBmsCanHeartbeat();
+    r.mainIO_heartbeat          = getMainIOHeartbeat();
+
+    // ── Solar / MPPT ─────────────────────────────────────────────────────────
+    r.mppt_current_out          = getMpptCurrentOut();
+    r.string1_temp              = getString1Temp();
+    r.string2_temp              = getString2Temp();
+    r.string3_temp              = getString3Temp();
+
+    // ── Battery / BMS CAN ────────────────────────────────────────────────────
+    r.pack_temp                 = getPackTemp();
+    r.pack_current              = getPackCurrent();
+    r.pack_voltage              = getPackVoltage();
+    r.soc                       = getSoc();
+    r.fan_speed                 = static_cast<uint8_t>(getFanSpeed());
+    r.bms_input_voltage         = getBmsInputVoltage();
+
+    // ── Battery / BMS Faults ─────────────────────────────────────────────────
+    r.bps_fault                             = getBpsFault();
+    r.voltage_failsafe                      = getVoltageFailsafe();
+    r.current_failsafe                      = getCurrentFailsafe();
+    r.relay_failsafe                        = getRelayFailsafe();
+    r.cell_balancing_active                 = getCellBalancingActive();
+    r.charge_interlock_failsafe             = getChargeInterlockFailsafe();
+    r.thermistor_b_value_table_invalid      = getThermistorBValueTableInvalid();
+    r.input_power_supply_failsafe           = getInputPowerSupplyFailsafe();
+
+    // ── Battery / Cell Group Voltages ────────────────────────────────────────
+    const auto& cgv = getCellGroupVoltages();
+    if (cgv.size() > 0)  r.cell_group1_voltage  = cgv[0];
+    if (cgv.size() > 1)  r.cell_group2_voltage  = cgv[1];
+    if (cgv.size() > 2)  r.cell_group3_voltage  = cgv[2];
+    if (cgv.size() > 3)  r.cell_group4_voltage  = cgv[3];
+    if (cgv.size() > 4)  r.cell_group5_voltage  = cgv[4];
+    if (cgv.size() > 5)  r.cell_group6_voltage  = cgv[5];
+    if (cgv.size() > 6)  r.cell_group7_voltage  = cgv[6];
+    if (cgv.size() > 7)  r.cell_group8_voltage  = cgv[7];
+    if (cgv.size() > 8)  r.cell_group9_voltage  = cgv[8];
+    if (cgv.size() > 9)  r.cell_group10_voltage = cgv[9];
+    if (cgv.size() > 10) r.cell_group11_voltage = cgv[10];
+    if (cgv.size() > 11) r.cell_group12_voltage = cgv[11];
+    if (cgv.size() > 12) r.cell_group13_voltage = cgv[12];
+    if (cgv.size() > 13) r.cell_group14_voltage = cgv[13];
+    if (cgv.size() > 14) r.cell_group15_voltage = cgv[14];
+    if (cgv.size() > 15) r.cell_group16_voltage = cgv[15];
+    if (cgv.size() > 16) r.cell_group17_voltage = cgv[16];
+    if (cgv.size() > 17) r.cell_group18_voltage = cgv[17];
+    if (cgv.size() > 18) r.cell_group19_voltage = cgv[18];
+    if (cgv.size() > 19) r.cell_group20_voltage = cgv[19];
+    if (cgv.size() > 20) r.cell_group21_voltage = cgv[20];
+    if (cgv.size() > 21) r.cell_group22_voltage = cgv[21];
+    if (cgv.size() > 22) r.cell_group23_voltage = cgv[22];
+    if (cgv.size() > 23) r.cell_group24_voltage = cgv[23];
+    if (cgv.size() > 24) r.cell_group25_voltage = cgv[24];
+    if (cgv.size() > 25) r.cell_group26_voltage = cgv[25];
+    if (cgv.size() > 26) r.cell_group27_voltage = cgv[26];
+    if (cgv.size() > 27) r.cell_group28_voltage = cgv[27];
+    if (cgv.size() > 28) r.cell_group29_voltage = cgv[28];
+    if (cgv.size() > 29) r.cell_group30_voltage = cgv[29];
+    if (cgv.size() > 30) r.cell_group31_voltage = cgv[30];
+
+    // ── Software / Timestamps ────────────────────────────────────────────────
+    r.tstamp_hr  = static_cast<uint8_t>(getTstampHr());
+    r.tstamp_mn  = static_cast<uint8_t>(getTstampMn());
+    r.tstamp_sc  = static_cast<uint8_t>(getTstampSc());
+    r.tstamp_ms  = static_cast<uint16_t>(getTstampMs());
+
+    // ── Software / GPS ───────────────────────────────────────────────────────
+    r.lat  = getLat();
+    r.lon  = getLon();
+    r.elev = getElev();
+
+    return r;
+}
+
 double bytesToDouble(const std::vector<uint8_t>& data, int start_pos)
 {
     double number;
