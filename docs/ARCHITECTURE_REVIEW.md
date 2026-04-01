@@ -3,7 +3,39 @@
 **Date:** January 8, 2026  
 **Reviewer:** Architecture Analysis (Opus)  
 **Sprint Duration:** 8 weeks  
-**Goal:** Modernize solar car driver IO system with clear data flow pipeline
+**Goal:** Modernize solar car driver IO system with clear data flow pipeline  
+**Last status refresh:** April 1, 2026
+
+> **How to read this document:** The **Executive Summary** and most sections that follow capture the **January 2026** review and recommendations. For **current implementation status** on the vehicle repo, read **[Status snapshot — April 1, 2026](#status-snapshot--april-1-2026)** first, then use the rest as historical design context.
+
+---
+
+## Status snapshot — April 1, 2026
+
+This section records where **`badgerloop-software/sc2-driver-io`** (branch `shobhin/driverIO`) actually stands relative to the review below.
+
+### Shipped or materially changed
+
+- **InfluxDB cloud path (C++):** The [`sc2-telemetry-tester`](https://github.com/badgerloop-software/sc2-telemetry-tester) branch [`tester--cpp`](https://github.com/badgerloop-software/sc2-telemetry-tester/tree/tester--cpp) was merged with **`--allow-unrelated-histories`** so upstream commit authorship is preserved. New top-level **`cpp/`** tree includes `TelemetryRecord`, `InfluxWriter` (v2 Line Protocol over HTTP via **libcurl**), `CsvParser`, standalone binary **`sc2_telemetry_tester`**, and **`sc2_telemetry_tests`**. Configuration via **`.env`** / **`.env.example`** (`INFLUX_URL`, `INFLUX_TOKEN`, `INFLUX_ORG`, `INFLUX_BUCKET`). Details: [`cpp/README_CPP.md`](../cpp/README_CPP.md).
+- **Legacy cloud stack removed from tree:** Node/Supabase tester (`src/*.js`, `package.json`, `sql/create_tables.sql`) and duplicate **`data/data_format.json`** were dropped. Canonical signal definitions remain the **`sc-data-format`** submodule (`sc-data-format/format.json`).
+- **Build system:** Root **`CMakeLists.txt`** requires **CMake ≥ 3.15**, **`find_package(CURL REQUIRED)`**, and **`add_subdirectory(cpp)`** so one configure step builds **`sc2-driver-io`** plus the Influx tester targets. Raspberry Pi OS needs **`libcurl4-openssl-dev`**.
+- **Supabase C++ client removed earlier:** **`telemetry/sql.cpp`** is gone. **`backendprocesses.h`** was slimmed to stop including **`telemetry/sql.cpp`**, **`tcp.cpp`**, and **`udp.cpp`** (those files are not part of the include graph for the main binary anymore). **`BackendProcesses` is still only declared**—there is **no in-tree implementation**; any future multi-channel DTI orchestration must add a `.cpp` or remove the type.
+- **Operations:** Optional **`services/systemd/sc2-influx-tester.service`** runs CSV replay/stream mode against Influx for **bench / lab** validation (not a substitute for live CAN).
+
+### Gaps (still true or newly visible)
+
+- **Live CAN → Influx:** Production path is **not** wired. The merged code proves **CSV → `TelemetryRecord` → Influx**; **`can_bridge` / `DataUnpacker`** do not yet populate **`TelemetryRecord`** or call **`InfluxWriter::writeBatch`** on a timer.
+- **Format path naming:** **`data_processor/dataUnpacker.cpp`** still opens paths like **`sc1-data-format/format.json`** in places; the repo submodule is **`sc-data-format`**. Align paths and verify on-target (build cwd, systemd `WorkingDirectory`).
+- **Diagrams in §2 below** still show **`sql.cpp` → LTE** as the cloud path; mentally substitute the **`cpp/InfluxWriter`** pipeline + note that legacy **`sql.cpp`** is removed until/unless replaced.
+- **Fleet / tooling:** Some Pis have had **DNS resolution failures for `github.com`** until resolver or **`/etc/hosts`** workarounds; fix **systemd-resolved / network** rather than relying on static host entries long term.
+
+### Recommended next work (priority)
+
+1. **Implement live cloud upload:** From the unpacked byte buffer (or per-signal map), fill **`TelemetryRecord`** (or emit Line Protocol fields) and **`InfluxWriter::writeBatch`** ~1 Hz (see upstream README “Porting to Raspberry Pi”).
+2. **`BackendProcesses`:** Either implement constructors / **`threadProcedure`** for the intended DTI list or delete the abstraction to avoid a false sense of completeness.
+3. **Re-audit Qt:** Run a repo-wide check for Qt includes/macros; if clean, update §6–§7 of this document so it matches reality.
+4. **Security:** Ensure **`.env`** for Influx is excluded from images/backups where inappropriate; extend **`docs/SECURITY.md`** with token rotation and bucket policy notes.
+5. **CI (optional):** Build and run **`sc2_telemetry_tests`** on pull requests.
 
 ---
 
@@ -14,11 +46,12 @@ After reviewing your codebase, I have both **good news and critical concerns**. 
 ### Key Findings:
 1. ✅ **Telemetry system (C++)** - Well-architected DTI pattern, preserve as-is
 2. ✅ **Lap counter algorithm** - Robust implementation, keep in Python
-3. ✅ **CAN utilities** - Clean signal parsing with `sc1-data-format` integration
-4. ⚠️ **Qt dependencies still present** - `Serial.cpp`, `DataUnpacker.cpp`, `dataFetcher.cpp` still use Qt
+3. ✅ **CAN utilities** - Clean signal parsing with format JSON integration (submodule is **`sc-data-format`**; some code paths may still reference legacy `sc1-data-format` paths—see April 2026 status)
+4. ⚠️ **Qt dependencies (Jan 2026 finding)** - Original review flagged Qt in `Serial.cpp`, `DataUnpacker.cpp`, `dataFetcher.cpp`; headless/Qt removal has progressed—**re-audit** before treating this as current
 5. ⚠️ **Two main entry points (resolved)** - `main.cpp` and `services/coordinator.py` (coordinator replaces `main.py`)
-6. ❌ **Ethernet-based data fetcher** - `dataFetcher.cpp` uses TCP server, needs CAN replacement
-7. ❌ **IPC strategy unclear** - JSON files for UI, but no defined strategy for CAN→C++ bridge
+6. ❌ **Ethernet-based data fetcher** - `dataFetcher.cpp` uses TCP server, needs CAN replacement (or confirm deprecated)
+7. ❌ **IPC strategy unclear** - JSON files for UI, but no defined strategy for CAN→C++ bridge (Unix socket / shared memory direction exists in code—validate under systemd)
+8. 🔄 **Cloud upload (April 2026)** - **InfluxDB** path exists in **`cpp/`**; **live CAN → Influx** integration still outstanding
 
 ---
 
@@ -57,9 +90,14 @@ sc2-driver-io/
 │   ├── DTI.h                        # Keep as-is (excellent pattern)
 │   ├── telemetry.h/.cpp             # Keep, remove Qt dependencies
 │   ├── serial.cpp                   # RFD900A - NEEDS Qt removal
-│   ├── sql.cpp                      # LTE transmission - NEEDS Qt removal
-│   ├── udp.cpp                      # Keep, remove Qt
-│   └── can_bridge.cpp               # NEW: Receives CAN data from Python
+│   ├── (sql.cpp removed — was Supabase; cloud = cpp/InfluxWriter + InfluxDB)
+│   ├── udp.cpp                      # Chase car UDP (still in tree)
+│   └── can_bridge.cpp               # Receives CAN-related data from Python coordinator
+│
+├── cpp/                             # MERGED from sc2-telemetry-tester tester--cpp
+│   ├── include/                     # TelemetryRecord, InfluxWriter, CsvParser
+│   ├── src/                         # libcurl Line Protocol client + tester main
+│   └── tests/                       # sc2_telemetry_tests
 │
 ├── data_processor/                  # RENAMED from DataProcessor
 │   ├── CMakeLists.txt
@@ -153,8 +191,8 @@ sc2-driver-io/
    │ /mnt/usb  │              │           │   System      │             │
    └───────────┘              │           ├───────────────┤             │
                               │           │ serial.cpp    │──► RFD900A Radio
-                              │           │ sql.cpp       │──► EG25-G LTE
                               │           │ udp.cpp       │──► Chase Car
+                              │           │ cpp/InfluxWriter │──► InfluxDB Cloud (v2 write API)
                               │           └───────────────┘
                               │
                               ▼

@@ -12,13 +12,15 @@ A headless driver IO system for Solar Car 2, featuring CAN bus communication, re
 
 This project is actively being developed. The architecture has been restructured with a clean Python/C++ hybrid design.
 
-**Current Status:**
-- ✅ Qt removal complete
+**Current Status (April 2026):**
+- ✅ Qt removal complete (headless path)
 - ✅ CAN bus integration complete
 - ✅ Python coordinator with fan-out architecture
 - ✅ GPS lap counter integrated
-- 🔄 SystemD service setup (Week 5-6)
-- 🔄 End-to-end testing
+- ✅ **InfluxDB cloud stack merged** — `cpp/` (`InfluxWriter`, `TelemetryRecord`, `sc2_telemetry_tester`, tests); see [docs/ARCHITECTURE_REVIEW.md](docs/ARCHITECTURE_REVIEW.md) “Status snapshot”
+- ✅ Lab/replay path — CSV → Influx via `build/cpp/sc2_telemetry_tester` and optional `sc2-influx-tester.service`
+- 🔄 **Live CAN → Influx** — not yet wired from `DataUnpacker` / `can_bridge` into `TelemetryRecord` + batched writes
+- 🔄 SystemD hardening, end-to-end validation on hardware, **`sc-data-format`** path alignment in C++ (`sc1-data-format` strings in some code)
 
 See [`docs/ARCHITECTURE_REVIEW.md`](docs/ARCHITECTURE_REVIEW.md) for detailed architecture information.
 
@@ -31,14 +33,16 @@ See [`docs/ARCHITECTURE_REVIEW.md`](docs/ARCHITECTURE_REVIEW.md) for detailed ar
 ```
 CAN Bus → Python Coordinator → ┬→ CSV Logger (USB)
                                 ├→ Lap Counter (GPS)
-                                ├→ C++ Telemetry (Radio/LTE)
+                                ├→ C++ Telemetry (Radio / UDP chase car)
+                                ├→ InfluxDB Cloud (cpp/InfluxWriter — replay today; live CAN next)
                                 └→ Textual Dashboard (Terminal UI)
 ```
 
 ### Key Components
 
 - **CAN Bus Reader** (`can_bus/`) - Single-reader architecture distributing to multiple consumers
-- **Telemetry System** (`telemetry/`) - C++ transmission over RFD900A radio and EG25-G LTE
+- **Telemetry System** (`telemetry/`) - C++ transmission over RFD900A radio, UDP (chase car); LTE path varies by deployment
+- **Cloud telemetry** (`cpp/`) - InfluxDB v2 Line Protocol (tester binary + shared `InfluxWriter`; configure with `.env`)
 - **Lap Counter** (`lap_counter/`) - GPS-based section and lap timing
 - **Terminal Dashboard** (`textual_frontend/`) - Lightweight Terminal-based UI
 - **Data Logger** (`can_bus/csv_logger.py`) - Buffered CSV writing to USB drive
@@ -150,9 +154,12 @@ python3 textual_frontend/dashboard_launcher.py
 sudo cp services/systemd/*.service /etc/systemd/system/
 sudo systemctl daemon-reload
 
-# Enable and start
+# Enable and start (core stack)
 sudo systemctl enable sc2-telemetry sc2-coordinator sc2-dashboard
 sudo systemctl start sc2-telemetry sc2-coordinator sc2-dashboard
+
+# Optional: Influx CSV replay / lab upload (needs .env with INFLUX_* — see .env.example)
+# sudo systemctl enable --now sc2-influx-tester
 
 # Check status
 sudo systemctl status sc2-*
@@ -167,13 +174,16 @@ sudo systemctl status sc2-*
 ```
 sc2-driver-io/
 ├── can_bus/              # CAN communication (Python)
-├── telemetry/            # Radio/LTE transmission (C++)
-├── data_processor/       # Data validation (C++)
+├── telemetry/            # Radio, UDP, CAN bridge (C++)
+├── cpp/                  # InfluxDB Line Protocol, CSV tester, unit tests
+├── data/                 # e.g. test_telemetry.csv for replay
+├── data_processor/       # Unpacking / validation (C++)
 ├── lap_counter/          # GPS-based lap counting (Python)
 ├── core/ipc/             # Inter-process communication
-├── services/             # System coordination
+├── services/             # System coordination + systemd units
 ├── textual_frontend/     # Terminal dashboard UI
 ├── neural_network/       # AI integration (next sprint)
+├── sc-data-format/       # Submodule — canonical format.json
 └── docs/                 # Architecture documentation
 ```
 
@@ -182,6 +192,8 @@ sc2-driver-io/
 - **`services/coordinator.py`** - Main Python orchestrator
 - **`main.cpp`** - C++ telemetry entry point
 - **`can_bus/can_reader.py`** - Single CAN reader with fan-out
+- **`cpp/src/InfluxWriter.cpp`** - InfluxDB HTTP write client
+- **`build/cpp/sc2_telemetry_tester`** - CSV replay / cloud smoke test (after build)
 - **`core/ipc/shared_data.py`** - Shared memory for dashboard
 - **`core/ipc/telemetry_bridge.py`** - Unix socket to C++
 
