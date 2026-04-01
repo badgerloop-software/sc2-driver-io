@@ -1,0 +1,18 @@
+[Unit]
+Description=SC2 InfluxDB CSV replay / cloud upload (sc2_telemetry_tester)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=sunpi
+Group=sunpi
+WorkingDirectory=/home/sunpi/sc2-driver-io
+# Create /home/sunpi/sc2-driver-io/.env with INFLUX_* (see .env.example)
+EnvironmentFile=-/home/sunpi/sc2-driver-io/.env
+ExecStart=/home/sunpi/sc2-driver-io/build/cpp/sc2_telemetry_tester --csv /home/sunpi/sc2-driver-io/data/test_telemetry.csv --delay 1000
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
