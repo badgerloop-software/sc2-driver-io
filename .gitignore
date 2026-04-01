@@ -84,3 +84,9 @@ ui_*.h
 # Visual Studio generated files
 .vscode/
 # xemacs temporary files
+
+# Legacy Node tester artifacts (optional local installs)
+node_modules/
+.env
+# Allow bundled replay CSV despite *.csv ignore above
+!data/test_telemetry.csv

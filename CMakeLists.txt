@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.15)
 project(sc2-driver-io)
 
 # Set C++ standard to C++20
@@ -45,3 +45,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ./telemetry
     ./data_processor
 )
+
+# InfluxDB / Line Protocol tester + shared library (merged from sc2-telemetry-tester tester--cpp)
+find_package(CURL REQUIRED)
+add_subdirectory(cpp)

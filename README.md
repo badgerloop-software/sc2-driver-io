@@ -340,5 +340,17 @@ sudo systemctl restart sc2-dashboard
 - **[Textual](https://github.com/Textualize/textual)** - Terminal UI framework
 - **[RapidJSON](https://rapidjson.org/)** - Fast JSON parsing (C++)
 - **[serialib](3rdparty/serial/)** - Cross-platform serial communication
+- **[InfluxDB Line Protocol](https://docs.influxdata.com/influxdb/v2/api/#operation/PostWrite)** - Cloud writes from `cpp/` (see below)
+
+---
+
+## InfluxDB cloud telemetry (`cpp/`)
+
+The C++ upload path from [badgerloop-software/sc2-telemetry-tester](https://github.com/badgerloop-software/sc2-telemetry-tester) branch [`tester--cpp`](https://github.com/badgerloop-software/sc2-telemetry-tester/tree/tester--cpp) is merged with **full upstream history** so original authors keep credit. It targets **InfluxDB Cloud** (v2 write API / Line Protocol), not Supabase.
+
+- **Build:** `cmake` / `make` from the repo root also builds `sc2_telemetry_tester` and `sc2_telemetry_tests` when `libcurl` development packages are installed (`libcurl4-openssl-dev` on Debian / Raspberry Pi OS).
+- **Config:** copy `.env.example` to `.env` and set `INFLUX_URL`, `INFLUX_TOKEN`, `INFLUX_ORG`, and `INFLUX_BUCKET`. Do not commit `.env`.
+- **CSV replay (bench / lab):** run `build/cpp/sc2_telemetry_tester` (paths documented in [cpp/README_CPP.md](cpp/README_CPP.md)).
+- **Canonical signal schema:** submodule [sc-data-format](https://github.com/badgerloop-software/sc-data-format) (`sc-data-format/format.json`).
 
 ---
