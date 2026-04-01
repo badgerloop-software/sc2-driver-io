@@ -354,3 +354,5 @@ The C++ upload path from [badgerloop-software/sc2-telemetry-tester](https://gith
 - **Canonical signal schema:** submodule [sc-data-format](https://github.com/badgerloop-software/sc-data-format) (`sc-data-format/format.json`).
 
 ---
+
+- **Optional systemd unit:** `services/systemd/sc2-influx-tester.service` runs `sc2_telemetry_tester` in stream mode (lab / replay). Copy `.env.example` to `.env`, install the unit, then `sudo systemctl enable --now sc2-influx-tester`. Replace with a live CAN→Influx path when the unpacker feeds `TelemetryRecord`.
